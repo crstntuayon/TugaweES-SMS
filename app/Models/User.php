@@ -31,6 +31,9 @@ class User extends Authenticatable
     'email',
     'password',
     'role_id',
+  
+
+
 ];
 
 
@@ -66,6 +69,11 @@ public function student()
 {
     return $this->hasOne(Student::class);
 }
+
+ public function sections()
+    {
+        return $this->hasMany(Section::class, 'teacher_id');
+    }
 
 
 }

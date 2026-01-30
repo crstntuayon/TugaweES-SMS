@@ -149,5 +149,28 @@ Route::get('/admin/dashboard/stats', function () {
 
 Route::get('/admin/dashboard/stats', [App\Http\Controllers\Admin\DashboardController::class, 'getStats'])->name('admin.dashboard.stats');
 
+Route::put('/admin/sections/{section}/assign-teacher',
+    [SectionController::class, 'assignTeacher'])->name('sections.assignTeacher');
+
+Route::get('/admin/sections/{section}/students',
+    [SectionController::class, 'students'])->name('sections.students');
+
+use App\Http\Controllers\ExportController;
+
+Route::get('/admin/export/teacher/{id}', [ExportController::class, 'teacher'])
+    ->name('export.teacher');
+
+
+
+
+
+Route::prefix('admin')->name('sections.')->middleware(['auth'])->group(function () {
+    Route::post('/assign-teacher-bulk/{teacher}', [App\Http\Controllers\Admin\SectionController::class, 'assignTeacherBulk'])
+         ->name('assignTeacherBulk');
+});
+
+
+
+
 
 require __DIR__.'/auth.php';

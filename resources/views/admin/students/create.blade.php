@@ -20,39 +20,91 @@
     <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-4">
         @csrf
 
-        <div>
-            <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input id="first_name" name="first_name" type="text" required
-                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 px-4 py-2">
-            <x-input-error :messages="$errors->get('first_name')" class="mt-1" />
+        <!-- NAME FIELDS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">First Name</label>
+                <input name="first_name" type="text" required
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+                <input name="middle_name" type="text"
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input name="last_name" type="text" required
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Suffix</label>
+                <input name="suffix" type="text" placeholder="Jr., Sr."
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+            </div>
         </div>
 
+        <!-- LRN -->
         <div>
-            <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input id="last_name" name="last_name" type="text" required
-                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 px-4 py-2">
-            <x-input-error :messages="$errors->get('last_name')" class="mt-1" />
+            <label class="block text-sm font-medium text-gray-700">LRN (Learner Reference Number)</label>
+            <input name="lrn" type="text" required
+                   class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
         </div>
 
+        <!-- Birthday -->
         <div>
-            <label for="section_id" class="block text-sm font-medium text-gray-700">Select Section</label>
-            <select id="section_id" name="section_id" required
-                    class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 px-4 py-2">
+            <label class="block text-sm font-medium text-gray-700">Birthday</label>
+            <input name="birthday" type="date" required
+                   class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input name="email" type="email" required
+                   class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+        </div>
+
+        <!-- Contact Number -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+            <input name="contact_number" type="text"
+                   class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
+        </div>
+
+        <!-- Address (NEW) -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Home Address</label>
+            <textarea name="address" rows="2"
+                      class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2"
+                      placeholder="Barangay, Municipality, Province"></textarea>
+        </div>
+
+        <!-- Section -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Select Section</label>
+            <select name="section_id" required
+                    class="mt-1 w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-4 py-2">
                 <option value="">-- Choose Section --</option>
                 @foreach($sections as $section)
-                    <option value="{{ $section->id }}">{{ $section->name }}</option>
+                    <option value="{{ $section->id }}">
+                        {{ $section->year_level }} - {{ $section->name }}
+                    </option>
                 @endforeach
             </select>
-            <x-input-error :messages="$errors->get('section_id')" class="mt-1" />
         </div>
 
+        <!-- Submit -->
         <button type="submit"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg shadow-lg transition duration-200 transform hover:scale-105">
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg shadow-lg transition hover:scale-105">
             Save Student
         </button>
     </form>
 
-    <!-- Back to Dashboard -->
+    <!-- Back -->
     <a href="{{ route('admin.dashboard') }}"
        class="mt-6 inline-block text-indigo-600 hover:underline font-medium">
         &larr; Back to Dashboard
@@ -60,14 +112,14 @@
 </div>
 
 <style>
-    /* Fade-in animation */
     .animate-fadeIn {
         animation: fadeIn 0.8s ease-out;
     }
     @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(-10px); }
-        100% { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
+
 </body>
 </html>

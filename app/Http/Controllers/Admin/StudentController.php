@@ -11,27 +11,13 @@ use App\Models\User;
 class StudentController extends Controller
 {
      // Show all students
-    public function index(Request $request)
-    {
-        $query = Student::with('section');
+  public function index()
+{
+    $students = Student::with('section')->get();
+    $sections = Section::all(); // <- fetch all sections
 
-        // Search by first_name, last_name, or linked user
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($q2) use ($search) {
-                      $q2->where('name', 'like', "%{$search}%")
-                         ->orWhere('email', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        $students = $query->orderBy('last_name')->paginate(10)->withQueryString();
-        return view('admin.students.index', compact('students'));
-    }
-
+    return view('admin.students.index', compact('students', 'sections'));
+}
     // Show form to create new student
     public function create()
     {
@@ -41,25 +27,24 @@ class StudentController extends Controller
     }
 
     // Store new student
-    public function store(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'section_id' => 'required|exists:sections,id',
-            'user_id' => 'nullable|exists:users,id'
-        ]);
+ public function store(Request $request)
+{
+    $validated = $request->validate([
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'lrn' => 'required|unique:students,lrn',
+        'birthday' => 'required|date',
+        'email' => 'nullable|email',
+        'contact_number' => 'nullable|string',
+        'address' => 'nullable|string',
+        'sex' => 'required|in:Male,Female',
+        'section_id' => 'required|exists:sections,id',
+    ]);
 
-        Student::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'section_id' => $request->section_id,
-            'user_id' => $request->user_id ?? null,
-        ]);
+    Student::create($validated);
 
-        return redirect()->route('admin.students.index')
-                         ->with('success', 'Student added successfully');
-    }
+    return redirect()->back()->with('success', 'Student added successfully!');
+}
 
     // Edit student
     public function edit(Student $student)
@@ -70,25 +55,30 @@ class StudentController extends Controller
     }
 
     // Update student
-    public function update(Request $request, Student $student)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'section_id' => 'required|exists:sections,id',
-            'user_id' => 'nullable|exists:users,id'
-        ]);
+  public function update(Request $request, Student $student)
+{
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'suffix' => 'nullable|string|max:50',
+        'birthday' => 'required|date',
+        'email' => 'required|email',
+        'contact_number' => 'nullable|string|max:20',
+        'sex' => 'required|string',
+        'section_id' => 'nullable|exists:sections,id',
+        'lrn' => 'nullable|string|max:20',
+        'address' => 'nullable|string|max:255',
+    ]);
 
-        $student->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'section_id' => $request->section_id,
-            'user_id' => $request->user_id ?? null,
-        ]);
+    $student->update($request->only([
+        'first_name', 'middle_name', 'last_name', 'suffix',
+        'birthday', 'email', 'contact_number', 'sex', 'section_id', 'lrn', 'address'
+    ]));
 
-        return redirect()->route('admin.students.index')
-                         ->with('success', 'Student updated successfully');
-    }
+    return redirect()->back()->with('success', 'Student updated successfully!');
+}
+
 
     // Delete student
     public function destroy(Student $student)
@@ -97,4 +87,6 @@ class StudentController extends Controller
         return redirect()->route('admin.students.index')
                          ->with('success', 'Student deleted successfully');
     }
+
+    
 }

@@ -13,7 +13,7 @@ class Student extends Model
     protected $fillable = [
         'first_name', 'middle_name', 'last_name', 'suffix',
         'birthday', 'email', 'contact_number', 'sex',
-        'section_id', 'lrn', 'address'
+        'section_id', 'lrn', 'address', 'photo', 'school_id'
     ];
 
     public function section()
@@ -21,10 +21,20 @@ class Student extends Model
         return $this->belongsTo(Section::class);
     }
 
-
+  // THIS IS THE RELATIONSHIP YOU NEED
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class, 'enrollments');
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function teacher()
+{
+    return $this->belongsTo(Teacher::class);
+}
+
 }

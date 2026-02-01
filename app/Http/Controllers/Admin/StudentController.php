@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Section;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\User;
 
 class StudentController extends Controller
@@ -30,7 +34,9 @@ class StudentController extends Controller
  public function store(Request $request)
 {
     $validated = $request->validate([
+        
         'first_name' => 'required|string',
+          'middle_name' => 'nullable|string|max:255',
         'last_name' => 'required|string',
         'lrn' => 'required|unique:students,lrn',
         'birthday' => 'required|date',
@@ -38,8 +44,15 @@ class StudentController extends Controller
         'contact_number' => 'nullable|string',
         'address' => 'nullable|string',
         'sex' => 'required|in:Male,Female',
-        'section_id' => 'required|exists:sections,id',
+        'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+       
     ]);
+
+     // ✅ Handle photo upload
+    if ($request->hasFile('photo')) {
+        $validated['photo'] = $request->file('photo')
+            ->store('photos', 'public');
+    }
 
     Student::create($validated);
 
@@ -55,8 +68,9 @@ class StudentController extends Controller
     }
 
     // Update student
-  public function update(Request $request, Student $student)
+public function update(Request $request, Student $student)
 {
+    // Validate input
     $request->validate([
         'first_name' => 'required|string|max:255',
         'middle_name' => 'nullable|string|max:255',
@@ -66,18 +80,40 @@ class StudentController extends Controller
         'email' => 'required|email',
         'contact_number' => 'nullable|string|max:20',
         'sex' => 'required|string',
-        'section_id' => 'nullable|exists:sections,id',
+        'section_id' => 'required|exists:sections,id',
         'lrn' => 'nullable|string|max:20',
         'address' => 'nullable|string|max:255',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
+    // Update all fields except photo
     $student->update($request->only([
         'first_name', 'middle_name', 'last_name', 'suffix',
-        'birthday', 'email', 'contact_number', 'sex', 'section_id', 'lrn', 'address'
+        'birthday', 'email', 'contact_number', 'sex',
+        'section_id', 'lrn', 'address'
     ]));
+
+    // Handle photo upload if present
+    if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+
+        // Delete old photo if exists
+        if ($student->photo && Storage::disk('public')->exists($student->photo)) {
+            Storage::disk('public')->delete($student->photo);
+        }
+
+        // Store new photo with unique name
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('photos', $filename, 'public');
+
+        // Save path in DB
+        $student->photo = $path;
+        $student->save();
+    }
 
     return redirect()->back()->with('success', 'Student updated successfully!');
 }
+
 
 
     // Delete student
@@ -87,6 +123,22 @@ class StudentController extends Controller
         return redirect()->route('admin.students.index')
                          ->with('success', 'Student deleted successfully');
     }
+
+    public function getStudentsJson()
+{
+    $students = Student::with('section')->get();
+
+    return response()->json($students);
+}
+
+public function unenroll(Student $student)
+{
+    // Remove section assignment
+    $student->section_id = null;
+    $student->save();
+
+    return redirect()->back()->with('success', $student->first_name . ' has been unenrolled.');
+}
 
     
 }

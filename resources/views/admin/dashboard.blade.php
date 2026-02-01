@@ -27,67 +27,54 @@
             <img src="{{ asset('images/logo.jpg') }}"   class="mx-auto h-20 w-20 rounded-full shadow-lg mb-4 ring-4 ring-indigo-200" alt="School Logo">
             <div>
                 <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
-                <p class="text-sm text-gray-500">Tugawe Elementary School</p>
+                <p class="text-sm text-gray-500">Tugawe Elementary School | Dauin District</p>
             </div>
         </div>
-     <div class="relative" x-data="{ open: false }">
 
-    <!-- Trigger -->
-    <button
-        @click="open = !open"
-        class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700"
-    >
-        <span class="hidden md:block">
-          Menu
-        </span>
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                  d="M19 9l-7 7-7-7" />
-        </svg>
-    </button>
 
-    <!-- Dropdown -->
-    <div
-        x-show="open"
-        @click.away="open = false"
-        x-transition
-        class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50"
-    >
+    
+        <!-- MENU DROPDOWN -->
+        <div class="relative" x-data="{ open: false }">
 
-        <!-- User Info -->
-        <div class="px-4 py-3 border-b">
-            <p class="text-sm font-semibold text-gray-800">
-                {{ auth()->user()->name ?? 'User' }}
-            </p>
-            <p class="text-xs text-gray-500 truncate">
-                {{ auth()->user()->email }}
-            </p>
+            <!-- Trigger -->
+            <button @click="open = !open" class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700">
+                <span class="hidden md:block">Menu</span>
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            <!-- Dropdown -->
+            <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
+                <!-- User Info -->
+                <div class="px-4 py-3 border-b">
+                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                </div>
+
+                <!-- Profile -->
+                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">👤 Profile</a>
+
+                <!-- Manage Users -->
+                <button onclick="openManageUsersModal()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">👥 Manage Users</button>
+
+                <!-- Create New Admin -->
+                <button onclick="openAddAdminModal()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">➕ Create Admin</button>
+
+                <!-- Divider -->
+                <div class="border-t"></div>
+
+                <!-- Logout -->
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                    </svg>
+                    Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+            </div>
         </div>
-
-        <!-- Profile -->
-        <a href="{{ route('profile.edit') }}"
-           class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-            👤 Profile
-        </a>
-
-        <!-- Divider -->
-        <div class="border-t"></div>
-
-        <!-- Logout Link -->
-<a href="{{ route('logout') }}"
-   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-   class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-    <!-- Door/Logout Icon SVG -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-    </svg>
-    Logout
-</a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-            @csrf
-        </form>
     </div>
-</div>
 
 </header>
 
@@ -372,7 +359,11 @@
         </div>
 
         <!-- STUDENT FORM -->
-        <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-4">
+       <form method="POST" 
+      action="{{ route('admin.students.store') }}" 
+      enctype="multipart/form-data"
+      class="space-y-4">
+
             @csrf
 
             <!-- NAME FIELDS -->
@@ -434,7 +425,7 @@
                           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
             </div>
 
-            <!-- SECTION + SCHOOL YEAR -->
+            <!-- SECTION + SCHOOL YEAR 
             <div>
                 <select name="section_id" required
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
@@ -450,7 +441,17 @@
                         <option value="">No sections available</option>
                     @endif
                 </select>
+            </div>  -->
+
+              <!-- PHOTO UPLOAD -->
+            <div class="mb-3 mt-3">
+                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
+                <div class="mt-2">
+                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+                </div>
             </div>
+
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
@@ -466,6 +467,342 @@
         </form>
     </div>
 </div>
+
+<!-- ================= ADD ADMIN MODAL ================= -->
+<div id="addAdminModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative overflow-y-auto max-h-[90vh]">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Create New Admin</h2>
+            <button type="button" onclick="closeAddAdminModal()" class="text-gray-400 hover:text-red-500 text-3xl font-bold transition">&times;</button>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" action="{{ route('admin.create') }}" class="space-y-5">
+            @csrf
+            <input type="hidden" name="role_id" value="1">
+
+            <!-- NAME FIELDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" name="first_name" placeholder="First Name" required
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+                <input type="text" name="middle_name" placeholder="Middle Name"
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" name="last_name" placeholder="Last Name" required
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+                <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)"
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+            </div>
+
+            <!-- BIRTHDAY -->
+            <input type="date" name="birthday" placeholder="Birthday" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+
+            <!-- EMAIL & USERNAME -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="email" name="email" placeholder="Email" required
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+                <input type="text" name="username" placeholder="Username" required
+                       class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+            </div>
+
+            <!-- PASSWORD -->
+            <input type="password" name="password" placeholder="Password" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+            <input type="password" name="password_confirmation" placeholder="Confirm Password" required
+                   class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" onclick="closeAddAdminModal()"
+                        class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-medium transition">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold shadow-lg transition transform hover:scale-105">
+                    Create Admin
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- ================= MANAGE USERS MODAL ================= -->
+<div id="manageUsersModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl p-6 relative overflow-y-auto max-h-[90vh]">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Manage Users</h2>
+            <button type="button" onclick="closeManageUsersModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+
+        <!-- Table container with spinner -->
+        <div class="relative">
+            <div id="usersLoadingSpinner" class="hidden absolute inset-0 bg-white/70 flex items-center justify-center z-10">
+                <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+            </div>
+
+            <div id="usersTableContainer">
+                <table class="w-full border rounded-lg overflow-hidden text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3 text-left">Name</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Created</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       @forelse($users ?? [] as $user)
+<tr class="border-t hover:bg-gray-50 transition"
+    data-id="{{ $user->id }}"
+    data-first-name="{{ $user->first_name }}"
+    data-last-name="{{ $user->last_name }}"
+    data-email="{{ $user->email }}"
+    data-username="{{ $user->username }}"
+    data-role-id="{{ $user->role_id }}">
+    
+    <td class="p-3">{{ $user->first_name }} {{ $user->last_name }}</td>
+    <td>{{ $user->email }}</td>
+    <td>{{ $user->username }}</td>
+    <td>{{ $user->role->name ?? 'N/A' }}</td>
+    <td>{{ $user->created_at->format('M d, Y') }}</td>
+    <td class="p-3 text-center flex justify-center gap-2">
+        <!-- Edit Icon -->
+        <a href="javascript:void(0);" onclick="openEditUserModal({{ $user->id }})"
+           class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 5h2m2 2l6 6-6 6-6-6 6-6zM4 21h16"/>
+    </svg>
+        </a>
+
+        <!-- Delete Button -->
+        <button onclick="openDeleteUserModal({{ $user->id }})"
+               class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
+                 a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
+    </svg>
+        </button>
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="6" class="text-center text-gray-500 py-4">No users found.</td>
+</tr>
+@endforelse
+
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="mt-3 flex justify-center">
+                    {{ $users->links() }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer counts -->
+        <div class="mt-4 flex justify-between items-center text-gray-700 text-sm">
+            <p>Total Users: {{ $users->total() ?? 0 }}</p>
+            <p>Showing {{ $users->count() }} of {{ $users->total() ?? 0 }}</p>
+        </div>
+    </div>
+
+  <!-- ================= EDIT USER MODAL ================= -->
+<div id="editUserModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-60 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Edit User</h2>
+            <button type="button" onclick="closeEditUserModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+
+        <form id="editUserForm" method="POST">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="user_id" id="editUserId">
+
+            <input type="text" name="first_name" id="editFirstName" placeholder="First Name" class="w-full px-4 py-2 rounded-lg border mb-2">
+            <input type="text" name="last_name" id="editLastName" placeholder="Last Name" class="w-full px-4 py-2 rounded-lg border mb-2">
+            <input type="email" name="email" id="editEmail" placeholder="Email" class="w-full px-4 py-2 rounded-lg border mb-2">
+            <input type="text" name="username" id="editUsername" placeholder="Username" class="w-full px-4 py-2 rounded-lg border mb-2">
+            <select name="role_id" id="editRole" class="w-full px-4 py-2 rounded-lg border mb-4">
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                @endforeach
+            </select>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeEditUserModal()" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- ================= DELETE USER MODAL ================= -->
+<div id="deleteUserModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-60 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative text-center">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Delete User?</h2>
+        <p class="text-gray-600 mb-4">This action cannot be undone. Deleting in <span id="deleteCountdown">5</span> seconds.</p>
+        <div class="flex justify-center gap-4">
+            <button type="button" onclick="cancelDelete()" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Cancel</button>
+            <form id="deleteUserForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ================= AJAX PAGINATION SCRIPT ================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('manageUsersModal');
+    const tableContainer = document.getElementById('usersTableContainer');
+    const spinner = document.getElementById('usersLoadingSpinner');
+
+    // Delegate clicks for pagination links
+    modal.addEventListener('click', function(e) {
+        const link = e.target.closest('.pagination a');
+        if (!link) return;
+
+        e.preventDefault();
+        spinner.classList.remove('hidden');
+
+        fetch(link.href, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.text())
+        .then(html => {
+            tableContainer.innerHTML = html;
+        })
+        .catch(err => console.error('Error fetching users:', err))
+        .finally(() => spinner.classList.add('hidden'));
+    });
+});
+
+// Open/Close modal functions
+function openManageUsersModal() {
+    document.getElementById('manageUsersModal').classList.remove('hidden');
+}
+function closeManageUsersModal() {
+    document.getElementById('manageUsersModal').classList.add('hidden');
+}
+</script>
+
+<!-- ================= EDIT & DELETE USER MODAL SCRIPTS ================= -->
+
+<script>
+let deleteInterval;
+
+// Edit User Modal
+function openEditUserModal(userId) {
+    const form = document.getElementById('editUserForm');
+
+    // Set form action dynamically
+    form.action = "{{ url('/admin/users') }}/" + userId;
+
+    // Fill modal fields
+    const row = document.querySelector(`tr[data-id='${userId}']`);
+    if (!row) return;
+
+    document.getElementById('editUserId').value = row.dataset.id;
+    document.getElementById('editFirstName').value = row.dataset.firstName;
+    document.getElementById('editLastName').value = row.dataset.lastName;
+    document.getElementById('editEmail').value = row.dataset.email;
+    document.getElementById('editUsername').value = row.dataset.username;
+    document.getElementById('editRole').value = row.dataset.roleId;
+
+    // Show modal
+    const modal = document.getElementById('editUserModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditUserModal() {
+    document.getElementById('editUserModal').classList.add('hidden');
+}
+
+// Delete User Modal (your existing code)
+function openDeleteUserModal(userId) {
+    const form = document.getElementById('deleteUserForm');
+    form.action = `/admin/users/${userId}`;
+    
+    const modal = document.getElementById('deleteUserModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    let countdown = 5;
+    const counter = document.getElementById('deleteCountdown');
+    counter.textContent = countdown;
+
+    window.deleteInterval = setInterval(() => {
+        countdown--;
+        counter.textContent = countdown;
+        if (countdown <= 0) {
+            clearInterval(window.deleteInterval);
+            form.submit();
+        }
+    }, 1000);
+}
+
+function cancelDelete() {
+    clearInterval(window.deleteInterval);
+    const modal = document.getElementById('deleteUserModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+</script>
+
+
+
+
+
+<!-- ============ MODAL JS FUNCTIONS ============ -->
+<script>
+function openManageUsersModal() {
+    const modal = document.getElementById('manageUsersModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeManageUsersModal() {
+    const modal = document.getElementById('manageUsersModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function openAddAdminModal() {
+    const modal = document.getElementById('addAdminModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeAddAdminModal() {
+    const modal = document.getElementById('addAdminModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
 
 <!-- ===== LIVE COUNTER + FLASH ===== -->
 <script>

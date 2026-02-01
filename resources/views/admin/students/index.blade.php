@@ -117,7 +117,7 @@ setTimeout(() => {
             </h2>
 
             <!-- CARDS GRID -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div  id="studentsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($groupStudents as $student)
                     @php
                         $initials = strtoupper(substr($student->first_name,0,1) . substr($student->last_name,0,1));
@@ -133,15 +133,17 @@ setTimeout(() => {
 
                         <!-- HEADER -->
                         <div class="flex justify-between items-start mb-5">
-                            <!-- AVATAR + NAME -->
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 rounded-full
-                                            bg-gradient-to-br from-indigo-400 to-indigo-600
-                                            text-white font-bold text-xl
-                                            flex items-center justify-center
-                                            shadow-inner transition group-hover:scale-105">
-                                    {{ $initials }}
-                                </div>
+                          <!-- AVATAR + NAME -->
+<div class="flex items-center gap-4">
+    <!-- PROFILE PHOTO -->
+    <div class="w-16 h-16 rounded-full
+                overflow-hidden
+                shadow-inner
+                transition group-hover:scale-105">
+        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+             alt="{{ $student->first_name }} {{ $student->last_name }}"
+             class="w-full h-full object-cover">
+    </div>
 
                                 <div>
                                     <h2 class="text-lg font-bold text-gray-800 leading-tight">
@@ -168,6 +170,8 @@ setTimeout(() => {
     data-contact="{{ $student->contact_number ?? '' }}"
     data-sex="{{ $student->sex ?? '' }}"
     data-section_id="{{ $student->section_id ?? '' }}"
+
+    
     class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110"
 >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
@@ -286,7 +290,11 @@ setTimeout(() => {
         </div>
 
         <!-- STUDENT FORM -->
-        <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-4">
+      <form method="POST" 
+      action="{{ route('admin.students.store') }}" 
+      enctype="multipart/form-data"
+      class="space-y-4">
+
             @csrf
 
             <!-- NAME FIELDS -->
@@ -348,23 +356,15 @@ setTimeout(() => {
                           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
             </div>
 
-            <!-- SECTION + SCHOOL YEAR -->
-            <div>
-                <select name="section_id" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                    <option value="">-- Select Section --</option>
-                    @if(isset($sections) && $sections->count())
-                        @foreach($sections as $section)
-                            <option value="{{ $section->id }}"
-                                {{ old('section_id') == $section->id ? 'selected' : '' }}>
-                                {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
-                            </option>
-                        @endforeach
-                    @else
-                        <option value="">No sections available</option>
-                    @endif
-                </select>
+             <!-- PHOTO UPLOAD -->
+            <div class="mb-3 mt-3">
+                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
+                <div class="mt-2">
+                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+                </div>
             </div>
+
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
@@ -388,7 +388,7 @@ setTimeout(() => {
         <h2 class="text-xl font-bold mb-4">Edit Student</h2>
 
         <!-- FORM -->
-        <form id="editStudentForm" method="POST">
+        <form id="editStudentForm" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -426,6 +426,15 @@ setTimeout(() => {
                 @endforeach
             </select>
 
+            <!-- PHOTO UPLOAD -->
+            <div class="mb-3 mt-3">
+                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
+                <div class="mt-2">
+                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+                </div>
+            </div>
+
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 mt-4">
                 <button type="button" onclick="closeEditStudentModal()" class="bg-gray-300 px-4 py-2 rounded-lg">Cancel</button>
@@ -436,6 +445,59 @@ setTimeout(() => {
         <button onclick="closeEditStudentModal()" class="absolute top-3 right-3 text-xl">✕</button>
     </div>
 </div>
+
+<!-- JS: Populate modal + Live preview -->
+<script>
+function openEditStudentModal(button) {
+    const studentId = button.dataset.id;
+    const first = button.dataset.first;
+    const middle = button.dataset.middle ?? '';
+    const last = button.dataset.last;
+    const suffix = button.dataset.suffix ?? '';
+    const birthday = button.dataset.birthday;
+    const email = button.dataset.email;
+    const contact = button.dataset.contact ?? '';
+    const sex = button.dataset.sex ?? '';
+    const sectionId = button.dataset.section_id ?? '';
+    const photo = button.dataset.photo ?? null;
+
+    // Fill form
+    document.getElementById('editStudentForm').action = `/students/${studentId}`;
+    document.getElementById('edit_student_first').value = first;
+    document.getElementById('edit_student_middle').value = middle;
+    document.getElementById('edit_student_last').value = last;
+    document.getElementById('edit_student_suffix').value = suffix;
+    document.getElementById('edit_student_birthday').value = birthday;
+    document.getElementById('edit_student_email').value = email;
+    document.getElementById('edit_student_contact').value = contact;
+    document.getElementById('edit_student_sex').value = sex;
+    document.getElementById('edit_student_section').value = sectionId;
+
+    // Show existing photo or placeholder
+    document.getElementById('photoPreview').src = photo 
+        ? `{{ asset('storage') }}/${photo}`
+        : '{{ asset("images/photo-placeholder.png") }}';
+
+    // Show modal
+    document.getElementById('editStudentModal').classList.remove('hidden');
+}
+
+function closeEditStudentModal() {
+    document.getElementById('editStudentModal').classList.add('hidden');
+}
+
+// Live preview for newly selected photo
+document.getElementById('editPhoto').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photoPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 
 <script>
@@ -515,7 +577,43 @@ function closeEditStudentModal() {
     modal.classList.remove('flex');
 }
 
+
+const editPhotoInput = document.getElementById('editPhoto');
+const photoPreview = document.getElementById('photoPreview');
+
+editPhotoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            photoPreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        photoPreview.src = '{{ asset("images/photo-placeholder.png") }}';
+    }
+});
 </script>
+
+
+<script>
+const editPhotoInput = document.getElementById('editPhoto');
+const photoPreview = document.getElementById('photoPreview');
+
+editPhotoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            photoPreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        photoPreview.src = '{{ asset("images/photo-placeholder.png") }}';
+    }
+});
+</script>
+
 
 </body>
 </html>

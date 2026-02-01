@@ -169,8 +169,125 @@ Route::prefix('admin')->name('sections.')->middleware(['auth'])->group(function 
          ->name('assignTeacherBulk');
 });
 
+use App\Http\Controllers\Admin\AdminController;
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::post('/admin/store', [AdminController::class, 'store'])
+        ->name('admin.store');
+});
+Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.create');
+
+
+use App\Http\Controllers\Admin\AdminUserController;
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.users.')->group(function () {
+    Route::get('/', [AdminUserController::class, 'index'])->name('index');
+    Route::get('/{user}/edit', [AdminUserController::class, 'edit'])->name('edit');
+    Route::put('/{user}', [AdminUserController::class, 'update'])->name('update');
+    Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+
+use App\Http\Controllers\Admin\UserController;
+
+use function Symfony\Component\String\u;
+
+Route::prefix('admin')->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index'); // list users
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store'); // create user
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update'); // edit user
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy'); // delete user
+});
+
+use App\Http\Controllers\Registrar\EnrollmentController;
+Route::prefix('registrar')->name('registrar.')->middleware('auth')->group(function() {
+    Route::get('enrollments/create', [EnrollmentController::class, 'create'])->name('enrollments.create');
+    Route::post('enrollments', [EnrollmentController::class, 'store'])->name('enrollments.store');
+});
 
 
 
+
+// Students
+Route::get('/registrar/students', [App\Http\Controllers\Registrar\StudentController::class, 'index'])
+    ->name('registrar.students.index');
+
+// Teachers
+Route::get('/registrar/teachers', [App\Http\Controllers\Registrar\TeacherController::class, 'index'])
+    ->name('registrar.teachers.index');
+
+// Sections
+Route::get('/registrar/sections', [App\Http\Controllers\Registrar\SectionController::class, 'index'])
+    ->name('registrar.sections.index');
+
+
+
+    Route::middleware(['auth', 'role:registrar'])->group(function () {
+    Route::put(
+        '/registrar/students/{student}/assign-teacher',
+        [ App\Http\Controllers\Registrar\StudentController::class, 'assignTeacher']
+    )->name('registrar.students.assignTeacher');
+});
+
+
+Route::get('/admin/students/json', [StudentController::class, 'getStudentsJson'])->name('admin.students.json');
+
+
+
+    use App\Http\Controllers\TeacherStudentController;
+
+Route::put('/teacher/students/{student}/unenroll', [TeacherStudentController::class, 'unenroll'])
+    ->name('teacher.students.unenroll');
+
+
+Route::post('/registrar/students/issue-id',
+    [App\Http\Controllers\Registrar\StudentController::class, 'issueSchoolId']
+)->name('registrar.students.issue-id');
+
+
+// ID Card pages
+use App\Http\Controllers\Registrar\IDCardController;
+
+Route::prefix('registrar')->middleware(['auth', 'role:registrar'])->group(function() {
+    // Show ID issuance form
+    Route::get('/idcards', [IDCardController::class, 'index'])->name('registrar.id.index');
+
+    // Generate/assign ID
+    Route::post('/idcards/generate', [IDCardController::class, 'generate'])->name('registrar.id.generate');
+
+    // Print the ID card
+    Route::get('/idcards/print/{type}/{id}', [IDCardController::class, 'print'])->name('registrar.id.print');
+});
+
+Route::prefix('registrar')->name('registrar.')->group(function () {
+    Route::get('idcards', [IDCardController::class, 'index'])->name('id.index');
+    Route::post('idcards/generate', [IDCardController::class, 'generate'])->name('id.generate');
+    Route::get('idcards/print/{type}/{id}', [IDCardController::class, 'print'])->name('id.print');
+});
+
+
+
+    // Single ID print
+Route::get('/registrar/idcards/print/{type}/{id}', [IDCardController::class, 'printSingle'])
+    ->name('registrar.idcards.print.single');
+
+// Bulk ID print (by section)
+Route::get('/registrar/idcards/print/bulk/{sectionId}', [IDCardController::class, 'printBulk'])
+    ->name('registrar.idcards.print.bulk');
+
+// QR Verification
+Route::get('/registrar/idcards/verify/{schoolId}', [IDCardController::class, 'verify'])
+    ->name('registrar.idcards.verify');
+
+   
+Route::get('/registrar/idcards/print/{type}/{id}', [IDCardController::class, 'printSingle'])
+    ->name('registrar.idcards.print'); // <-- THIS MUST MATCH YOUR REDIRECT
+
+
+    // routes/web.php
+Route::prefix('registrar')->name('registrar.')->group(function () {
+    Route::resource('students', App\Http\Controllers\Registrar\StudentController::class);
+});
 
 require __DIR__.'/auth.php';

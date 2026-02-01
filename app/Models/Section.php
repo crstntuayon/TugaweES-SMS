@@ -23,14 +23,15 @@ class Section extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    public function students()
-    {
-        return $this->hasMany(Student::class);
-    }
-
+   
     public function yearLevel()
 {
     return $this->belongsTo(YearLevel::class, 'year_level');
 }
+
+  public function students()
+    {
+        return $this->belongsToMany(Student::class, 'enrollments');
+    }
 
 }

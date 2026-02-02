@@ -177,6 +177,9 @@
 </div>
 
 
+
+
+
 <!-- ADD STUDENT MODAL -->
 <div id="addStudentModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
@@ -192,7 +195,11 @@
         </div>
 
         <!-- STUDENT FORM -->
-        <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-4">
+       <form method="POST" 
+      action="{{ route('admin.students.store') }}" 
+      enctype="multipart/form-data"
+      class="space-y-4">
+
             @csrf
 
             <!-- NAME FIELDS -->
@@ -254,7 +261,34 @@
                           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
             </div>
 
-            
+            <!-- SECTION + SCHOOL YEAR -->
+            <div>
+                <select name="section_id" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                    <option value="">-- Select Section --</option>
+                    @if(isset($sections) && $sections->count())
+                        @foreach($sections as $section)
+                            <option value="{{ $section->id }}"
+                                {{ old('section_id') == $section->id ? 'selected' : '' }}>
+                                {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
+                            </option>
+                        @endforeach
+                    @else
+                        <option value="">No sections available</option>
+                    @endif
+                </select>
+            </div>  
+
+              <!-- PHOTO UPLOAD -->
+            <div class="mb-3 mt-3">
+                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
+                <div class="mt-2">
+                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+                </div>
+            </div>
+
+
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
                 <button type="button" onclick="closeAddStudentModal()"
@@ -269,6 +303,22 @@
         </form>
     </div>
 </div>
+<script>
+
+    
+    // STUDENT MODAL FUNCTIONS
+    function openAddStudentModal() {
+    const modal = document.getElementById('addStudentModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeAddStudentModal() {
+    const modal = document.getElementById('addStudentModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
 
 <script>
 function studentTable() {

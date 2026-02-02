@@ -13,6 +13,7 @@ class StudentController extends Controller
     // Display all students
   public function index()
     {
+         $sections = Section::orderBy('year_level')->get();
         $students = Student::all();
         $sections = Section::all(); // make sure you have sections
         return view('registrar.students.index', compact('students', 'sections'));
@@ -31,6 +32,7 @@ class StudentController extends Controller
         'address' => 'nullable|string',
         'sex' => 'required|in:Male,Female',
         'photo'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+       'section_id' => 'required|integer|exists:sections,id',
        
     ]);
      // ✅ Handle photo upload
@@ -46,38 +48,52 @@ class StudentController extends Controller
 
 
     // UPDATE method
-    public function update(Request $request, Student $student)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'suffix' => 'nullable|string|max:50',
-            'birthday' => 'required|date',
-            'email' => 'required|email',
-            'contact_number' => 'nullable|string|max:20',
-            'sex' => 'required|string',
-            'section_id' => 'required|integer|exists:sections,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+  public function update(Request $request, Student $student)
+{
+    // Validate input
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'suffix' => 'nullable|string|max:50',
+        'birthday' => 'required|date',
+        'email' => 'required|email',
+        'contact_number' => 'nullable|string|max:20',
+        'sex' => 'required|string',
+        'section_id' => 'required|exists:sections,id',
+        'lrn' => 'nullable|string|max:20',
+        'address' => 'nullable|string|max:255',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $student->update($request->only([
-            'first_name','middle_name','last_name','suffix','birthday','email',
-            'contact_number','sex','section_id'
-        ]));
+    // Update all fields except photo
+    $student->update($request->only([
+        'first_name', 'middle_name', 'last_name', 'suffix',
+        'birthday', 'email', 'contact_number', 'sex',
+        'section_id', 'lrn', 'address'
+    ]));
 
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            if ($student->photo && Storage::disk('public')->exists($student->photo)) {
-                Storage::disk('public')->delete($student->photo);
-            }
-            $path = $file->store('photos', 'public');
-            $student->photo = $path;
-            $student->save();
+    // Handle photo upload if present
+    if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+
+        // Delete old photo if exists
+        if ($student->photo && Storage::disk('public')->exists($student->photo)) {
+            Storage::disk('public')->delete($student->photo);
         }
 
-        return redirect()->back()->with('success', 'Student updated successfully!');
+        // Store new photo with unique name
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('photos', $filename, 'public');
+
+        // Save path in DB
+        $student->photo = $path;
+        $student->save();
     }
+
+    return redirect()->back()->with('success', 'Student updated successfully!');
+}
+
 
     public function assignTeacher(Request $request, Student $student)
 {

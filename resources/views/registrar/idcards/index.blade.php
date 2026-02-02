@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const personId = personSelect.value;
         if (!personId) return;
 
-        const prefix = type === 'student' ? 'S' : 'T';
+        const prefix = type === 'student' ? 'TES-S' : 'TES-T';
         const year = new Date().getFullYear();
         generatedInput.value = `${prefix}-${year}-${String(personId).padStart(5, '0')}`;
     }

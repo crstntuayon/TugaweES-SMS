@@ -45,6 +45,7 @@ class StudentController extends Controller
         'address' => 'nullable|string',
         'sex' => 'required|in:Male,Female',
         'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+         'section_id' => 'required|exists:sections,id',
        
     ]);
 

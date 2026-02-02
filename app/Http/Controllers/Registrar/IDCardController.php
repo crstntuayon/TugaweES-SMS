@@ -33,7 +33,7 @@ class IDCardController extends Controller
 
     // Generate unique school ID
     $year = date('Y');
-    $prefix = $type === 'student' ? 'S' : 'T';
+    $prefix = $type === 'student' ? 'TES-S' : 'TES-T';
     $schoolId = $prefix . '-' . $year . '-' . str_pad($personId, 5, '0', STR_PAD_LEFT);
 
     // Save ID to database

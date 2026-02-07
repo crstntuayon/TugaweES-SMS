@@ -290,7 +290,10 @@ Route::prefix('registrar')->name('registrar.')->group(function () {
     Route::resource('students', App\Http\Controllers\Registrar\StudentController::class);
 });
 
+<<<<<<< HEAD
 
 Route::put('/registrar/students/{student}', [StudentController::class, 'update']);
 
+=======
+>>>>>>> 363cc25 (when adding student it also create stud. account)
 require __DIR__.'/auth.php';

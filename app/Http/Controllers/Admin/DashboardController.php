@@ -18,8 +18,24 @@ class DashboardController extends Controller
 
 $users = User::with('role')->latest()->paginate(10); // 10 per page
 
+<<<<<<< HEAD
 
+=======
+    // TOTAL STUDENTS
+>>>>>>> 363cc25 (when adding student it also create stud. account)
     $totalStudents = Student::count();
+
+    // Total Male / Female
+    $maleCount = Student::where('sex', 'Male')->count();
+    $femaleCount = Student::where('sex', 'Female')->count();
+
+     // Students per Section
+    $studentsPerSection = Student::with('section')
+        ->get()
+        ->groupBy(function($student) {
+            return ($student->section->year_level ?? 'N/A') . ' - ' . ($student->section->name ?? 'Not Assigned');
+        })->map(fn($group) => $group->count());
+
     $totalTeachers = User::whereHas('role', fn ($q) => $q->where('name', 'teacher'))->count();
     $totalSections = Section::count();
 
@@ -35,11 +51,17 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
         'totalTeachers',
         'totalSections',
         'users',
+<<<<<<< HEAD
         'roles' // <-- and this line
+=======
+        'roles', 
+        'maleCount', 
+        'femaleCount', 
+        'studentsPerSection'
+>>>>>>> 363cc25 (when adding student it also create stud. account)
        
     ));
 }
-
 
    
 }

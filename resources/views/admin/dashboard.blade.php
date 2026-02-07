@@ -80,13 +80,65 @@
 
 <main class="max-w-7xl mx-auto px-6 py-10">
 
-    <!-- NAVIGATION TABS -->
-    <div class="flex flex-wrap gap-3 mb-10">
-        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm shadow">Dashboard</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-indigo-50 text-gray-700 text-sm shadow">Students</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-green-50 text-gray-700 text-sm shadow">Teachers</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-yellow-50 text-gray-700 text-sm shadow">Sections</a>
+
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+    <!-- Gender Distribution Slim Card -->
+    <div class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
+        
+        <!-- Counts -->
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+                <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
+                <span class="text-gray-500 text-sm">Male</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
+                <span class="text-gray-500 text-sm">Female</span>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="w-24 h-24">
+            <canvas id="sexChart" class="w-full h-full"></canvas>
+        </div>
     </div>
+
+    <!-- Students per Section -->
+    <div class="bg-green-50 rounded-xl shadow p-6">
+        <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Students per Section</p>
+        <ul class="text-sm text-gray-600 space-y-1 max-h-40 overflow-y-auto">
+            @foreach($studentsPerSection as $section => $count)
+                <li class="flex justify-between">
+                    <span>{{ $section }}</span>
+                    <span class="font-semibold">{{ $count }}</span>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('sexChart').getContext('2d');
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            data: [{{ $maleCount }}, {{ $femaleCount }}],
+            backgroundColor: ['#3B82F6', '#EC4899']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } }
+    }
+});
+</script>
+
 
     <!-- STATS CARDS -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

@@ -100,22 +100,16 @@ setTimeout(() => {
 
 </script>
 
-    <!-- STUDENT CARDS GROUPED BY SECTION + YEAR -->
-    @php
-        $groupedStudents = $students->groupBy(function($student) {
-            return ($student->section->year_level ?? 'N/A') . ' - ' . ($student->section->name ?? 'Not Assigned');
-        });
-        $colors = ['green','blue','indigo','purple','pink','yellow','red','teal'];
-    @endphp
+ <!-- STUDENTS TABLE GROUPED BY SECTION + YEAR -->
+@php
+    $groupedStudents = $students->groupBy(function($student) {
+        return ($student->section->year_level ?? 'N/A') . ' - ' . ($student->section->name ?? 'Not Assigned');
+    });
+@endphp
 
-    @forelse($groupedStudents as $groupName => $groupStudents)
-        <div class="mb-8">
-            <!-- GROUP HEADER -->
-            @php $headerColor = $colors[crc32($groupName) % count($colors)]; @endphp
-            <h2 class="sticky top-0 bg-{{ $headerColor }}-200 text-{{ $headerColor }}-800 font-bold px-4 py-2 rounded-lg shadow-sm mb-4 z-10">
-                Section: {{ $groupName }}
-            </h2>
+@forelse($groupedStudents as $groupName => $groupStudents)
 
+<<<<<<< HEAD
             <!-- CARDS GRID -->
             <div  id="studentsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($groupStudents as $student)
@@ -126,11 +120,32 @@ setTimeout(() => {
                         $index = crc32($yearLevel) % count($colors);
                         $color = $colors[$index];
                     @endphp
+=======
+    <!-- GROUP HEADER -->
+    <div class="mb-10">
+        <h2 class="bg-indigo-100 text-indigo-800 font-bold px-5 py-3 rounded-xl shadow mb-4">
+            Section: {{ $groupName }}
+        </h2>
+>>>>>>> 363cc25 (when adding student it also create stud. account)
 
-                    <div class="student-card group bg-white rounded-3xl p-6 shadow-lg border border-gray-100
-                                transition-all duration-300 hover:-translate-y-1
-                                hover:shadow-2xl hover:border-indigo-200">
+        <!-- TABLE -->
+        <div class="overflow-x-auto bg-white rounded-2xl shadow border">
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-100 uppercase text-xs text-gray-600">
+                    <tr>
+                        <th class="px-5 py-3 text-left">Student</th>
+                     <!--   <th class="px-5 py-3 text-left">LRN</th> -->
+                        <th class="px-5 py-3 text-left">Email</th>
+                        <th class="px-5 py-3 text-left">Contact</th>
+                        <th class="px-5 py-3 text-left">Sex</th>
+                        <th class="px-5 py-3 text-left">Birthday</th>
+                        <th class="px-5 py-3 text-left">Address</th>
+                        <th class="px-5 py-3 text-left">Section / Year</th>
+                        <th class="px-5 py-3 text-center">Actions</th>
+                    </tr>
+                </thead>
 
+<<<<<<< HEAD
                         <!-- HEADER -->
                         <div class="flex justify-between items-start mb-5">
                           <!-- AVATAR + NAME -->
@@ -144,18 +159,75 @@ setTimeout(() => {
              alt="{{ $student->first_name }} {{ $student->last_name }}"
              class="w-full h-full object-cover">
     </div>
+=======
+                <tbody class="divide-y">
+                    @foreach($groupStudents as $student)
+                        <tr class="hover:bg-indigo-50 transition">
 
-                                <div>
-                                    <h2 class="text-lg font-bold text-gray-800 leading-tight">
-                                        {{ $student->first_name }} {{ $student->last_name }}
-                                    </h2>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        LRN: {{ $student->lrn }}
-                                    </p>
+                            <!-- STUDENT -->
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-4">
+                                    <img
+                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                        class="w-12 h-12 rounded-full object-cover shadow"
+                                        alt="Photo">
+
+                                    <div>
+                                        <p class="font-semibold text-gray-800 leading-tight">
+                                            {{ $student->first_name }}
+                                            {{ $student->middle_name }}
+                                            {{ $student->last_name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            S-ID: {{ $student->school_id }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </td>
+>>>>>>> 363cc25 (when adding student it also create stud. account)
+
+                            <!-- LRN 
+                            <td class="px-5 py-4 text-gray-700">
+                                {{ $student->lrn }}
+                            </td> -->
+
+                            <!-- EMAIL -->
+                            <td class="px-5 py-4">
+                                {{ $student->email ?? '—' }}
+                            </td>
+
+                            <!-- CONTACT -->
+                            <td class="px-5 py-4">
+                                {{ $student->contact_number ?? '—' }}
+                            </td>
+
+                            <!-- SEX -->
+                            <td class="px-5 py-4">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                    {{ $student->sex === 'Male' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700' }}">
+                                    {{ ucfirst($student->sex) }}
+                                </span>
+                            </td>
+
+                            <!-- BIRTHDAY -->
+                            <td class="px-5 py-4">
+                                {{ \Carbon\Carbon::parse($student->birthday)->format('M d, Y') }}
+                            </td>
+
+                            <!-- ADDRESS -->
+                            <td class="px-5 py-4 max-w-xs truncate">
+                                {{ $student->address ?? '—' }}
+                            </td>
+
+                            <!-- SECTION -->
+                            <td class="px-5 py-4 text-xs font-semibold text-indigo-700">
+                                {{ $student->section->name ?? 'Not Assigned' }}<br>
+                                {{ $student->section->year_level ?? 'N/A' }} |
+                                {{ $student->section->school_year ?? 'N/A' }}
+                            </td>
 
                             <!-- ACTIONS -->
+<<<<<<< HEAD
                             <div class="flex gap-3 opacity-0 group-hover:opacity-100 transition">
             <button
      type="button"
@@ -174,83 +246,55 @@ setTimeout(() => {
     
     class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110"
 >
+=======
+                            <td class="px-5 py-4 text-center">
+                                <div class="flex justify-center gap-3">
+                                    <button
+                                        onclick="openEditStudentModal(this)"
+                                        data-id="{{ $student->id }}"
+                                        data-first="{{ $student->first_name }}"
+                                        data-middle="{{ $student->middle_name ?? '' }}"
+                                        data-last="{{ $student->last_name }}"
+                                        data-birthday="{{ $student->birthday }}"
+                                        data-email="{{ $student->email }}"
+                                        data-contact="{{ $student->contact_number ?? '' }}"
+                                        data-sex="{{ $student->sex }}"
+                                        data-section_id="{{ $student->section_id ?? '' }}"
+                                         class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
+>>>>>>> 363cc25 (when adding student it also create stud. account)
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
          viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M11 5h2m2 2l6 6-6 6-6-6 6-6zM4 21h16"/>
     </svg>
-</button>
+                                    </button>
 
+                                    <button
+                                        onclick="showDeleteModal({{ $student->id }})"
+                                       class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
+                 a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
+    </svg>
+                                    </button>
+                                </div>
+                            </td>
 
-
-                                <button onclick="showDeleteModal({{ $student->id }})"
-                                        title="Delete"
-                                        class="text-red-500 hover:text-red-700 hover:scale-110 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                         viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- INFO BADGES -->
-                        <div class="space-y-2 text-sm">
-                            @if($student->email)
-                                <span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-                                             bg-indigo-50 text-indigo-700 font-medium">
-                                    📧 {{ $student->email }}
-                                </span>
-                            @endif
-
-                            @if($student->contact_number)
-                                <span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-                                             bg-green-50 text-green-700 font-medium">
-                                    📞 {{ $student->contact_number }}
-                                </span>
-                            @endif
-
-                            @if($student->sex)
-                                <span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-                                             bg-purple-50 text-purple-700 font-medium">
-                                    ⚥ {{ ucfirst($student->sex) }}
-                                </span>
-                            @endif
-
-                            @if($student->birthday)
-                                <span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-                                             bg-pink-50 text-pink-700 font-medium">
-                                    🎂 {{ \Carbon\Carbon::parse($student->birthday)->format('F d, Y') }}
-                                </span>
-                            @endif
-
-                            @if($student->address)
-                                <span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-                                             bg-yellow-50 text-yellow-700 font-medium">
-                                    📍 {{ $student->address }}
-                                </span>
-                            @endif
-
-                           <!-- SECTION PILL -->
-<span class="flex items-center gap-2 px-3 py-1.5 rounded-full
-             bg-{{ $color }}-100 text-{{ $color }}-800 font-semibold text-xs">
-    Section: {{ $sectionName }} | Status: {{ $yearLevel }} | Year: {{ $student->section->school_year ?? 'N/A' }}
-</span>
-
-                        </div>
-
-                    </div>
-                @endforeach
-            </div>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-    @empty
-        <p class="col-span-full text-center text-gray-500 py-10">
-            No students found.
-        </p>
-    @endforelse
+    </div>
 
-</div>
+@empty
+    <p class="text-center text-gray-500 py-10">
+        No students found.
+    </p>
+@endforelse
+
 
 <!-- DELETE MODAL -->
 <div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">

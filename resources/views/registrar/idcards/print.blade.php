@@ -69,6 +69,7 @@ $roleColors = [
 <div id="id-content" class="id-wrapper">
 @foreach($people as $person)
 <div class="id-row">
+<<<<<<< HEAD
   <!-- FRONT -->
 <div class="id-card">
     <div class="h-[15mm] {{ $roleColors[$type] }} flex items-center justify-center gap-2 text-white">
@@ -101,6 +102,29 @@ $roleColors = [
 </div>
 
 
+=======
+    <!-- FRONT -->
+    <div class="id-card">
+        <div class="h-[15mm] {{ $roleColors[$type] }} flex items-center justify-center gap-2 text-white">
+            <img src="{{ asset('images/logo.jpg') }}" class="w-10 h-10 rounded-full bg-white p-1">
+            <div class="text-center leading-tight">
+                <p class="text-[8px] font-bold">TUGAWE ELEMENTARY SCHOOL</p>
+                <p class="text-[7px]">Dauin District</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center mt-2 gap-1">
+            <img src="{{ $person->photo ? asset('storage/photos/'.$person->photo) : asset('images/photo-placeholder.png') }}" class="photo">
+            <p class="font-bold text-[7px] uppercase text-gray-800 mt-1">{{ $person->last_name }}, {{ $person->first_name }}</p>
+            <p class="text-[6px] font-semibold text-gray-600 uppercase">{{ $type }}</p>
+            <p class="mt-1 text-[6px]"><strong>ID No:</strong> {{ $person->school_id }}</p>
+          
+            <div class="mt-2" >
+                {!! QrCode::size(50)->generate(route('registrar.idcards.verify', $person->school_id)) !!}
+            </div>
+        </div>
+    </div>
+
+>>>>>>> 363cc25 (when adding student it also create stud. account)
     <!-- BACK -->
     <div class="id-card">
         <div class="h-[15mm] bg-gray-800 flex items-center justify-center text-white text-[7px] font-bold">

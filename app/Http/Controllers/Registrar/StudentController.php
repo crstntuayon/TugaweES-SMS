@@ -13,7 +13,10 @@ class StudentController extends Controller
     // Display all students
   public function index()
     {
+<<<<<<< HEAD
          $sections = Section::orderBy('year_level')->get();
+=======
+>>>>>>> 363cc25 (when adding student it also create stud. account)
         $students = Student::all();
         $sections = Section::all(); // make sure you have sections
         return view('registrar.students.index', compact('students', 'sections'));
@@ -32,7 +35,10 @@ class StudentController extends Controller
         'address' => 'nullable|string',
         'sex' => 'required|in:Male,Female',
         'photo'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+<<<<<<< HEAD
        'section_id' => 'required|integer|exists:sections,id',
+=======
+>>>>>>> 363cc25 (when adding student it also create stud. account)
        
     ]);
      // ✅ Handle photo upload
@@ -48,6 +54,7 @@ class StudentController extends Controller
 
 
     // UPDATE method
+<<<<<<< HEAD
   public function update(Request $request, Student $student)
 {
     // Validate input
@@ -95,6 +102,41 @@ class StudentController extends Controller
 }
 
 
+=======
+    public function update(Request $request, Student $student)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'suffix' => 'nullable|string|max:50',
+            'birthday' => 'required|date',
+            'email' => 'required|email',
+            'contact_number' => 'nullable|string|max:20',
+            'sex' => 'required|string',
+            'section_id' => 'required|integer|exists:sections,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $student->update($request->only([
+            'first_name','middle_name','last_name','suffix','birthday','email',
+            'contact_number','sex','section_id'
+        ]));
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            if ($student->photo && Storage::disk('public')->exists($student->photo)) {
+                Storage::disk('public')->delete($student->photo);
+            }
+            $path = $file->store('photos', 'public');
+            $student->photo = $path;
+            $student->save();
+        }
+
+        return redirect()->back()->with('success', 'Student updated successfully!');
+    }
+
+>>>>>>> 363cc25 (when adding student it also create stud. account)
     public function assignTeacher(Request $request, Student $student)
 {
     $request->validate([

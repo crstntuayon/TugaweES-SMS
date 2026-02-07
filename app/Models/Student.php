@@ -13,7 +13,11 @@ class Student extends Model
     protected $fillable = [
         'first_name', 'middle_name', 'last_name', 'suffix',
         'birthday', 'email', 'contact_number', 'sex',
+<<<<<<< HEAD
         'section_id', 'lrn', 'address', 'photo', 'school_id'
+=======
+        'section_id', 'lrn', 'address', 'photo', 'school_id', 'user_id'
+>>>>>>> 363cc25 (when adding student it also create stud. account)
     ];
 
     public function section()

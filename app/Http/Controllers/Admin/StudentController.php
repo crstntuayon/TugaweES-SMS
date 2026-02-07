@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Section;
 use Illuminate\Support\Facades\Storage;
+<<<<<<< HEAD
 
+=======
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+>>>>>>> 363cc25 (when adding student it also create stud. account)
 use App\Models\User;
 
 class StudentController extends Controller
@@ -34,6 +39,7 @@ class StudentController extends Controller
  public function store(Request $request)
 {
     $validated = $request->validate([
+<<<<<<< HEAD
         
         'first_name' => 'required|string',
           'middle_name' => 'nullable|string|max:255',
@@ -56,9 +62,56 @@ class StudentController extends Controller
     }
 
     Student::create($validated);
+=======
+        'first_name'      => 'required|string',
+        'middle_name'     => 'nullable|string|max:255',
+        'last_name'       => 'required|string',
+        'lrn'             => 'required|unique:students,lrn',
+        'birthday'        => 'required|date',
+        'email'           => 'nullable|email|unique:users,email',
+        'contact_number'  => 'nullable|string',
+        'address'         => 'nullable|string',
+        'sex'             => 'required|in:Male,Female',
+        'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    DB::transaction(function () use ($request, &$validated) {
+
+        // ✅ Photo upload
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')
+                ->store('photos', 'public');
+        }
+
+        // ✅ Use provided email or auto-generate
+        $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
+
+        // ✅ CREATE USER (role_id = 4 → Student)
+      $username = $validated['username']
+    ?? strtolower($validated['first_name'][0] . $validated['last_name'] . rand(100, 999));
+
+$user = User::create([
+    'first_name' => $validated['first_name'],
+    'last_name'  => $validated['last_name'],
+    'username'   => $username,
+    'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
+    'email'      => $email,
+    'password'   => Hash::make($validated['lrn']),
+    'role_id'    => 4,
+]);
+
+
+        // ✅ CREATE STUDENT (linked)
+        Student::create(array_merge($validated, [
+            'user_id' => $user->id,
+            'email'   => $email,
+        ]));
+    });
+>>>>>>> 363cc25 (when adding student it also create stud. account)
 
     return redirect()->back()->with('success', 'Student added successfully!');
 }
+
 
     // Edit student
     public function edit(Student $student)

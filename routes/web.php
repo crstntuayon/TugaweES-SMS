@@ -101,40 +101,37 @@ Route::prefix('student')->name('student.')->middleware(['auth'])->group(function
 
 
 // Admin Controllers
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\Admin\TeacherController;
-use App\Http\Controllers\Admin\SectionController;
+
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
 
     // Admin Dashboard
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // Students Management
-    Route::get('/students', [StudentController::class, 'index'])->name('students.index');
-    Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
-    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
-    Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
-    Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
-    Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::get('/students', [ App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students.index');
+    Route::get('/students/create', [ App\Http\Controllers\Admin\StudentController::class, 'create'])->name('students.create');
+    Route::post('/students', [ App\Http\Controllers\Admin\StudentController::class, 'store'])->name('students.store');
+    Route::get('/students/{student}/edit', [ App\Http\Controllers\Admin\StudentController::class, 'edit'])->name('students.edit');
+    Route::put('/students/{student}', [ App\Http\Controllers\Admin\StudentController::class, 'update'])->name('students.update');
+    Route::delete('/students/{student}', [ App\Http\Controllers\Admin\StudentController::class, 'destroy'])->name('students.destroy');
 
     // Teachers Management
-    Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
-    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
-    Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
-    Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('teachers.edit');
-    Route::put('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
-    Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+    Route::get('/teachers', [ App\Http\Controllers\Admin\TeacherController::class, 'index'])->name('teachers.index');
+    Route::get('/teachers/create', [ App\Http\Controllers\Admin\TeacherController::class, 'create'])->name('teachers.create');
+    Route::post('/teachers', [ App\Http\Controllers\Admin\TeacherController::class, 'store'])->name('teachers.store');
+    Route::get('/teachers/{teacher}/edit', [ App\Http\Controllers\Admin\TeacherController::class, 'edit'])->name('teachers.edit');
+    Route::put('/teachers/{teacher}', [ App\Http\Controllers\Admin\TeacherController::class, 'update'])->name('teachers.update');
+    Route::delete('/teachers/{teacher}', [ App\Http\Controllers\Admin\TeacherController::class, 'destroy'])->name('teachers.destroy');
 
     // Sections Management
-    Route::get('/sections', [SectionController::class, 'index'])->name('sections.index');
-    Route::get('/sections/create', [SectionController::class, 'create'])->name('sections.create');
-    Route::post('/sections', [SectionController::class, 'store'])->name('sections.store');
-    Route::get('/sections/{section}/edit', [SectionController::class, 'edit'])->name('sections.edit');
-    Route::put('/sections/{section}', [SectionController::class, 'update'])->name('sections.update');
-    Route::delete('/sections/{section}', [SectionController::class, 'destroy'])->name('sections.destroy');
+    Route::get('/sections', [ App\Http\Controllers\Admin\SectionController::class, 'index'])->name('sections.index');
+    Route::get('/sections/create', [ App\Http\Controllers\Admin\SectionController::class, 'create'])->name('sections.create');
+    Route::post('/sections', [ App\Http\Controllers\Admin\SectionController::class, 'store'])->name('sections.store');
+    Route::get('/sections/{section}/edit', [ App\Http\Controllers\Admin\SectionController::class, 'edit'])->name('sections.edit');
+    Route::put('/sections/{section}', [ App\Http\Controllers\Admin\SectionController::class, 'update'])->name('sections.update');
+    Route::delete('/sections/{section}', [ App\Http\Controllers\Admin\SectionController::class, 'destroy'])->name('sections.destroy');
 
 });
 
@@ -150,10 +147,10 @@ Route::get('/admin/dashboard/stats', function () {
 Route::get('/admin/dashboard/stats', [App\Http\Controllers\Admin\DashboardController::class, 'getStats'])->name('admin.dashboard.stats');
 
 Route::put('/admin/sections/{section}/assign-teacher',
-    [SectionController::class, 'assignTeacher'])->name('sections.assignTeacher');
+    [ App\Http\Controllers\Admin\SectionController::class, 'assignTeacher'])->name('sections.assignTeacher');
 
 Route::get('/admin/sections/{section}/students',
-    [SectionController::class, 'students'])->name('sections.students');
+    [ App\Http\Controllers\Admin\SectionController::class, 'students'])->name('sections.students');
 
 use App\Http\Controllers\ExportController;
 
@@ -231,7 +228,7 @@ Route::get('/registrar/sections', [App\Http\Controllers\Registrar\SectionControl
 });
 
 
-Route::get('/admin/students/json', [StudentController::class, 'getStudentsJson'])->name('admin.students.json');
+Route::get('/admin/students/json', [ App\Http\Controllers\Admin\StudentController::class, 'getStudentsJson'])->name('admin.students.json');
 
 
 
@@ -289,6 +286,11 @@ Route::get('/registrar/idcards/print/{type}/{id}', [IDCardController::class, 'pr
 Route::prefix('registrar')->name('registrar.')->group(function () {
     Route::resource('students', App\Http\Controllers\Registrar\StudentController::class);
 });
+
+
+Route::post('/admin/students/issue-ids', [App\Http\Controllers\Admin\StudentController::class, 'issueIds'])
+    ->name('admin.students.issue-ids');
+Route::post('/admin/students/export-ids', [App\Http\Controllers\Admin\StudentController::class, 'exportIdsPdf'])->name('admin.students.export-ids');
 
 <<<<<<< HEAD
 

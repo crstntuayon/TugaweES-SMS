@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 >>>>>>> 363cc25 (when adding student it also create stud. account)
 use App\Models\User;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class StudentController extends Controller
 {
@@ -194,5 +197,41 @@ public function unenroll(Student $student)
     return redirect()->back()->with('success', $student->first_name . ' has been unenrolled.');
 }
 
-    
+  
+
+public function issueIds(Request $request)
+{
+    $sectionId = $request->section_id;
+
+    $students = Student::where('section_id', $sectionId)->get();
+
+    foreach ($students as $student) {
+        if (!$student->school_id) {
+            // Generate a professional S-ID (Year + Section + 4-digit number)
+            $count = Student::where('section_id', $sectionId)->count();
+            $student->school_id = 'S-' . date('Y') . '-' . str_pad($student->id, 4, '0', STR_PAD_LEFT);
+            $student->save();
+        }
+    }
+
+    // Optional: Return a view to print IDs
+    return view('admin.students.print-ids', [
+        'students' => $students,
+        'section' => $students->first()->section ?? null,
+        'schoolYear' => date('Y')
+    ]);
+}
+
+public function exportIdsPdf(Request $request)
+{
+    $sectionId = $request->section_id;
+    $students = Student::where('section_id', $sectionId)->get();
+    $section = $students->first()->section ?? null;
+    $schoolYear = date('Y');
+
+    $pdf = Pdf::loadView('admin.students.print-ids', compact('students', 'section', 'schoolYear'))
+              ->setPaper('a4', 'portrait'); // Adjust orientation if needed
+
+    return $pdf->download('school_ids_' . ($section->name ?? 'section') . '.pdf');
+}
 }

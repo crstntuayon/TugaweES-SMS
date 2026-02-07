@@ -86,17 +86,29 @@
     <!-- Gender Distribution Slim Card -->
     <div class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
         
-        <!-- Counts -->
-        <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-2">
-                <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
-                <span class="text-gray-500 text-sm">Male</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
-                <span class="text-gray-500 text-sm">Female</span>
-            </div>
-        </div>
+       <!-- Counts -->
+<div class="flex flex-col gap-2">
+    <!-- Current School Year -->
+    <p class="text-gray-500 font-medium text-xs mb-1">
+        School Year: {{ $currentSchoolYear ?? 'N/A' }}
+    </p>
+
+    <!-- Card Title -->
+    <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Total Enrollees</p>
+
+    <!-- Male Count -->
+    <div class="flex items-center gap-2">
+        <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
+        <span class="text-gray-500 text-sm">Male</span>
+    </div>
+
+    <!-- Female Count -->
+    <div class="flex items-center gap-2">
+        <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
+        <span class="text-gray-500 text-sm">Female</span>
+    </div>
+</div>
+
 
         <!-- Pie Chart -->
         <div class="w-24 h-24">
@@ -104,18 +116,42 @@
         </div>
     </div>
 
-    <!-- Students per Section -->
-    <div class="bg-green-50 rounded-xl shadow p-6">
-        <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Students per Section</p>
-        <ul class="text-sm text-gray-600 space-y-1 max-h-40 overflow-y-auto">
-            @foreach($studentsPerSection as $section => $count)
-                <li class="flex justify-between">
-                    <span>{{ $section }}</span>
-                    <span class="font-semibold">{{ $count }}</span>
-                </li>
-            @endforeach
-        </ul>
+<!-- Students per Section -->
+<div class="bg-green-50 rounded-xl shadow p-6 flex flex-col">
+    
+    <!-- Title -->
+    <p class="text-gray-700 font-semibold uppercase text-sm mb-4">
+        Students per Section
+    </p>
+
+    <!-- List of Sections -->
+    <ul class="space-y-2 overflow-y-auto max-h-52">
+        @foreach($studentsPerSection as $section => $count)
+            <li class="flex justify-between items-center bg-green-100 rounded-full px-4 py-2 shadow-sm hover:bg-green-200 transition-all duration-200">
+                <!-- Section Name -->
+                <span class="text-green-800 font-medium text-sm truncate" title="{{ $section }}">
+                    {{ $section }}
+                </span>
+
+                <!-- Student Count Badge -->
+                <span class="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    {{ $count }}
+                </span>
+            </li>
+        @endforeach
+    </ul>
+
+    <!-- Issue School IDs Button -->
+    <div class="mt-4">
+        <button 
+            onclick="openSectionModal()"
+            class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors duration-200">
+            Issue School IDs
+        </button>
     </div>
+
+</div>
+
 
 </div>
 
@@ -138,6 +174,8 @@ new Chart(ctx, {
     }
 });
 </script>
+
+
 
 
     <!-- STATS CARDS -->
@@ -472,10 +510,28 @@ new Chart(ctx, {
             </div>
 
             <!-- ADDRESS -->
-            <div>
-                <textarea name="address" rows="2" placeholder="Home Address"
-                          class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
-            </div>
+            <!-- Address Input with Suggestions -->
+<div>
+    <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+    
+    <input list="addresses" 
+           id="address" 
+           name="address" 
+           placeholder="Enter your address"
+           value="{{ old('address') }}"
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+    >
+
+    <!-- Predefined address suggestions -->
+    <datalist id="addresses">
+        <option value="Bulak, Dauin, Negros Oriental">
+        <option value="Libjo, Dauin, Negros Oriental">
+        <option value="Lipayo, Dauin, Negros Oriental">
+        <option value="Mag-aso, Dauin, Negros Oriental">
+        <option value="Tugawe, Dauin, Negros Oriental">
+    </datalist>
+</div>
+
 
             <!-- SECTION + SCHOOL YEAR 
             <div>
@@ -519,6 +575,42 @@ new Chart(ctx, {
         </form>
     </div>
 </div>
+
+<!-- Section Selection Modal -->
+<div id="sectionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
+        <h3 class="text-lg font-semibold mb-4">Select Section</h3>
+
+        <form action="{{ route('admin.students.issue-ids') }}" method="POST">
+            @csrf
+            <select name="section_id" required
+                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-400">
+                <option value="">-- Choose Section --</option>
+                @foreach($sections as $section)
+                    <option value="{{ $section->id }}">
+                        {{ $section->year_level }} - {{ $section->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeSectionModal()" class="px-4 py-2 rounded-lg border">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Generate IDs</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openSectionModal() {
+    document.getElementById('sectionModal').classList.remove('hidden');
+}
+
+function closeSectionModal() {
+    document.getElementById('sectionModal').classList.add('hidden');
+}
+</script>
+
 
 <!-- ================= ADD ADMIN MODAL ================= -->
 <div id="addAdminModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">

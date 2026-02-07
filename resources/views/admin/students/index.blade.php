@@ -395,10 +395,46 @@ setTimeout(() => {
             </div>
 
             <!-- ADDRESS -->
+          <!-- Address Input with Suggestions -->
+<div>
+    <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+    
+    <input list="addresses" 
+           id="address" 
+           name="address" 
+           placeholder="Enter your address"
+           value="{{ old('address') }}"
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+    >
+
+    <!-- Predefined address suggestions -->
+    <datalist id="addresses">
+        <option value="Bulak, Dauin, Negros Oriental">
+        <option value="Libjo, Dauin, Negros Oriental">
+        <option value="Lipayo, Dauin, Negros Oriental">
+        <option value="Mag-aso, Dauin, Negros Oriental">
+        <option value="Tugawe, Dauin, Negros Oriental">
+    </datalist>
+</div>
+
+
+                <!-- SECTION + SCHOOL YEAR 
             <div>
-                <textarea name="address" rows="2" placeholder="Home Address"
-                          class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
-            </div>
+                <select name="section_id" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                    <option value="">-- Select Section --</option>
+                    @if(isset($sections) && $sections->count())
+                        @foreach($sections as $section)
+                            <option value="{{ $section->id }}"
+                                {{ old('section_id') == $section->id ? 'selected' : '' }}>
+                                {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
+                            </option>
+                        @endforeach
+                    @else
+                        <option value="">No sections available</option>
+                    @endif
+                </select>
+            </div>  -->
 
              <!-- PHOTO UPLOAD -->
             <div class="mb-3 mt-3">

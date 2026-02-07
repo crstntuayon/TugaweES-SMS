@@ -43,6 +43,7 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
     $sections = Section::all(); // ✅ REQUIRED
 
        $roles = Role::all(); // <-- add this line
+$currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school_year ?? null;
 
     return view('admin.dashboard', compact(
         'students',
@@ -58,7 +59,6 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
         'maleCount', 
         'femaleCount', 
         'studentsPerSection'
->>>>>>> 363cc25 (when adding student it also create stud. account)
        
     ));
 }

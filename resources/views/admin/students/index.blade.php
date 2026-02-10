@@ -109,24 +109,11 @@ setTimeout(() => {
 
 @forelse($groupedStudents as $groupName => $groupStudents)
 
-<<<<<<< HEAD
-            <!-- CARDS GRID -->
-            <div  id="studentsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($groupStudents as $student)
-                    @php
-                        $initials = strtoupper(substr($student->first_name,0,1) . substr($student->last_name,0,1));
-                        $sectionName = $student->section->name ?? 'Not Assigned';
-                        $yearLevel = $student->section->year_level ?? 'N/A';
-                        $index = crc32($yearLevel) % count($colors);
-                        $color = $colors[$index];
-                    @endphp
-=======
     <!-- GROUP HEADER -->
     <div class="mb-10">
         <h2 class="bg-indigo-100 text-indigo-800 font-bold px-5 py-3 rounded-xl shadow mb-4">
             Section: {{ $groupName }}
         </h2>
->>>>>>> 363cc25 (when adding student it also create stud. account)
 
         <!-- TABLE -->
         <div class="overflow-x-auto bg-white rounded-2xl shadow border">
@@ -141,25 +128,10 @@ setTimeout(() => {
                         <th class="px-5 py-3 text-left">Birthday</th>
                         <th class="px-5 py-3 text-left">Address</th>
                         <th class="px-5 py-3 text-left">Section / Year</th>
-                        <th class="px-5 py-3 text-center">Actions</th>
+                        <th class="px-5 py-3 text-center">Action</th>
                     </tr>
                 </thead>
 
-<<<<<<< HEAD
-                        <!-- HEADER -->
-                        <div class="flex justify-between items-start mb-5">
-                          <!-- AVATAR + NAME -->
-<div class="flex items-center gap-4">
-    <!-- PROFILE PHOTO -->
-    <div class="w-16 h-16 rounded-full
-                overflow-hidden
-                shadow-inner
-                transition group-hover:scale-105">
-        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-             alt="{{ $student->first_name }} {{ $student->last_name }}"
-             class="w-full h-full object-cover">
-    </div>
-=======
                 <tbody class="divide-y">
                     @foreach($groupStudents as $student)
                         <tr class="hover:bg-indigo-50 transition">
@@ -184,7 +156,6 @@ setTimeout(() => {
                                     </div>
                                 </div>
                             </td>
->>>>>>> 363cc25 (when adding student it also create stud. account)
 
                             <!-- LRN 
                             <td class="px-5 py-4 text-gray-700">
@@ -227,26 +198,6 @@ setTimeout(() => {
                             </td>
 
                             <!-- ACTIONS -->
-<<<<<<< HEAD
-                            <div class="flex gap-3 opacity-0 group-hover:opacity-100 transition">
-            <button
-     type="button"
-    onclick="openEditStudentModal(this)"
-    data-id="{{ $student->id }}"
-    data-first="{{ $student->first_name }}"
-    data-middle="{{ $student->middle_name ?? '' }}"
-    data-last="{{ $student->last_name }}"
-    data-suffix="{{ $student->suffix ?? '' }}"
-    data-birthday="{{ $student->birthday }}"
-    data-email="{{ $student->email }}"
-    data-contact="{{ $student->contact_number ?? '' }}"
-    data-sex="{{ $student->sex ?? '' }}"
-    data-section_id="{{ $student->section_id ?? '' }}"
-
-    
-    class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110"
->
-=======
                             <td class="px-5 py-4 text-center">
                                 <div class="flex justify-center gap-3">
                                     <button
@@ -261,7 +212,6 @@ setTimeout(() => {
                                         data-sex="{{ $student->sex }}"
                                         data-section_id="{{ $student->section_id ?? '' }}"
                                          class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
->>>>>>> 363cc25 (when adding student it also create stud. account)
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
          viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -269,7 +219,7 @@ setTimeout(() => {
     </svg>
                                     </button>
 
-                                    <button
+                                 <!--   <button
                                         onclick="showDeleteModal({{ $student->id }})"
                                        class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
@@ -278,7 +228,7 @@ setTimeout(() => {
               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
                  a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
     </svg>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </td>
 
@@ -505,6 +455,29 @@ setTimeout(() => {
                     </option>
                 @endforeach
             </select>
+
+            <!-- ADDRESS -->
+<div class="mt-3">
+    <label for="edit_student_address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+    
+    <input list="addresses_list" 
+           id="edit_student_address" 
+           name="address" 
+           placeholder="Enter your address"
+           value="{{ old('address') }}" 
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+    required>
+
+    <!-- Predefined address suggestions -->
+    <datalist id="addresses_list" required>
+        <option value="Bulak, Dauin, Negros Oriental">
+        <option value="Libjo, Dauin, Negros Oriental">
+        <option value="Lipayo, Dauin, Negros Oriental">
+        <option value="Mag-aso, Dauin, Negros Oriental">
+        <option value="Tugawe, Dauin, Negros Oriental">
+    </datalist>
+</div>
+
 
             <!-- PHOTO UPLOAD -->
             <div class="mb-3 mt-3">

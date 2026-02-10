@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section;
+use Illuminate\Http\Request;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -16,6 +18,64 @@ class DashboardController extends Controller
             ->with('students')
             ->get();
 
-        return view('teacher.dashboard', compact('sections'));
+             // Sections assigned to this teacher
+       
+ // Students **not yet enrolled in any section**
+        $students = Student::whereNull('section_id')->get();
+
+
+ // Fetch sections for the registrar (or all if needed)
+   // $sections = Section::all(); // for section dropdown
+   // $students = Student::all(); // for student dropdown
+   
+        return view('teacher.dashboard', compact('students', 'sections'));
     }
+    // Enroll student into a section
+ public function enroll(Request $request)
+{
+    $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'section_id' => 'required|exists:sections,id',
+    ]);
+
+    $student = Student::findOrFail($request->student_id);
+    $section = Section::findOrFail($request->section_id);
+
+    // Security: teacher ownership
+    if ($section->teacher_id !== auth()->id()) {
+        return back()->with('error', 'You are not allowed to enroll in this section.');
+    }
+
+    // Already in same section
+    if ($student->section_id == $section->id) {
+        return back()->with('error', 'Student is already enrolled in this section.');
+    }
+
+    // Enroll / transfer
+    $student->section_id = $section->id;
+    $student->save();
+
+    return back()->with('success', 'Student enrolled successfully.');
+}
+
+
+    // Unenroll (already covered)
+    public function unenroll($studentId)
+    {
+        $student = Student::findOrFail($studentId);
+
+        if ($student->section_id) {
+            $section = $student->section;
+            if ($section->teacher_id != auth()->id()) {
+                return back()->with('error', 'You cannot unenroll a student from another teacher’s section.');
+            }
+        }
+
+        $student->section_id = null;
+        $student->save();
+
+        return back()->with('success', 'Student has been unenrolled successfully!');
+    }
+    
+
 }

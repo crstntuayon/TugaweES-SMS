@@ -9,16 +9,12 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Section;
 use Illuminate\Support\Facades\Storage;
-<<<<<<< HEAD
-
-=======
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
->>>>>>> 363cc25 (when adding student it also create stud. account)
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -42,30 +38,6 @@ class StudentController extends Controller
  public function store(Request $request)
 {
     $validated = $request->validate([
-<<<<<<< HEAD
-        
-        'first_name' => 'required|string',
-          'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string',
-        'lrn' => 'required|unique:students,lrn',
-        'birthday' => 'required|date',
-        'email' => 'nullable|email',
-        'contact_number' => 'nullable|string',
-        'address' => 'nullable|string',
-        'sex' => 'required|in:Male,Female',
-        'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-         'section_id' => 'required|exists:sections,id',
-       
-    ]);
-
-     // ✅ Handle photo upload
-    if ($request->hasFile('photo')) {
-        $validated['photo'] = $request->file('photo')
-            ->store('photos', 'public');
-    }
-
-    Student::create($validated);
-=======
         'first_name'      => 'required|string',
         'middle_name'     => 'nullable|string|max:255',
         'last_name'       => 'required|string',
@@ -76,6 +48,7 @@ class StudentController extends Controller
         'address'         => 'nullable|string',
         'sex'             => 'required|in:Male,Female',
         'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        
     ]);
 
     DB::transaction(function () use ($request, &$validated) {
@@ -108,9 +81,9 @@ $user = User::create([
         Student::create(array_merge($validated, [
             'user_id' => $user->id,
             'email'   => $email,
+            
         ]));
     });
->>>>>>> 363cc25 (when adding student it also create stud. account)
 
     return redirect()->back()->with('success', 'Student added successfully!');
 }
@@ -139,7 +112,7 @@ public function update(Request $request, Student $student)
         'sex' => 'required|string',
         'section_id' => 'required|exists:sections,id',
         'lrn' => 'nullable|string|max:20',
-        'address' => 'nullable|string|max:255',
+        'address' => 'required|string|max:255',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
@@ -199,28 +172,53 @@ public function unenroll(Student $student)
 
   
 
+
 public function issueIds(Request $request)
 {
     $sectionId = $request->section_id;
+
+    // FIXED SCHOOL ID (change only if needed)
+    $schoolId = '120231';
+
+    // Last 2 digits of current year (e.g. 26)
+    $year = Carbon::now()->format('y');
+
+    // Get last issued ID for THIS SCHOOL + YEAR
+    $lastStudent = Student::whereNotNull('school_id')
+        ->where('school_id', 'like', "S-{$schoolId}{$year}%")
+        ->orderBy('school_id', 'desc')
+        ->first();
+
+    // Get last 4-digit sequence
+    $lastSequence = $lastStudent
+        ? (int) substr($lastStudent->school_id, -4)
+        : 0;
 
     $students = Student::where('section_id', $sectionId)->get();
 
     foreach ($students as $student) {
         if (!$student->school_id) {
-            // Generate a professional S-ID (Year + Section + 4-digit number)
-            $count = Student::where('section_id', $sectionId)->count();
-            $student->school_id = 'S-' . date('Y') . '-' . str_pad($student->id, 4, '0', STR_PAD_LEFT);
+            $lastSequence++;
+
+            // ✅ FINAL FORMAT: S-120231260000
+            $student->school_id = sprintf(
+                'S-%s%s%04d',
+                $schoolId,
+                $year,
+                $lastSequence
+            );
+
             $student->save();
         }
     }
 
-    // Optional: Return a view to print IDs
     return view('admin.students.print-ids', [
         'students' => $students,
-        'section' => $students->first()->section ?? null,
-        'schoolYear' => date('Y')
+        'section' => optional($students->first())->section,
+        'schoolYear' => Carbon::now()->year,
     ]);
 }
+
 
 public function exportIdsPdf(Request $request)
 {

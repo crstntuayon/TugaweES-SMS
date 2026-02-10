@@ -36,7 +36,7 @@
            </span>
         </div>
 
-        <!-- RIGHT: USER DROPDOWN -->
+        <!-- USER DROPDOWN -->
         <div class="relative" x-data="{ open: false }">
             <button @click="open = !open"
                     class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-xl shadow-md text-sm font-medium text-gray-700 transition">
@@ -56,6 +56,9 @@
                 <a href="{{ route('profile.edit') }}"
                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">👤 Profile</a>
 
+                <a href="#" @click="document.getElementById('enrollStudentModal').classList.remove('hidden'); open = false;"
+                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">➕ Enroll Student</a>
+
                 <div class="border-t"></div>
 
                 <a href="{{ route('logout') }}"
@@ -69,9 +72,11 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
             </div>
         </div>
-
     </div>
 </header>
+
+
+
 
 <main class="max-w-7xl mx-auto space-y-10">
 
@@ -93,18 +98,31 @@
                     </span>
                 </div>
 
+                <!-- Section Actions -->
+<div class="flex flex-wrap gap-2 mb-4">
+    <a href="{{ route('teacher.attendance', $section->id) }}"
+       class="bg-yellow-500 text-white px-4 py-2 rounded-xl hover:bg-yellow-600 transition">
+       📝 Attendance
+    </a>
+    <a href="{{ route('teacher.grades', $section->id) }}"
+       class="bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition">
+       📊 Grades
+    </a>
+</div>
+
+
                 <!-- Gender Stats -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                     <div class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
                         <div>
                             <p class="text-sm text-blue-500 font-medium">Male Students</p>
-                            <p class="text-2xl font-extrabold text-blue-600">{{ $section->students->where('sex','Male')->whereNotNull('section_id')->count() }}</p>
+                            <p class="text-2xl font-extrabold text-blue-600">{{ $section->students->where('sex','Male')->count() }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3 bg-pink-50 border border-pink-200 rounded-xl p-4 shadow-sm">
                         <div>
                             <p class="text-sm text-pink-500 font-medium">Female Students</p>
-                            <p class="text-2xl font-extrabold text-pink-600">{{ $section->students->where('sex','Female')->whereNotNull('section_id')->count() }}</p>
+                            <p class="text-2xl font-extrabold text-pink-600">{{ $section->students->where('sex','Female')->count() }}</p>
                         </div>
                     </div>
                 </div>
@@ -114,7 +132,7 @@
                     <table class="min-w-full text-sm table-auto">
                         <thead class="bg-gray-50 sticky top-0">
                             <tr class="text-gray-700">
-                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">No.</th>
                                 <th class="px-4 py-3">Name</th>
                                 <th class="px-4 py-3">LRN</th>
                                 <th class="px-4 py-3">Birthday</th>
@@ -125,27 +143,65 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y">
-                            @foreach($section->students->whereNotNull('section_id') as $index => $student)
+                            @forelse($section->students as $index => $student)
                                 <tr class="student-row hover:bg-gray-50 transition">
                                     <td class="px-4 py-3">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-3 font-medium">{{ $student->first_name }} {{ $student->last_name }}</td>
+                                    <!-- STUDENT -->
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-4">
+                                    <img
+                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                        class="w-12 h-12 rounded-full object-cover shadow"
+                                        alt="Photo">
+
+                                    <div>
+                                        <p class="font-semibold text-gray-800 leading-tight">
+                                            {{ $student->first_name }}
+                                            {{ $student->middle_name }}
+                                            {{ $student->last_name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            S-ID: {{ $student->school_id }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
                                     <td class="px-4 py-3">{{ $student->lrn }}</td>
                                     <td class="px-4 py-3">{{ $student->birthday ? \Carbon\Carbon::parse($student->birthday)->format('M d, Y') : 'N/A' }}</td>
                                     <td class="px-4 py-3 text-blue-600">{{ $student->email }}</td>
                                     <td class="px-4 py-3">{{ $student->contact_number ?? 'N/A' }}</td>
                                     <td class="px-4 py-3">{{ $student->address ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">
-                                        <form action="{{ route('teacher.students.unenroll', $student->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to unenroll this student?')">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Unenroll</button>
-                                        </form>
-                                    </td>
+                                    <td class="flex gap-2">
+    {{-- If student is currently enrolled --}}
+    @if($student->section_id === $section->id)
+
+        {{-- UNENROLL --}}
+        <form action="{{ route('teacher.students.unenroll', $student->id) }}"
+              method="POST"
+              onsubmit="return confirm('Unenroll this student?')">
+            @csrf
+            @method('PUT')
+            <button class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Unenroll
+            </button>
+        </form>
+
+    @else
+
+        {{-- RE-ENROLL --}}
+        <button
+            onclick="openReEnrollModal({{ $student->id }})"
+            class="bg-green-600 text-white px-3 py-1 rounded text-sm">
+            Re-Enroll
+        </button>
+
+    @endif
+</td>
+
                                 </tr>
-                            @endforeach
-                            @if($section->students->whereNotNull('section_id')->isEmpty())
+                            @empty
                                 <tr><td colspan="8" class="text-center py-4 text-gray-500">No students enrolled</td></tr>
-                            @endif
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -154,6 +210,100 @@
         @endforeach
     </div>
 </main>
+
+
+
+<!-- ENROLL STUDENT MODAL -->
+<div id="enrollStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative mx-auto my-auto">
+        <h2 class="text-xl font-bold mb-4">Enroll Student</h2>
+
+        <form method="POST" action="{{ route('teacher.students.enroll') }}">
+            @csrf
+
+            <label class="block text-gray-700 font-medium mb-2">Select Student</label>
+            <select name="student_id" required class="w-full px-4 py-2 border rounded-lg mb-4">
+    <option value="">-- Choose Student --</option>
+    @foreach($students as $student)
+        <option value="{{ $student->id }}">{{ $student->first_name }} {{ $student->last_name }}</option>
+    @endforeach
+</select>
+
+            <label class="block text-gray-700 font-medium mb-2">Select Section</label>
+            <select name="section_id" required class="w-full px-4 py-2 border rounded-lg mb-4">
+                <option value="">-- Choose Section --</option>
+                @foreach($sections as $section)
+                    <option value="{{ $section->id }}">{{ $section->year_level }} - {{ $section->name }}</option>
+                @endforeach
+            </select>
+
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="document.getElementById('enrollStudentModal').classList.add('hidden');"
+                        class="bg-gray-300 px-4 py-2 rounded-lg">Cancel</button>
+                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg">Enroll</button>
+            </div>
+        </form>
+
+        <button onclick="document.getElementById('enrollStudentModal').classList.add('hidden');"
+                class="absolute top-3 right-3 text-xl">✕</button>
+    </div>
+</div>
+
+<!-- RE-ENROLL MODAL -->
+<div id="reEnrollModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
+
+        <h2 class="text-lg font-bold mb-4">Re-Enroll Student</h2>
+
+        <form method="POST" action="{{ route('teacher.students.enroll') }}">
+            @csrf
+
+            {{-- Student ID (auto-filled) --}}
+            <input type="hidden" name="student_id" id="reEnrollStudentId">
+
+            <label class="block text-gray-700 font-medium mb-2">
+                Select Section
+            </label>
+
+            <select name="section_id" required class="w-full border rounded-lg px-4 py-2 mb-4">
+                @foreach($sections as $section)
+                    <option value="{{ $section->id }}">
+                        {{ $section->year_level }} - {{ $section->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <div class="flex justify-end gap-3">
+                <button type="button"
+                        onclick="closeReEnrollModal()"
+                        class="bg-gray-300 px-4 py-2 rounded">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="bg-green-600 text-white px-5 py-2 rounded">
+                    Re-Enroll
+                </button>
+            </div>
+        </form>
+
+        <button onclick="closeReEnrollModal()"
+                class="absolute top-3 right-4 text-xl">
+            ✕
+        </button>
+    </div>
+</div>
+<script>
+    function openReEnrollModal(studentId) {
+        document.getElementById('reEnrollStudentId').value = studentId;
+        document.getElementById('reEnrollModal').classList.remove('hidden');
+        document.getElementById('reEnrollModal').classList.add('flex');
+    }
+
+    function closeReEnrollModal() {
+        document.getElementById('reEnrollModal').classList.add('hidden');
+        document.getElementById('reEnrollModal').classList.remove('flex');
+    }
+</script>
 
 <!-- Search Script -->
 <script>
@@ -167,4 +317,33 @@ function globalSearch(value) {
 
 <script src="//unpkg.com/alpinejs" defer></script>
 </body>
+@if(session('success'))
+    <div id="alertBox"
+         class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-500">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div id="alertBox"
+         class="fixed top-5 right-5 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-500">
+        {{ session('error') }}
+    </div>
+@endif
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.getElementById('alertBox');
+
+        if (alert) {
+            setTimeout(() => {
+                alert.classList.add('opacity-0');
+            }, 2500);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+    });
+</script>
+
 </html>

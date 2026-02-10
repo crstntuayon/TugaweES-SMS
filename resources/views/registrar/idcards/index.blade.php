@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const personId = personSelect.value;
         if (!personId) return;
 
-<<<<<<< HEAD
+
         const prefix = type === 'student' ? 'TES-S' : 'TES-T';
-=======
+
         const prefix = type === 'student' ? 'S' : 'T';
->>>>>>> 363cc25 (when adding student it also create stud. account)
+
         const year = new Date().getFullYear();
         generatedInput.value = `${prefix}-${year}-${String(personId).padStart(5, '0')}`;
     }

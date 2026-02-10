@@ -4,42 +4,78 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
-use App\Models\AttendanceRecord;
 use App\Models\Section;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf; // for PDF export
 
 class AttendanceController extends Controller
 {
-    public function index()
-    {
-        $sections = Section::where('teacher_id', Auth::id())->get();
-        return view('teacher.attendance.index', compact('sections'));
+    // Show attendance modal / month view
+   public function index(Request $request, $sectionId)
+{
+    $section = Section::with('students.attendances')->findOrFail($sectionId);
+
+    // Parse month from query parameter
+    $monthParam = $request->query('month'); // expects "YYYY-MM"
+    if ($monthParam) {
+        [$year, $month] = explode('-', $monthParam);
+    } else {
+        $year = date('Y');
+        $month = date('m');
     }
 
-    public function create(Section $section)
-    {
-        $students = $section->students;
-        return view('teacher.attendance.create', compact('section', 'students'));
-    }
+    $students = $section->students()->with([
+        'attendances' => fn($q) => $q->whereYear('date', $year)
+                                     ->whereMonth('date', $month)
+    ])->get();
 
+    $daysInMonth = Carbon::parse("$year-$month-01")->daysInMonth;
+
+    return view('teacher.attendance', compact(
+        'section','students','month','year','daysInMonth'
+    ));
+}
+
+    // Save attendance
     public function store(Request $request, Section $section)
     {
-        $attendance = Attendance::create([
-            'section_id' => $section->id,
-            'date' => now()->toDateString(),
-            'teacher_id' => Auth::id()
+        $request->validate([
+            'attendance' => 'required|array'
         ]);
 
-        foreach ($request->status as $studentId => $status) {
-            AttendanceRecord::create([
-                'attendance_id' => $attendance->id,
-                'student_id' => $studentId,
-                'status' => $status
-            ]);
+        foreach ($request->attendance as $studentId => $days) {
+            foreach ($days as $date => $status) {
+                Attendance::updateOrCreate(
+                    ['student_id' => $studentId, 'date' => $date],
+                    ['section_id' => $section->id, 'status' => $status]
+                );
+            }
         }
 
-        return redirect()->route('teacher.attendance.index')
-            ->with('success', 'Attendance saved successfully');
+        return back()->with('success','Attendance saved successfully!');
     }
+
+    // Export attendance for the month
+    public function export(Section $section, Request $request)
+    {
+        $month = $request->month ?? now()->format('m');
+        $year  = $request->year ?? now()->format('Y');
+
+        $students = $section->students()->with([
+            'attendances' => fn($q) => $q->whereYear('date',$year)
+                                        ->whereMonth('date',$month)
+        ])->get();
+
+        $daysInMonth = Carbon::parse("$year-$month-01")->daysInMonth;
+
+        $pdf = Pdf::loadView('teacher.export', compact(
+            'section','students','month','year','daysInMonth'
+        ));
+
+        return $pdf->download("Attendance_{$section->name}_{$month}_{$year}.pdf");
+    }
+
+    
 }

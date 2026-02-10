@@ -69,7 +69,7 @@ $roleColors = [
 <div id="id-content" class="id-wrapper">
 @foreach($people as $person)
 <div class="id-row">
-<<<<<<< HEAD
+
   <!-- FRONT -->
 <div class="id-card">
     <div class="h-[15mm] {{ $roleColors[$type] }} flex items-center justify-center gap-2 text-white">
@@ -102,7 +102,7 @@ $roleColors = [
 </div>
 
 
-=======
+
     <!-- FRONT -->
     <div class="id-card">
         <div class="h-[15mm] {{ $roleColors[$type] }} flex items-center justify-center gap-2 text-white">
@@ -124,7 +124,7 @@ $roleColors = [
         </div>
     </div>
 
->>>>>>> 363cc25 (when adding student it also create stud. account)
+
     <!-- BACK -->
     <div class="id-card">
         <div class="h-[15mm] bg-gray-800 flex items-center justify-center text-white text-[7px] font-bold">

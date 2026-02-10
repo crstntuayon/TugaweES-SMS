@@ -12,6 +12,8 @@ class SectionController extends Controller
 {
 public function index()
 {
+
+
     $teachers = User::whereHas('role', fn($q) => $q->where('name', 'teacher'))->get();
 
     $sections = Section::with(['teacher', 'students'])

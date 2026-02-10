@@ -177,12 +177,6 @@
 </div>
 
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 363cc25 (when adding student it also create stud. account)
 <!-- ADD STUDENT MODAL -->
 <div id="addStudentModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
@@ -198,15 +192,15 @@
         </div>
 
         <!-- STUDENT FORM -->
-<<<<<<< HEAD
+
        <form method="POST" 
       action="{{ route('admin.students.store') }}" 
       enctype="multipart/form-data"
       class="space-y-4">
 
-=======
+
         <form method="POST" action="{{ route('admin.students.store') }}" class="space-y-4">
->>>>>>> 363cc25 (when adding student it also create stud. account)
+
             @csrf
 
             <!-- NAME FIELDS -->
@@ -268,7 +262,7 @@
                           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">{{ old('address') }}</textarea>
             </div>
 
-<<<<<<< HEAD
+
             <!-- SECTION + SCHOOL YEAR -->
             <div>
                 <select name="section_id" required
@@ -297,9 +291,6 @@
             </div>
 
 
-=======
-            
->>>>>>> 363cc25 (when adding student it also create stud. account)
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
                 <button type="button" onclick="closeAddStudentModal()"
@@ -314,7 +305,7 @@
         </form>
     </div>
 </div>
-<<<<<<< HEAD
+
 <script>
 
     
@@ -331,8 +322,7 @@ function closeAddStudentModal() {
     modal.classList.remove('flex');
 }
 </script>
-=======
->>>>>>> 363cc25 (when adding student it also create stud. account)
+
 
 <script>
 function studentTable() {

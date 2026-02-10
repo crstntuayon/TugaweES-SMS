@@ -18,11 +18,7 @@ class DashboardController extends Controller
 
 $users = User::with('role')->latest()->paginate(10); // 10 per page
 
-<<<<<<< HEAD
-
-=======
     // TOTAL STUDENTS
->>>>>>> 363cc25 (when adding student it also create stud. account)
     $totalStudents = Student::count();
 
     // Total Male / Female
@@ -52,13 +48,11 @@ $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school
         'totalTeachers',
         'totalSections',
         'users',
-<<<<<<< HEAD
-        'roles' // <-- and this line
-=======
         'roles', 
         'maleCount', 
         'femaleCount', 
-        'studentsPerSection'
+        'studentsPerSection',
+        'currentSchoolYear',
        
     ));
 }

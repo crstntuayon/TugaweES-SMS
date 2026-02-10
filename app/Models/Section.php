@@ -29,9 +29,21 @@ class Section extends Model
     return $this->belongsTo(YearLevel::class, 'year_level');
 }
 
-  public function students()
-    {
-        return $this->belongsToMany(Student::class, 'enrollments');
-    }
+public function students()
+{
+    return $this->hasMany(Student::class);
+}
+
+public function grades()
+{
+    return $this->hasMany(Grade::class);
+}
+
+public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
+
+
 
 }

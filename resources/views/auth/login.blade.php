@@ -113,14 +113,7 @@
             </button>
         </form>
 
-        <!-- Register -->
-        <p class="mt-6 text-center text-sm text-gray-500">
-            Don't have an account?
-            <a href="{{ route('register') }}" class="text-indigo-600 hover:underline font-medium">
-                Register here
-            </a>
-        </p>
-
+       
         <!-- Footer -->
         <div class="text-center text-xs text-gray-400 mt-6">
             © {{ date('Y') }} Tugawe ES • Student Management System

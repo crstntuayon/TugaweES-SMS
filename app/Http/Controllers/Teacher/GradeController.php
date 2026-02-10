@@ -3,44 +3,99 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Section;
-use App\Models\Subject;
-use App\Models\Grade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Section;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Grade; // Assume you have a Grade model
 
 class GradeController extends Controller
 {
-    public function index(Section $section)
+    // Show grades form for a section
+    public function index($sectionId)
     {
-        $subjects = Subject::all();
-        $students = $section->students;
+        $section = Section::with(['students.grades'])->findOrFail($sectionId);
+        $subjects = Subject::all(); // Or filter subjects for the section if needed
 
-        return view('teacher.grades.index', compact(
-            'section',
-            'subjects',
-            'students'
-        ));
+        return view('teacher.grades', compact('section', 'subjects'));
     }
 
-    public function store(Request $request, Section $section)
+    // Store grades
+    public function store(Request $request, $sectionId)
     {
-        foreach ($request->grades as $studentId => $subjects) {
-            foreach ($subjects as $subjectId => $gradeValue) {
+        $section = Section::with('students')->findOrFail($sectionId);
+
+        $gradesInput = $request->input('grades', []);
+
+        foreach ($gradesInput as $studentId => $subjectsGrades) {
+            $student = $section->students->where('id', $studentId)->first();
+            if (!$student) continue;
+
+            $total = 0;
+            $count = 0;
+
+            foreach ($subjectsGrades as $subjectId => $gradeValue) {
+                // Validate each grade
+                $gradeValue = floatval($gradeValue);
+                if ($gradeValue < 0 || $gradeValue > 100) continue;
+
+                $total += $gradeValue;
+                $count++;
+
+                // Update or create grade
                 Grade::updateOrCreate(
                     [
                         'student_id' => $studentId,
                         'subject_id' => $subjectId,
-                        'quarter' => $request->quarter
+                        
                     ],
                     [
                         'grade' => $gradeValue,
-                        'teacher_id' => Auth::id()
                     ]
                 );
             }
+
+            // Calculate average if any valid grades exist
+            if ($count > 0) {
+                $average = round($total / $count, 2);
+                $student->average_grade = $average;
+                $student->save();
+            }
         }
 
-        return back()->with('success', 'Grades saved successfully');
+        return redirect()->back()->with('success', 'Grades saved successfully.');
     }
+
+    public function storeModal(Request $request)
+{
+    $request->validate([
+        'student_id' => 'required|exists:students,id',
+        'grades' => 'required|array'
+    ]);
+
+    foreach ($request->grades as $subjectId => $quarters) {
+        foreach ($quarters as $quarter => $grade) {
+
+            if ($grade === null || $grade === '') {
+                continue;
+            }
+
+            Grade::updateOrCreate(
+                [
+                    'student_id' => $request->student_id,
+                    'subject_id' => $subjectId,
+                    'quarter'    => $quarter,
+                ],
+                [
+                    'grade' => $grade
+                ]
+            );
+        }
+    }
+
+    return response()->json([
+        'message' => 'Grades saved successfully'
+    ]);
+}
+
 }

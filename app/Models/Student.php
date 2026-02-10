@@ -13,11 +13,7 @@ class Student extends Model
     protected $fillable = [
         'first_name', 'middle_name', 'last_name', 'suffix',
         'birthday', 'email', 'contact_number', 'sex',
-<<<<<<< HEAD
-        'section_id', 'lrn', 'address', 'photo', 'school_id'
-=======
         'section_id', 'lrn', 'address', 'photo', 'school_id', 'user_id'
->>>>>>> 363cc25 (when adding student it also create stud. account)
     ];
 
     public function section()
@@ -26,10 +22,11 @@ class Student extends Model
     }
 
   // THIS IS THE RELATIONSHIP YOU NEED
-    public function sections()
-    {
-        return $this->belongsToMany(Section::class, 'enrollments');
-    }
+  public function sections()
+{
+    return $this->belongsToMany(\App\Models\Section::class, 'section_student')->withTimestamps();
+}
+
 
     public function user()
     {
@@ -39,6 +36,16 @@ class Student extends Model
     public function teacher()
 {
     return $this->belongsTo(Teacher::class);
+}
+
+public function grades()
+{
+    return $this->hasMany(Grade::class);
+}
+
+public function attendances()
+{
+    return $this->hasMany(Attendance::class);
 }
 
 }

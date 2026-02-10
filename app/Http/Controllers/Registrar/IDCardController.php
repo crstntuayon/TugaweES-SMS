@@ -20,11 +20,7 @@ class IDCardController extends Controller
     }
 
     // Generate/assign school ID
-<<<<<<< HEAD
    public function generate(Request $request)
-=======
-  public function generate(Request $request)
->>>>>>> 363cc25 (when adding student it also create stud. account)
 {
     // Validate input
     $request->validate([
@@ -35,10 +31,9 @@ class IDCardController extends Controller
     $type = $request->type;
     $personId = $request->id;
 
-<<<<<<< HEAD
     // Generate unique school ID
     $year = date('Y');
-    $prefix = $type === 'student' ? 'TES-S' : 'TES-T';
+    $prefix = $type === 'student' ? 'S' : 'T';
     $schoolId = $prefix . '-' . $year . '-' . str_pad($personId, 5, '0', STR_PAD_LEFT);
 
     // Save ID to database
@@ -48,52 +43,14 @@ class IDCardController extends Controller
         $person = Teacher::findOrFail($personId);
     }
 
-=======
-    // Determine prefix and model
-    $prefix = $type === 'student' ? 'S' : 'T';
-    $model = $type === 'student' ? Student::class : Teacher::class;
-
-    // School code
-    $schoolCode = '120231';
-
-    // Last 2 digits of current year
-    $yearSuffix = date('y'); // e.g., '26' for 2026
-
-    // Find the last record for this type enrolled this year
-    $lastRecord = $model::where('school_id', 'like', $prefix . '-' . $schoolCode . $yearSuffix . '%')
-                         ->orderBy('id', 'desc')
-                         ->first();
-
-    if ($lastRecord && $lastRecord->school_id) {
-        $lastNumber = intval(substr($lastRecord->school_id, -4));
-        $uniqueNumber = $lastNumber + 1;
-    } else {
-        $uniqueNumber = 1;
-    }
-
-    // Pad to 4 digits
-    $uniqueNumberPadded = str_pad($uniqueNumber, 4, '0', STR_PAD_LEFT);
-
-    // Combine final school ID
-    $schoolId = $prefix . '-' . $schoolCode . $yearSuffix . $uniqueNumberPadded;
-
-    // Save to database
-    $person = $model::findOrFail($personId);
->>>>>>> 363cc25 (when adding student it also create stud. account)
     $person->school_id = $schoolId;
     $person->save();
 
     // Redirect to printable page
     return redirect()->route('registrar.idcards.print', ['type' => $type, 'id' => $personId]);
-<<<<<<< HEAD
 
 }
 
-=======
-}
-
-
->>>>>>> 363cc25 (when adding student it also create stud. account)
     // Show printable ID card
     public function print($type, $id)
     {

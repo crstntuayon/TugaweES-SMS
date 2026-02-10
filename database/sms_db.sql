@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 02, 2026 at 02:56 PM
--- Server version: 8.0.44
+-- Generation Time: Feb 09, 2026 at 05:00 PM
+-- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -29,12 +29,75 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `attendances` (
   `id` bigint UNSIGNED NOT NULL,
-  `attendance_id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
-  `status` enum('Present','Absent','Late') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `section_id` bigint UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `status` enum('none','present','late','absent') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'none',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `attendances`
+--
+
+INSERT INTO `attendances` (`id`, `student_id`, `section_id`, `date`, `status`, `created_at`, `updated_at`) VALUES
+(1, 58, 38, '2026-02-09', 'none', '2026-02-09 08:07:49', '2026-02-09 08:36:08'),
+(2, 59, 38, '2026-02-09', 'none', '2026-02-09 08:07:49', '2026-02-09 08:36:08'),
+(3, 58, 38, '2026-02-10', 'none', '2026-02-09 08:08:33', '2026-02-09 08:36:08'),
+(4, 59, 38, '2026-02-10', 'none', '2026-02-09 08:08:33', '2026-02-09 08:36:08'),
+(5, 58, 38, '2026-02-01', 'present', '2026-02-09 08:36:08', '2026-02-09 08:36:20'),
+(6, 58, 38, '2026-02-02', 'late', '2026-02-09 08:36:08', '2026-02-09 08:45:21'),
+(7, 58, 38, '2026-02-03', 'absent', '2026-02-09 08:36:08', '2026-02-09 08:47:01'),
+(8, 58, 38, '2026-02-04', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(9, 58, 38, '2026-02-05', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(10, 58, 38, '2026-02-06', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(11, 58, 38, '2026-02-07', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(12, 58, 38, '2026-02-08', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(13, 58, 38, '2026-02-11', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(14, 58, 38, '2026-02-12', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(15, 58, 38, '2026-02-13', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(16, 58, 38, '2026-02-14', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(17, 58, 38, '2026-02-15', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(18, 58, 38, '2026-02-16', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(19, 58, 38, '2026-02-17', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(20, 58, 38, '2026-02-18', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(21, 58, 38, '2026-02-19', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(22, 58, 38, '2026-02-20', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(23, 58, 38, '2026-02-21', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(24, 58, 38, '2026-02-22', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(25, 58, 38, '2026-02-23', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(26, 58, 38, '2026-02-24', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(27, 58, 38, '2026-02-25', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(28, 58, 38, '2026-02-26', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(29, 58, 38, '2026-02-27', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(30, 58, 38, '2026-02-28', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(31, 59, 38, '2026-02-01', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(32, 59, 38, '2026-02-02', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(33, 59, 38, '2026-02-03', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(34, 59, 38, '2026-02-04', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(35, 59, 38, '2026-02-05', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(36, 59, 38, '2026-02-06', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(37, 59, 38, '2026-02-07', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(38, 59, 38, '2026-02-08', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(39, 59, 38, '2026-02-11', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(40, 59, 38, '2026-02-12', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(41, 59, 38, '2026-02-13', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(42, 59, 38, '2026-02-14', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(43, 59, 38, '2026-02-15', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(44, 59, 38, '2026-02-16', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(45, 59, 38, '2026-02-17', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(46, 59, 38, '2026-02-18', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(47, 59, 38, '2026-02-19', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(48, 59, 38, '2026-02-20', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(49, 59, 38, '2026-02-21', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(50, 59, 38, '2026-02-22', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(51, 59, 38, '2026-02-23', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(52, 59, 38, '2026-02-24', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(53, 59, 38, '2026-02-25', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(54, 59, 38, '2026-02-26', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(55, 59, 38, '2026-02-27', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08'),
+(56, 59, 38, '2026-02-28', 'none', '2026-02-09 08:36:08', '2026-02-09 08:36:08');
 
 -- --------------------------------------------------------
 
@@ -89,16 +152,6 @@ CREATE TABLE `enrollments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `enrollments`
---
-
-INSERT INTO `enrollments` (`id`, `student_id`, `section_id`, `created_at`, `updated_at`) VALUES
-(17, 45, 18, NULL, NULL),
-(18, 37, 18, NULL, NULL),
-(19, 38, 18, NULL, NULL),
-(20, 49, 18, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -125,12 +178,28 @@ CREATE TABLE `grades` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `subject_id` bigint UNSIGNED NOT NULL,
-  `teacher_id` bigint UNSIGNED NOT NULL,
-  `quarter` enum('1st','2nd','3rd','4th') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `grade` decimal(5,2) NOT NULL,
+  `quarter` tinyint UNSIGNED NOT NULL,
+  `grade` decimal(5,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `grades`
+--
+
+INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
+(1, 58, 1, 1, 90.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(2, 58, 2, 1, 88.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(3, 58, 3, 1, 87.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(4, 58, 4, 1, 90.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(5, 58, 5, 1, 92.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(6, 58, 6, 1, 94.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(7, 58, 7, 1, 85.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(8, 58, 8, 1, 97.00, '2026-02-09 07:41:40', '2026-02-09 07:42:16'),
+(9, 58, 1, 2, 90.00, '2026-02-09 07:46:22', '2026-02-09 07:46:22'),
+(10, 58, 1, 3, 88.00, '2026-02-09 07:46:22', '2026-02-09 07:46:22'),
+(11, 58, 1, 4, 87.00, '2026-02-09 07:46:22', '2026-02-09 07:46:22');
 
 -- --------------------------------------------------------
 
@@ -220,7 +289,19 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (34, '2026_01_31_232621_add_school_id_to_students_table', 29),
 (35, '2026_01_31_235758_add_photo_to_students_table', 30),
 (36, '2026_01_31_235858_add_photo_to_teachers_table', 31),
-(37, '2026_02_01_000010_add_school_id_to_teachers_table', 32);
+(37, '2026_02_01_000010_add_school_id_to_teachers_table', 32),
+(38, '2026_02_08_013953_create_section_student_table', 33),
+(39, '2026_02_08_133247_create_grades_table', 34),
+(40, '2026_02_08_133622_create_attendances_table', 35),
+(41, '2026_02_09_130105_add_day_to_attendances_table', 36),
+(42, '2026_02_09_131519_create_attendances_table', 37),
+(43, '2026_02_09_132455_create_attendances_table', 38),
+(44, '2026_02_09_132535_create_grades_table', 38),
+(45, '2026_02_09_132852_remove_day_from_attendances_table', 39),
+(46, '2026_02_09_140854_create_grades_table', 40),
+(47, '2026_02_09_142014_add_average_grade_to_students_table', 41),
+(48, '2026_02_09_153539_create_grades_table', 42),
+(49, '2026_02_09_160343_create_attendances_table', 43);
 
 -- --------------------------------------------------------
 
@@ -266,8 +347,8 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `sections` (
   `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `year_level` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N/A',
-  `school_year` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2026-2027',
+  `year_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N/A',
+  `school_year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2026-2027',
   `teacher_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -279,15 +360,22 @@ CREATE TABLE `sections` (
 --
 
 INSERT INTO `sections` (`id`, `name`, `year_level`, `school_year`, `teacher_id`, `created_at`, `updated_at`, `capacity`) VALUES
-(18, 'Rubia', 'Kindergarten', '2025-2026', 13, '2026-01-29 06:08:12', '2026-02-01 02:03:22', 40),
-(19, 'Sojor', 'Grade 3', '2025-2026', NULL, '2026-01-29 06:08:41', '2026-01-31 03:50:48', 40),
-(25, 'Alama', 'Grade 2', '2025-2026', NULL, '2026-01-29 17:04:45', '2026-01-31 03:50:53', 40),
-(26, 'Tuble', 'Grade 6', '2025-2026', 20, '2026-01-29 17:07:26', '2026-01-31 03:53:51', 40),
-(27, 'Manginsay', 'Grade 1', '2025-2026', NULL, '2026-01-29 18:48:52', '2026-01-31 03:51:06', 40),
-(28, 'Alcoriza', 'Grade 5', '2025-2026', NULL, '2026-01-29 18:51:18', '2026-01-31 03:51:13', 40),
-(29, 'Gargar', 'Grade 4', '2025-2026', NULL, '2026-01-29 19:01:40', '2026-01-31 03:51:20', 40),
-(35, 'Sampaguita', 'Kindergarten', '2025-2026', NULL, '2026-01-30 03:18:36', '2026-01-31 03:51:28', 40),
-(36, 'Dela Cruz', 'Grade 1', '2025-2026', NULL, '2026-01-30 05:47:11', '2026-01-31 03:51:34', 40);
+(38, 'Mercury', 'Kindergarten', '2025-2026', 13, '2026-02-07 14:41:36', '2026-02-07 22:39:50', 40),
+(39, 'Venus', 'Grade 1', '2025-2026', NULL, '2026-02-07 22:42:11', '2026-02-07 22:48:53', 40);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `section_student`
+--
+
+CREATE TABLE `section_student` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `section_id` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -309,7 +397,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('ADuo9ThyEul0yZLGC9f38a0XIfLEaqt76xpCcZg7', 13, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiME1NaWQ5NFRvQ1VMaDVDZGNTeklFZ2RzZTZkbnltYnFhSVBKZVlSSCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZWdpc3RyYXIvc3R1ZGVudHMiO3M6NToicm91dGUiO3M6MjQ6InJlZ2lzdHJhci5zdHVkZW50cy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjEzO30=', 1769947551);
+('o8YF7s7tRGFx4cZybhZuL9GWM0J0WZdAmSFkSLjS', 13, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiQ3F5MHZqYWttOEFmbVV2Z002cTNvNlkxTE1UR0lPWVM5R25yY2x0OCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9kYXNoYm9hcmQvc3RhdHMiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLmRhc2hib2FyZC5zdGF0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjEzO30=', 1770656127);
 
 -- --------------------------------------------------------
 
@@ -319,35 +407,33 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 
 CREATE TABLE `students` (
   `id` bigint UNSIGNED NOT NULL,
-  `lrn` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lrn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `middle_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `middle_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sex` enum('Male','Female') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `suffix` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `average_grade` decimal(5,2) DEFAULT NULL,
+  `sex` enum('Male','Female') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `suffix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birthday` date DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `contact_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` bigint UNSIGNED DEFAULT NULL,
   `section_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `teacher_id` bigint UNSIGNED DEFAULT NULL,
-  `school_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `school_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `section_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`) VALUES
-(37, '120231090040', 'Crestian', 'Bajado', 'Tuayon', 'Male', NULL, '2004-01-07', 'cresttuayon@gmail.com', '09368726547', 'Tugawe, Dauin, Negros Oriental', NULL, 18, '2026-01-31 03:53:11', '2026-01-31 20:34:13', NULL, 'S-2026-00037', 'photos/1769917875_OIP (1).jpg'),
-(38, '120231000025', 'Jeanievy', 'Bantoto', 'Sojor', 'Female', NULL, '2004-07-12', 'jenebe@gmail.com', '09759264665', 'Tugawe, Dauin, Negros Oriental, Philippines', NULL, 18, '2026-01-31 14:43:53', '2026-01-31 20:32:38', NULL, 'S-2026-00038', 'photos/1769919073_Jeanievy_ID.png'),
-(45, '120231100025', 'Aleah', 'Alagadmo', 'Relimbo', 'Female', NULL, '2004-06-16', 'aleah@gmail.com', '09759264665', 'Libjo, Dauin, Negros Oriental, Philippines', NULL, 18, '2026-02-01 01:00:40', '2026-02-01 02:27:55', NULL, 'TES-S-2026-00045', 'photos/1769941675_2a7d4c4bc1381a476b8b8a85885ac392.jpg'),
-(48, '120231000027', 'Ken', 'Bajado', 'Salve', 'Female', NULL, '2004-03-03', 'salveken@gmail.com', '09368726540', 'Tugawe, Dauin', NULL, 18, '2026-02-01 03:19:41', '2026-02-01 03:48:52', NULL, NULL, 'photos/Q4B7Rin6cMATs9SmKVy0XgwpxTzxU7GEcgmJYKyU.jpg'),
-(49, '120231000957', 'Denise Nicole', 'Trumata', 'Josol', 'Male', NULL, '2004-02-16', 'josol@gmail.com', '09368726540', 'Tugawe', NULL, 18, '2026-02-01 04:01:08', '2026-02-01 04:05:44', NULL, 'TES-S-2026-00049', 'photos/1769947544_OIP (1).jpg');
+INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `average_grade`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `section_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`) VALUES
+(58, '120231090040', 'Crestian', 'Bajado', 'Tuayon', 90.50, 'Male', NULL, '2004-01-07', 'cresttuayon@gmail.com', '09368726547', 'Tugawe, Dauin, Negros Oriental', 36, 38, '2026-02-07 23:15:00', '2026-02-09 06:31:59', NULL, 'S-120231260001', 'photos/7T6haQwMkIrlv3coGpqKKYTxffe99IG68S83yg0q.jpg'),
+(59, '120231000036', 'Caterine', 'Abad', 'Alagadmo', 89.50, 'Female', NULL, '2003-10-03', 'alagadmocatherine@gmail.com', '09759264665', 'Tugawe, Dauin, Negros Oriental', 37, 38, '2026-02-07 23:28:13', '2026-02-09 06:32:00', NULL, 'S-120231260002', 'photos/aZtzcluAtlVoj8fFHCyy0QxqixkUe8FOvU4U0iu4.jpg');
 
 -- --------------------------------------------------------
 
@@ -362,6 +448,20 @@ CREATE TABLE `subjects` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'English', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(2, 'Filipino', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(3, 'Mathematics', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(4, 'Science', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(5, 'Araling Panlipunan', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(6, 'Edukasyong Pantahanan at Pangkabuhayan (EPP)', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(7, 'Music, Arts, PE, and Health (MAPEH)', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
+(8, 'Values Education', '2026-02-09 05:46:38', '2026-02-09 05:46:38');
+
 -- --------------------------------------------------------
 
 --
@@ -370,11 +470,11 @@ CREATE TABLE `subjects` (
 
 CREATE TABLE `teachers` (
   `id` bigint UNSIGNED NOT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `school_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `school_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -408,10 +508,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `lrn`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'ardqgbSOuLhfkE27ArxrZyuiNVNZXCLnCBm8lT7B1EsGilboMH8VK3tgIt90', '2026-01-27 05:37:20', '2026-01-27 05:37:20', NULL, '', NULL, '', NULL, NULL, ''),
-(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'mZBlNjHGwxQaZ3hQTpEoXkh4lS6NOTmVvdIY7SInlek5eWz2JydHqQyZCCmt', '2026-01-27 05:37:21', '2026-01-27 05:37:21', NULL, '', NULL, '', NULL, NULL, ''),
+(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'IA08b1g3ImVZZaH61Zf36V92HGc3grdYOFZUlAcYxPaxzGbvTJgDl6mBFl3E', '2026-01-27 05:37:20', '2026-01-27 05:37:20', NULL, '', NULL, '', NULL, NULL, ''),
+(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', NULL, '', NULL, '', NULL, NULL, ''),
 (13, 2, 'teacher@tugaweES.edu.ph', NULL, '$2y$12$I703bY65xDMTGUJ/NA1hYuoccRQRYjy7INoW2feSbrdmlKoqmEbTO', NULL, '2026-01-28 21:57:58', '2026-01-28 21:57:58', NULL, 'Teacher', NULL, 'User', NULL, NULL, 'teacheruser1'),
-(26, 2, 'maamvic@gmail.com', NULL, '$2y$12$6E/xjz3H7s/GYYj/vSIF5Oih81cNk.egvuGUszo9X25IN..Sk94YC', NULL, '2026-01-31 15:04:26', '2026-01-31 15:04:26', NULL, 'Victoria', 'A.', 'Sojor', NULL, '1989-12-06', 'maamvic');
+(36, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$cVf4Ip8ZPAM.ATsqpUGD8uCSp3KoexnV2L.PU/cGTkQKt4Sk0LfEK', NULL, '2026-02-07 23:15:00', '2026-02-07 23:15:00', NULL, 'Crestian', NULL, 'Tuayon', NULL, NULL, 'ctuayon985'),
+(37, 4, 'alagadmocatherine@gmail.com', NULL, '$2y$12$zd48NCck5rZWDRjLUWwT8uGT8KRTWVYb/0nv0aef83v4.48x3nY7a', NULL, '2026-02-07 23:28:13', '2026-02-07 23:28:13', NULL, 'Caterine', NULL, 'Alagadmo', NULL, NULL, 'calagadmo245');
 
 -- --------------------------------------------------------
 
@@ -421,7 +522,7 @@ INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, 
 
 CREATE TABLE `year_levels` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -448,8 +549,8 @@ INSERT INTO `year_levels` (`id`, `name`, `created_at`, `updated_at`) VALUES
 --
 ALTER TABLE `attendances`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `attendances_attendance_id_foreign` (`attendance_id`),
-  ADD KEY `attendances_student_id_foreign` (`student_id`);
+  ADD UNIQUE KEY `attendances_student_id_date_unique` (`student_id`,`date`),
+  ADD KEY `attendances_section_id_foreign` (`section_id`);
 
 --
 -- Indexes for table `attendance_records`
@@ -494,8 +595,7 @@ ALTER TABLE `failed_jobs`
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `grades_student_id_subject_id_quarter_unique` (`student_id`,`subject_id`,`quarter`),
-  ADD KEY `grades_subject_id_foreign` (`subject_id`),
-  ADD KEY `grades_teacher_id_foreign` (`teacher_id`);
+  ADD KEY `grades_subject_id_foreign` (`subject_id`);
 
 --
 -- Indexes for table `jobs`
@@ -534,6 +634,14 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `sections`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `section_student`
+--
+ALTER TABLE `section_student`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `section_student_student_id_foreign` (`student_id`),
+  ADD KEY `section_student_section_id_foreign` (`section_id`);
 
 --
 -- Indexes for table `sessions`
@@ -590,7 +698,7 @@ ALTER TABLE `year_levels`
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `attendance_records`
@@ -602,7 +710,7 @@ ALTER TABLE `attendance_records`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -614,7 +722,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -626,7 +734,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -638,19 +746,25 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `section_student`
+--
+ALTER TABLE `section_student`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `teachers`
@@ -662,7 +776,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `year_levels`
@@ -678,7 +792,7 @@ ALTER TABLE `year_levels`
 -- Constraints for table `attendances`
 --
 ALTER TABLE `attendances`
-  ADD CONSTRAINT `attendances_attendance_id_foreign` FOREIGN KEY (`attendance_id`) REFERENCES `attendances` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `attendances_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `attendances_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
@@ -700,8 +814,14 @@ ALTER TABLE `enrollments`
 --
 ALTER TABLE `grades`
   ADD CONSTRAINT `grades_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `grades_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `grades_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `grades_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `section_student`
+--
+ALTER TABLE `section_student`
+  ADD CONSTRAINT `section_student_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `section_student_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `students`

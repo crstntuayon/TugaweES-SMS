@@ -93,58 +93,136 @@ $cardsPerPage = 6;
         <div class="id-row">
 
 
-            <!-- FRONT -->
-            <div class="id-card">
-                <div class="h-[15mm] {{ $roleColors['student'] }} flex items-center justify-center gap-2 text-white">
-                    <img src="{{ asset('images/logo.jpg') }}" class="w-10 h-10 rounded-full bg-white p-1">
-                    <div class="text-center leading-tight">
-                        <p class="text-[8px] font-bold">TUGAWE ELEMENTARY SCHOOL</p>
-                        <p class="text-[7px]">Dauin District</p>
-                    </div>
-                </div>
+           <!-- FRONT -->
+<div class="id-card relative overflow-hidden bg-white">
 
-                <div class="flex flex-col items-center mt-2 gap-1">
-                    <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}" class="photo">
-                    <p class="font-bold text-[8px] uppercase text-gray-800 mt-1 text-center">
-                        {{ $student->first_name }} {{ $student->middle_name ?? '' }} {{ $student->last_name }}
-                    </p>
-                    <p class="text-[15px] font-semibold text-gray-600 uppercase">STUDENT</p>
-                    <p class="mt-1 text-[6px] text-center"><strong>ID No:</strong> {{ $student->school_id }}</p>
-                    <div class="mt-2">
-                        {!! QrCode::size(50)->generate(route('registrar.idcards.verify', $student->school_id)) !!}
-                    </div>
-                </div>
-            </div>
+    <!-- RIGHT HALF BACKGROUND LOGO (FULL HEIGHT) -->
+    <img
+        src="{{ asset('images/logo.jpg') }}"
+        class="absolute right-[-35%] top-1/2 -translate-y-1/2 h-[120%] opacity-[0.08] rotate-[-12deg] pointer-events-none"
+        alt="School Logo Background"
+    >
 
-            <!-- BACK -->
-            <div class="id-card">
-                <div class="h-[15mm] bg-gray-800 flex items-center justify-center text-white text-[7px] font-bold">
-                    SCHOOL IDENTIFICATION CARD
-                </div>
-                <div class="px-2 py-2 text-[6.5px] text-gray-700 leading-tight flex flex-col justify-between h-full">
-                    <div>
-                        <p><strong>School:</strong> Tugawe Elementary School</p>
-                        <p><strong>Address:</strong> Tugawe, Dauin, Negros Oriental</p>
-                        <p><strong>Contact:</strong> (035) 123-4567</p>
-                        <p><strong>Email:</strong> info@school.edu.ph</p>
-                        <hr class="my-1">
-                        <p><strong>Emergency Contact:</strong> {{ $student->contact_number ?? 'N/A' }}</p>
-                        <hr class="my-1">
-                        <p class="text-justify">This ID is non-transferable. If found, please return to the Registrar. Carry it at all times while on campus.</p>
-                        <p class="mt-1"><strong>Valid Until:</strong><br>{{ $student->created_at->addYears(4)->format('M d, Y') }}</p>
-                    </div>
-                    <div class="flex justify-between mt-2">
-                        <div class="text-center">
-                            <p>____________________</p>
-                            <p class="text-[6px]">Registrar</p>
-                        </div>
-                        <div class="text-center">
-                            <p>____________________</p>
-                            <p class="text-[6px]">Principal</p>
-                        </div>
-                    </div>
-                </div>
+    <!-- HEADER -->
+    <div class="h-[15mm] {{ $roleColors['student'] }} flex items-center justify-center gap-2 text-white relative z-10">
+        <img src="{{ asset('images/logo.jpg') }}" class="w-10 h-10 rounded-full bg-white p-1">
+        <div class="text-center leading-tight">
+            <p class="text-[8px] font-bold tracking-wide">
+                TUGAWE ELEMENTARY SCHOOL
+            </p>
+            <p class="text-[7px] opacity-90">
+                Dauin District | School ID: 120231
+            </p>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="flex flex-col items-center mt-2 gap-1 relative z-10">
+
+        <!-- PHOTO -->
+        <img
+            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+            class="photo border-2 border-white shadow-md"
+        >
+
+        <!-- NAME -->
+        <p class="font-bold text-[9px] uppercase text-gray-900 mt-1 text-center leading-tight">
+            {{ $student->first_name }} {{ $student->middle_name ?? '' }} {{ $student->last_name }}
+        </p>
+
+        <!-- ROLE -->
+        <p class="text-[13px] font-semibold text-gray-600 uppercase tracking-wide">
+            STUDENT
+        </p>
+
+        <!-- DIVIDER -->
+        <div class="w-10 h-[1px] bg-gray-300 my-1"></div>
+
+        <!-- ID -->
+        <p class="mt-1 text-[6px] text-center text-gray-700">
+            <strong>ID No:</strong> {{ $student->school_id }}
+        </p>
+
+        <!-- QR -->
+        <div class="mt-2 p-1 bg-white rounded shadow-sm">
+            {!! QrCode::size(50)->generate(
+                route('admin.students.verify', $student->school_id)
+            ) !!}
+        </div>
+
+    </div>
+
+    <!-- MICRO-TEXT SECURITY -->
+    <p class="absolute bottom-1 left-0 right-0 text-[4px] text-gray-400 text-center tracking-widest">
+        TUGAWE ELEMENTARY SCHOOL • OFFICIAL STUDENT IDENTIFICATION
+    </p>
+
+</div>
+
+           <!-- BACK -->
+<div class="id-card relative overflow-hidden bg-white">
+
+    <!-- RIGHT HALF BACKGROUND LOGO -->
+    <img
+        src="{{ asset('images/logo.jpg') }}"
+        class="absolute right-[-35%] top-1/2 -translate-y-1/2 h-[120%] opacity-[0.08] rotate-[-12deg] pointer-events-none"
+        alt="School Logo Background"
+    >
+
+    <!-- HEADER -->
+    <div class="h-[15mm] {{ $roleColors['student'] }} flex items-center justify-center text-white relative z-10">
+        
+        <div class="text-center leading-tight">
+            <p class="text-[8px] font-bold tracking-wide">
+                SCHOOL IDENTIFICATION CARD
+            </p>
+            <p class="text-[7px] opacity-90">
+                Tugawe Elementary School
+            </p>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="px-2 py-2 text-[6.5px] text-gray-700 leading-tight flex flex-col justify-between h-full relative z-10">
+
+        <!-- SCHOOL INFO & EMERGENCY -->
+        <div class="space-y-1">
+            <p><strong>School:</strong> Tugawe Elementary School</p>
+            <p><strong>Address:</strong> Tugawe, Dauin, Negros Oriental</p>
+            <p><strong>Contact:</strong> (035) 123-4567</p>
+            <p><strong>Email:</strong> info@school.edu.ph</p>
+            <hr class="my-1 border-gray-300">
+            <p><strong>Emergency Contact:</strong> {{ $student->contact_number ?? 'N/A' }}</p>
+            <hr class="my-1 border-gray-300">
+            <p class="text-justify">
+                This ID is non-transferable. If found, please return to the Registrar. Carry it at all times while on campus.
+            </p>
+            <p class="mt-1">
+                <strong>Valid Until:</strong><br>{{ $student->created_at->addYears(4)->format('M d, Y') }}
+            </p>
+            
+        </div>
+
+        <!-- SIGNATURES -->
+        <div class="flex justify-between mt-2">
+            <div class="text-center">
+                <p>____________________</p>
+                <p class="text-[6px]">Registrar</p>
             </div>
+            <div class="text-center">
+                <p>____________________</p>
+                <p class="text-[6px]">Principal</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MICRO-TEXT SECURITY -->
+    <p class="absolute bottom-1 left-0 right-0 text-[4px] text-gray-400 text-center tracking-widest">
+        TUGAWE ELEMENTARY SCHOOL • OFFICIAL STUDENT IDENTIFICATION • BACKSIDE
+    </p>
+
+</div>
+
 
         </div>
         @endforeach

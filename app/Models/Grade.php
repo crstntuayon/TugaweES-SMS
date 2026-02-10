@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Grade extends Model
 {
-    protected $fillable = [
-        'student_id',
-        'subject_id',
-        'teacher_id',
-        'quarter',
-        'grade'
-    ];
+    use HasFactory;
+
+ protected $fillable = ['student_id', 'subject_id', 'quarter', 'grade'];
+
 
     public function student()
     {
@@ -24,3 +22,4 @@ class Grade extends Model
         return $this->belongsTo(Subject::class);
     }
 }
+

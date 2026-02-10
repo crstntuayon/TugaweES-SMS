@@ -292,10 +292,45 @@ Route::post('/admin/students/issue-ids', [App\Http\Controllers\Admin\StudentCont
     ->name('admin.students.issue-ids');
 Route::post('/admin/students/export-ids', [App\Http\Controllers\Admin\StudentController::class, 'exportIdsPdf'])->name('admin.students.export-ids');
 
-<<<<<<< HEAD
 
-Route::put('/registrar/students/{student}', [StudentController::class, 'update']);
 
-=======
->>>>>>> 363cc25 (when adding student it also create stud. account)
+
+// TEACHER ROLE ENROLLMENT ROUTE
+
+
+   // Enroll student
+Route::post('teacher/students/enroll', [App\Http\Controllers\Teacher\DashboardController::class, 'enroll'])
+    ->name('teacher.students.enroll');
+
+// Unenroll student (already discussed)
+Route::put('teacher/students/{student}/unenroll', [App\Http\Controllers\Teacher\DashboardController::class, 'unenroll'])
+    ->name('teacher.students.unenroll');
+
+// Attendance
+Route::get('/teacher/attendance/{section}', [App\Http\Controllers\Teacher\AttendanceController::class, 'index'])->name('teacher.attendance');
+Route::post('/teacher/attendance/{section}', [App\Http\Controllers\Teacher\AttendanceController::class, 'store'])->name('teacher.attendance.store');
+
+// Grades
+Route::get('/teacher/grades/{section}', [App\Http\Controllers\Teacher\GradeController::class, 'index'])->name('teacher.grades');
+Route::post('/teacher/grades/{section}', [App\Http\Controllers\Teacher\GradeController::class, 'store'])->name('teacher.grades.store');
+
+Route::get('admin/students/verify/{school_id}', [App\Http\Controllers\Teacher\StudentVerificationController::class, 'verify'])
+    ->name('admin.students.verify');
+
+
+    Route::post(
+    '/teacher/grades/modal/save',
+    [App\Http\Controllers\Teacher\GradeController::class, 'storeModal']
+)->name('teacher.grades.modal.save');
+
+
+   Route::get('/attendance/{section}', [App\Http\Controllers\Teacher\AttendanceController::class,'index'])
+            ->name('teacher.attendance');
+
+        Route::post('/attendance/{section}', [App\Http\Controllers\Teacher\AttendanceController::class,'store'])
+            ->name('teacher.attendance.store');
+
+        Route::get('/attendance/{section}/export', [App\Http\Controllers\Teacher\AttendanceController::class,'export'])
+            ->name('teacher.export');
+
 require __DIR__.'/auth.php';

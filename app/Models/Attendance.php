@@ -2,21 +2,26 @@
 
 namespace App\Models;
 
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 
 class Attendance extends Model
 {
-    protected $fillable = ['section_id', 'date', 'teacher_id'];
+    use HasFactory;
+
+    protected $fillable = [
+        'student_id',
+        'section_id',
+        'date',
+        'status',];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 
     public function section()
     {
         return $this->belongsTo(Section::class);
     }
-
-    public function records()
-    {
-        return $this->hasMany(AttendanceRecord::class);
     }
-}

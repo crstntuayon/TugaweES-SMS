@@ -343,8 +343,25 @@ new Chart(ctx, {
 
         <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Teacher</h2>
 
-        <form method="POST" action="{{ route('admin.teachers.store') }}" class="space-y-4">
+        <form method="POST"
+              action="{{ route('admin.teachers.store') }}"
+              enctype="multipart/form-data"
+              class="space-y-4">
             @csrf
+
+            <!-- PHOTO UPLOAD -->
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-200 mb-2">
+                    <img id="photoPreview"
+                         src="https://ui-avatars.com/api/?name=Teacher"
+                         class="w-full h-full object-cover">
+                </div>
+
+                <input type="file" name="photo"
+                       accept="image/*"
+                       onchange="previewTeacherPhoto(event)"
+                       class="text-sm">
+            </div>
 
             <!-- NAME FIELDS -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -362,11 +379,8 @@ new Chart(ctx, {
             </div>
 
             <!-- BIRTHDAY -->
-            <div>
-                <label class="text-sm text-gray-600 mb-1 block">Birthday</label>
-                <input type="date" name="birthday" required
-                       class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
-            </div>
+            <input type="date" name="birthday" required
+                   class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
 
             <!-- EMAIL -->
             <input type="email" name="email" placeholder="Email Address" required
@@ -376,8 +390,8 @@ new Chart(ctx, {
             <input type="text" name="username" placeholder="Username" required
                    class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
 
-            <!-- PASSWORDS -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- PASSWORD -->
+            <div class="grid grid-cols-2 gap-4">
                 <input type="password" name="password" placeholder="Password" required
                        class="px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
 
@@ -386,7 +400,7 @@ new Chart(ctx, {
                        class="px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
             </div>
 
-            <!-- ACTION BUTTONS -->
+            <!-- BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
                 <button type="button" onclick="closeAddTeacherModal()"
                         class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg">
@@ -398,15 +412,24 @@ new Chart(ctx, {
                     Save Teacher
                 </button>
             </div>
+
         </form>
 
-        <!-- CLOSE ICON -->
         <button onclick="closeAddTeacherModal()"
                 class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">
             ✕
         </button>
     </div>
 </div>
+<script>
+function previewTeacherPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        document.getElementById('photoPreview').src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
 
 
 <!-- ADD SECTION MODAL -->

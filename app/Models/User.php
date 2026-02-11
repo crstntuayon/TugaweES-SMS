@@ -75,5 +75,9 @@ public function student()
         return $this->hasMany(Section::class, 'teacher_id');
     }
 
+public function teacher()
+{
+    return $this->hasOne(\App\Models\Teacher::class);
+}
 
 }

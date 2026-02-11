@@ -364,6 +364,8 @@ Route::prefix('student')->middleware(['auth', 'role:student'])->group(function (
 
 
     
+// routes/web.php
+Route::put('/admin/teachers/{teacher}/program', [App\Http\Controllers\Admin\TeacherController::class, 'updateProgram'])->name('admin.teachers.program.update');
 
 
 require __DIR__.'/auth.php';

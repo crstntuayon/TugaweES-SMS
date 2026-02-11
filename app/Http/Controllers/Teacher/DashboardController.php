@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\SchoolYear;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -23,12 +24,9 @@ class DashboardController extends Controller
  // Students **not yet enrolled in any section**
         $students = Student::whereNull('section_id')->get();
 
-
- // Fetch sections for the registrar (or all if needed)
-   // $sections = Section::all(); // for section dropdown
-   // $students = Student::all(); // for student dropdown
+ $activeSchoolYear = \App\Models\SchoolYear::where('is_active', true)->first();
    
-        return view('teacher.dashboard', compact('students', 'sections'));
+        return view('teacher.dashboard', compact('students', 'sections', 'activeSchoolYear'));
     }
     // Enroll student into a section
  public function enroll(Request $request)

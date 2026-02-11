@@ -33,48 +33,78 @@
 
 
     
-        <!-- MENU DROPDOWN -->
-        <div class="relative" x-data="{ open: false }">
+      <!-- MENU DROPDOWN -->
+<div class="relative" x-data="{ open: false }">
 
-            <!-- Trigger -->
-            <button @click="open = !open" class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700">
-                <span class="hidden md:block">Menu</span>
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-                </svg>
+    <!-- Trigger -->
+    <button @click="open = !open"
+        class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-xl shadow text-sm font-medium text-gray-700 transition">
+        <span class="hidden md:block">Menu</span>
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <!-- Dropdown -->
+    <div x-show="open" @click.away="open = false" x-transition
+        class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+
+        <!-- User Info -->
+        <div class="px-4 py-3 border-b bg-gray-50">
+            <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name ?? 'User' }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="flex flex-col divide-y divide-gray-100">
+
+            <!-- Profile -->
+            <a href="{{ route('profile.edit') }}"
+                class="px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                👤 Profile
+            </a>
+
+            <!-- Manage Users -->
+            <button type="button" onclick="openManageUsersModal()"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                👥 Manage Users
             </button>
 
-            <!-- Dropdown -->
-            <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
-                <!-- User Info -->
-                <div class="px-4 py-3 border-b">
-                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
-                    <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-                </div>
+            <!-- Create New Admin -->
+            <button type="button" onclick="openAddAdminModal()"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+                ➕ Create Admin
+            </button>
 
-                <!-- Profile -->
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">👤 Profile</a>
-
-                <!-- Manage Users -->
-                <button onclick="openManageUsersModal()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">👥 Manage Users</button>
-
-                <!-- Create New Admin -->
-                <button onclick="openAddAdminModal()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">➕ Create Admin</button>
-
-                <!-- Divider -->
-                <div class="border-t"></div>
-
-                <!-- Logout -->
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-                    </svg>
-                    Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+            <!-- Active School Year Selector -->
+            <div class="px-4 py-3 bg-gray-50">
+                <span class="block text-sm font-semibold text-gray-700 mb-2">Active School Year</span>
+                <form action="{{ route('admin.schoolyears.activate') }}" method="POST">
+                    @csrf
+                    <select name="school_year" onchange="this.form.submit()"
+                        class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm">
+                        @foreach($schoolYears as $year)
+                            <option value="{{ $year->id }}" {{ $year->is_active ? 'selected' : '' }}>
+                                {{ $year->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
             </div>
+
+            <!-- Logout -->
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                </svg>
+                Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+
         </div>
     </div>
+</div>
 
 </header>
 
@@ -90,7 +120,7 @@
 <div class="flex flex-col gap-2">
     <!-- Current School Year -->
     <p class="text-gray-500 font-medium text-xs mb-1">
-        School Year: {{ $currentSchoolYear ?? 'N/A' }}
+        Active SY: <span class="text-gray-700 font-semibold">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
     </p>
 
     <!-- Card Title -->
@@ -434,7 +464,7 @@ new Chart(ctx, {
     </div>
 </div>
 
-<!-- ADD STUDENT MODAL -->
+<!-- ================= ADD STUDENT MODAL ================= -->
 <div id="addStudentModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 relative overflow-y-auto max-h-[90vh]">
@@ -443,16 +473,14 @@ new Chart(ctx, {
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Add New Student</h2>
             <button type="button" onclick="closeAddStudentModal()"
-                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">
-                &times;
-            </button>
+                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
         </div>
 
         <!-- STUDENT FORM -->
-       <form method="POST" 
-      action="{{ route('admin.students.store') }}" 
-      enctype="multipart/form-data"
-      class="space-y-4">
+        <form method="POST" 
+              action="{{ route('admin.students.store') }}" 
+              enctype="multipart/form-data"
+              class="space-y-4">
 
             @csrf
 
@@ -461,19 +489,15 @@ new Chart(ctx, {
                 <input type="text" name="first_name" placeholder="First Name" required
                        value="{{ old('first_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="middle_name" placeholder="Middle Name"
                        value="{{ old('middle_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="last_name" placeholder="Last Name" required
                        value="{{ old('last_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)"
                        value="{{ old('suffix') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="lrn" placeholder="LRN" required
                        value="{{ old('lrn') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
@@ -509,49 +533,33 @@ new Chart(ctx, {
                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
             </div>
 
-            <!-- ADDRESS -->
-            <!-- Address Input with Suggestions -->
-<div>
-    <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
-    
-    <input list="addresses" 
-           id="address" 
-           name="address" 
-           placeholder="Enter your address"
-           value="{{ old('address') }}"
-           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-    >
-
-    <!-- Predefined address suggestions -->
-    <datalist id="addresses">
-        <option value="Bulak, Dauin, Negros Oriental">
-        <option value="Libjo, Dauin, Negros Oriental">
-        <option value="Lipayo, Dauin, Negros Oriental">
-        <option value="Mag-aso, Dauin, Negros Oriental">
-        <option value="Tugawe, Dauin, Negros Oriental">
-    </datalist>
-</div>
-
-
-            <!-- SECTION + SCHOOL YEAR 
+            <!-- HOME ADDRESS -->
             <div>
-                <select name="section_id" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                    <option value="">-- Select Section --</option>
-                    @if(isset($sections) && $sections->count())
-                        @foreach($sections as $section)
-                            <option value="{{ $section->id }}"
-                                {{ old('section_id') == $section->id ? 'selected' : '' }}>
-                                {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
-                            </option>
-                        @endforeach
-                    @else
-                        <option value="">No sections available</option>
-                    @endif
-                </select>
-            </div>  -->
+                <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+                <input list="addresses" 
+                       id="address" 
+                       name="address" 
+                       placeholder="Enter your address"
+                       value="{{ old('address') }}"
+                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+                <datalist id="addresses">
+                    <option value="Bulak, Dauin, Negros Oriental">
+                    <option value="Libjo, Dauin, Negros Oriental">
+                    <option value="Lipayo, Dauin, Negros Oriental">
+                    <option value="Mag-aso, Dauin, Negros Oriental">
+                    <option value="Tugawe, Dauin, Negros Oriental">
+                </datalist>
+            </div>
 
-              <!-- PHOTO UPLOAD -->
+            <!-- PASSWORD -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="password" name="password" placeholder="Password" required
+                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required
+                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+            </div>
+
+            <!-- PHOTO UPLOAD -->
             <div class="mb-3 mt-3">
                 <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
                 <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
@@ -559,7 +567,6 @@ new Chart(ctx, {
                     <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
                 </div>
             </div>
-
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
@@ -572,9 +579,11 @@ new Chart(ctx, {
                     Save Student
                 </button>
             </div>
+
         </form>
     </div>
 </div>
+
 
 <!-- Section Selection Modal -->
 <div id="sectionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

@@ -48,6 +48,7 @@ class StudentController extends Controller
         'address'         => 'nullable|string',
         'sex'             => 'required|in:Male,Female',
         'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'password'        => 'required|confirmed|min:6',
         
     ]);
 
@@ -72,7 +73,7 @@ $user = User::create([
     'username'   => $username,
     'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
     'email'      => $email,
-    'password'   => Hash::make($validated['lrn']),
+    'password' => Hash::make($request->password), // hash password!
     'role_id'    => 4,
 ]);
 

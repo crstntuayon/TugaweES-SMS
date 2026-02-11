@@ -333,4 +333,37 @@ Route::get('admin/students/verify/{school_id}', [App\Http\Controllers\Teacher\St
         Route::get('/attendance/{section}/export', [App\Http\Controllers\Teacher\AttendanceController::class,'export'])
             ->name('teacher.export');
 
+
+
+
+use App\Http\Controllers\Student\DashboardController;
+
+Route::middleware(['auth'])->prefix('student')->name('student.')->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::get('/grades', [DashboardController::class, 'grades'])
+        ->name('grades');
+
+});
+
+Route::prefix('student')->middleware(['auth', 'role:student'])->group(function () {
+    Route::get('sms', [App\Http\Controllers\Student\StudentController::class, 'sms'])->name('student.sms');
+    Route::get('curriculum', [App\Http\Controllers\Student\StudentController::class, 'curriculum'])->name('student.curriculum');
+    Route::get('loadslip', [App\Http\Controllers\Student\StudentController::class, 'loadslip'])->name('student.loadslip');
+   
+
+});
+
+
+    // Activate School Year
+    Route::post('/schoolyears/activate', [App\Http\Controllers\SchoolYearController::class, 'activate'])->name('admin.schoolyears.activate');
+
+
+
+
+    
+
+
 require __DIR__.'/auth.php';

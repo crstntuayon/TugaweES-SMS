@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Section;
 use App\Models\Student;
 use App\Models\Role;
+use App\Models\SchoolYear;
 use Illuminate\Http\Request;
 
 
@@ -38,6 +39,9 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
     $students = Student::with('section')->get();
     $sections = Section::all(); // ✅ REQUIRED
 
+     $schoolYears = SchoolYear::orderBy('name', 'asc')->get();
+    $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+
        $roles = Role::all(); // <-- add this line
 $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school_year ?? null;
 
@@ -53,6 +57,8 @@ $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school
         'femaleCount', 
         'studentsPerSection',
         'currentSchoolYear',
+        'schoolYears',
+        'activeSchoolYear'
        
     ));
 }

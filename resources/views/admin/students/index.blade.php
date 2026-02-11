@@ -121,7 +121,6 @@ setTimeout(() => {
                 <thead class="bg-gray-100 uppercase text-xs text-gray-600">
                     <tr>
                         <th class="px-5 py-3 text-left">Student</th>
-                     <!--   <th class="px-5 py-3 text-left">LRN</th> -->
                         <th class="px-5 py-3 text-left">Email</th>
                         <th class="px-5 py-3 text-left">Contact</th>
                         <th class="px-5 py-3 text-left">Sex</th>
@@ -156,11 +155,6 @@ setTimeout(() => {
                                     </div>
                                 </div>
                             </td>
-
-                            <!-- LRN 
-                            <td class="px-5 py-4 text-gray-700">
-                                {{ $student->lrn }}
-                            </td> -->
 
                             <!-- EMAIL -->
                             <td class="px-5 py-4">
@@ -219,16 +213,6 @@ setTimeout(() => {
     </svg>
                                     </button>
 
-                                 <!--   <button
-                                        onclick="showDeleteModal({{ $student->id }})"
-                                       class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-         viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
-                 a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
-    </svg>
-                                    </button> -->
                                 </div>
                             </td>
 
@@ -269,7 +253,7 @@ setTimeout(() => {
 </div>
 
 
-<!-- ADD STUDENT MODAL -->
+<!-- ================= ADD STUDENT MODAL ================= -->
 <div id="addStudentModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 relative overflow-y-auto max-h-[90vh]">
@@ -278,16 +262,14 @@ setTimeout(() => {
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Add New Student</h2>
             <button type="button" onclick="closeAddStudentModal()"
-                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">
-                &times;
-            </button>
+                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
         </div>
 
         <!-- STUDENT FORM -->
-      <form method="POST" 
-      action="{{ route('admin.students.store') }}" 
-      enctype="multipart/form-data"
-      class="space-y-4">
+        <form method="POST" 
+              action="{{ route('admin.students.store') }}" 
+              enctype="multipart/form-data"
+              class="space-y-4">
 
             @csrf
 
@@ -296,19 +278,15 @@ setTimeout(() => {
                 <input type="text" name="first_name" placeholder="First Name" required
                        value="{{ old('first_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="middle_name" placeholder="Middle Name"
                        value="{{ old('middle_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="last_name" placeholder="Last Name" required
                        value="{{ old('last_name') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)"
                        value="{{ old('suffix') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-
                 <input type="text" name="lrn" placeholder="LRN" required
                        value="{{ old('lrn') }}"
                        class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
@@ -344,49 +322,33 @@ setTimeout(() => {
                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
             </div>
 
-            <!-- ADDRESS -->
-          <!-- Address Input with Suggestions -->
-<div>
-    <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
-    
-    <input list="addresses" 
-           id="address" 
-           name="address" 
-           placeholder="Enter your address"
-           value="{{ old('address') }}"
-           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-    >
-
-    <!-- Predefined address suggestions -->
-    <datalist id="addresses">
-        <option value="Bulak, Dauin, Negros Oriental">
-        <option value="Libjo, Dauin, Negros Oriental">
-        <option value="Lipayo, Dauin, Negros Oriental">
-        <option value="Mag-aso, Dauin, Negros Oriental">
-        <option value="Tugawe, Dauin, Negros Oriental">
-    </datalist>
-</div>
-
-
-                <!-- SECTION + SCHOOL YEAR 
+            <!-- HOME ADDRESS -->
             <div>
-                <select name="section_id" required
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                    <option value="">-- Select Section --</option>
-                    @if(isset($sections) && $sections->count())
-                        @foreach($sections as $section)
-                            <option value="{{ $section->id }}"
-                                {{ old('section_id') == $section->id ? 'selected' : '' }}>
-                                {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
-                            </option>
-                        @endforeach
-                    @else
-                        <option value="">No sections available</option>
-                    @endif
-                </select>
-            </div>  -->
+                <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+                <input list="addresses" 
+                       id="address" 
+                       name="address" 
+                       placeholder="Enter your address"
+                       value="{{ old('address') }}"
+                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+                <datalist id="addresses">
+                    <option value="Bulak, Dauin, Negros Oriental">
+                    <option value="Libjo, Dauin, Negros Oriental">
+                    <option value="Lipayo, Dauin, Negros Oriental">
+                    <option value="Mag-aso, Dauin, Negros Oriental">
+                    <option value="Tugawe, Dauin, Negros Oriental">
+                </datalist>
+            </div>
 
-             <!-- PHOTO UPLOAD -->
+            <!-- PASSWORD -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="password" name="password" placeholder="Password" required
+                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required
+                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+            </div>
+
+            <!-- PHOTO UPLOAD -->
             <div class="mb-3 mt-3">
                 <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
                 <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
@@ -394,7 +356,6 @@ setTimeout(() => {
                     <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
                 </div>
             </div>
-
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
@@ -407,9 +368,11 @@ setTimeout(() => {
                     Save Student
                 </button>
             </div>
+
         </form>
     </div>
 </div>
+
 
 <!-- EDIT STUDENT MODAL -->
 <div id="editStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">

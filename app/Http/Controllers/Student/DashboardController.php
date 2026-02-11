@@ -3,57 +3,39 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Grade;
+use Illuminate\Http\Request;
+use App\Models\Student;
 
 class DashboardController extends Controller
 {
-    /**
-     * Show the student dashboard.
-     */
     public function index()
     {
-        $user = Auth::user();
+        // Logged-in student
+        $student = Student::with(['section', 'grades.subject', 'attendances'])->where('user_id', auth()->id())->first();
 
-        // Make sure the user has a student record
-        $student = $user->student;
         if (!$student) {
-            abort(403, 'Student record not found.');
+            abort(404, 'Student record not found.');
         }
 
-        // Load related section, teacher, and classmates
-        $section = $student->section; // returns null if no section assigned
-        $teacher = $section?->teacher; // null safe operator
-        $classmates = $section
-            ? $section->students()->where('id', '!=', $student->id)->get()
-            : collect(); // empty collection if no section
+        // Just get the section of this student
+        $section = $student->section;
 
-        return view('student.dashboard', compact(
-            'student',
-            'section',
-            'teacher',
-            'classmates'
-        ));
+          // Get the active school year
+    $activeSchoolYear = \App\Models\SchoolYear::where('is_active', true)->first();
+
+        return view('student.dashboard', compact('student', 'section'   , 'activeSchoolYear'));
     }
 
-    /**
-     * Show the student's grades.
-     */
     public function grades()
     {
-        $user = Auth::user();
-        $student = $user->student;
+        $student = Student::with('grades.subject')->where('user_id', auth()->id())->first();
 
         if (!$student) {
-            abort(403, 'Student record not found.');
+            abort(404, 'Student record not found.');
         }
 
-        // Load grades grouped by quarter, eager load subjects
-        $grades = Grade::where('student_id', $student->id)
-            ->with('subject')
-            ->get()
-            ->groupBy('quarter');
+        $grades = $student->grades;
 
-        return view('student.grades', compact('grades'));
+        return view('student.grades', compact('student', 'grades'));
     }
 }

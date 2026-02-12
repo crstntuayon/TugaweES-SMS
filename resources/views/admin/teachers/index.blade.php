@@ -262,117 +262,176 @@ function openTeacherModal(id) {
 function renderTeacherDocument() {
     let t = currentTeacher;
 
+    const photoUrl = t.photo 
+        ? `/storage/${t.photo}` 
+        : `/images/photo-placeholder.png`;
+
     document.getElementById('teacherModalContent').innerHTML = `
-       <div class="flex items-center justify-center mb-4 gap-4">
-    <!-- Left Logo -->
-    <img src="{{ asset('images/logo1.png') }}" alt="Logo 1" class="h-12 w-auto">
+        
+        <!-- HEADER -->
+        <div class="relative">
 
-    <!-- Center Text -->
-    <div class="text-center">
-        <p class="font-bold uppercase text-xs">Republic of the Philippines</p>
-        <p class="font-bold uppercase text-xs">Department of Education</p>
-        <p>Division of Negros Oriental</p>
-       
-    </div>
-
-    <!-- Right Logo -->
-    <img src="{{ asset('images/logo.jpg') }}" alt="Logo 2" class="h-12 w-auto">
-</div> <br>
-
-<p>________________________________________________________________________________________________________________________________</p>
-
-<br>
-
-
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <p><strong>Teacher Name:</strong> ${t.first_name} ${t.middle_name ?? ''} ${t.last_name} ${t.suffix ?? ''}</p>
-
-                <p><strong>Current Position:</strong> ${isEditing ? `<input id="position" value="${t.position ?? ''}" class="border px-2 py-1 w-full">` : (t.position ?? 'Teacher I')}</p>
-
-                <p><strong>Teaching Experience (Years):</strong> ${isEditing ? `<input id="years_experience" type="number" value="${t.years_experience ?? 0}" class="border px-2 py-1 w-full">` : (t.years_experience ?? 0)}</p>
-
-                <p><strong>Teaching Experience (Grade Level):</strong> ${isEditing ? `<input id="grade_experience" value="${t.grade_experience ?? ''}" class="border px-2 py-1 w-full">` : (t.grade_experience ?? '')}</p>
-            </div>
-
-            <div>
-                <p><strong>Grade Level:</strong> ${t.sections.length > 0 ? t.sections.map(s => s.year_level).join(', ') : '-'}</p>
-
-                <p><strong>Enrollment (Male):</strong> ${isEditing ? `<input id="male_enrollment" type="number" value="${t.male_enrollment ?? 0}" class="border px-2 py-1 w-full">` : (t.male_enrollment ?? 0)}</p>
-
-                <p><strong>Enrollment (Female):</strong> ${isEditing ? `<input id="female_enrollment" type="number" value="${t.female_enrollment ?? 0}" class="border px-2 py-1 w-full">` : (t.female_enrollment ?? 0)}</p>
-            <p><strong>Active SY:</strong> ${activeSchoolYear?.name ?? '-'}</p>
-
-            </div>
-        </div>
-
-        <!-- Teaching Load Table -->
-        <div class="overflow-auto mb-4">
-            <table class="w-full border text-xs">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border px-2 py-1">Time</th>
-                        <th class="border px-2 py-1">Minutes</th>
-                        <th class="border px-2 py-1">Subject</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${t.teaching_load?.length > 0 
-                        ? t.teaching_load.map((l, index) => `
-                            <tr>
-                                <td class="border px-2 py-1">
-                                    ${isEditing 
-                                        ? `<input data-index="${index}" data-field="time" value="${l.time}" class="border w-full px-1">`
-                                        : l.time}
-                                </td>
-                                <td class="border px-2 py-1">
-                                    ${isEditing 
-                                        ? `<input data-index="${index}" data-field="minutes" value="${l.minutes}" class="border w-full px-1">`
-                                        : l.minutes}
-                                </td>
-                                <td class="border px-2 py-1">
-                                    ${isEditing 
-                                        ? `<input data-index="${index}" data-field="subject" value="${l.subject}" class="border w-full px-1">`
-                                        : l.subject}
-                                </td>
-                            </tr>
-                        `).join('')
-                        : '<tr><td class="border px-2 py-1 text-center" colspan="3">No load assigned</td></tr>'
-                    }
-                </tbody>
-            </table>
-
-            ${isEditing ? `
-                <div class="mt-2 text-right">
-                    <button onclick="addTeachingRow()" 
-                        class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 4v16m8-8H4" />
-                        </svg>
-                    </button>
+            <!-- Logos + Header -->
+            <div class="flex items-center justify-center gap-4">
+                <img src="{{ asset('images/logo1.png') }}" class="h-14 w-auto">
+                
+                <div class="text-center leading-tight">
+                    <p class="font-bold uppercase text-xs">Republic of the Philippines</p>
+                    <p class="font-bold uppercase text-sm">Department of Education</p>
+                    <p class="text-xs">Division of Negros Oriental</p>
                 </div>
-            ` : ''}
+
+                <img src="{{ asset('images/logo.jpg') }}" class="h-14 w-auto">
+            </div>
+
+            <!-- Teacher Photo (Top Right Vertical Rectangle) -->
+            <div class="absolute top-0 right-0">
+                <div class="w-28 h-40 border-2 border-gray-400 shadow-md bg-white overflow-hidden">
+                    <img src="${photoUrl}" 
+                        class="w-full h-full object-cover">
+                </div>
+            </div>
         </div>
 
-        <!-- Signatures -->
-        <div class="grid grid-cols-3 gap-4 text-center text-sm">
-            <div>
-                ${isEditing ? `<input id="prepared_by" value="${t.prepared_by ?? 'Principal'}" class="border px-2 py-1 w-full text-center">`
-                : `<p class="border-t pt-2">Prepared by<br><strong>${t.prepared_by ?? 'Principal'}</strong></p>`}
+        <hr class="my-6 border-gray-400">
+
+        <!-- TEACHER DETAILS -->
+        <div class="grid grid-cols-2 gap-8 text-sm">
+
+            <!-- LEFT SIDE -->
+            <div class="space-y-2">
+
+                <p><strong>Teacher Name:</strong><br>
+                    ${t.first_name} ${t.middle_name ?? ''} ${t.last_name} ${t.suffix ?? ''}
+                </p>
+
+                <p><strong>Current Position:</strong><br>
+                    ${isEditing 
+                        ? `<input id="position" value="${t.position ?? ''}" class="border px-2 py-1 w-full rounded">`
+                        : (t.position ?? 'Teacher I')}
+                </p>
+
+                <p><strong>Teaching Experience (Years):</strong><br>
+                    ${isEditing 
+                        ? `<input id="years_experience" type="number" value="${t.years_experience ?? 0}" class="border px-2 py-1 w-full rounded">`
+                        : (t.years_experience ?? 0)}
+                </p>
+
+                <p><strong>Teaching Experience (Grade Level):</strong><br>
+                    ${isEditing 
+                        ? `<input id="grade_experience" value="${t.grade_experience ?? ''}" class="border px-2 py-1 w-full rounded">`
+                        : (t.grade_experience ?? '')}
+                </p>
+
             </div>
-            <div>
-                ${isEditing ? `<input id="conforme" value="${t.conforme ?? 'Adviser'}" class="border px-2 py-1 w-full text-center">`
-                : `<p class="border-t pt-2">Conforme<br><strong>${t.conforme ?? 'Adviser'}</strong></p>`}
+
+            <!-- RIGHT SIDE -->
+            <div class="space-y-2">
+
+                <p><strong>Grade Level Assigned:</strong><br>
+                    ${t.sections.length > 0 
+                        ? t.sections.map(s => s.year_level).join(', ') 
+                        : '-'}
+                </p>
+
+                <p><strong>Enrollment (Male):</strong><br>
+                    ${isEditing 
+                        ? `<input id="male_enrollment" type="number" value="${t.male_enrollment ?? 0}" class="border px-2 py-1 w-full rounded">`
+                        : (t.male_enrollment ?? 0)}
+                </p>
+
+                <p><strong>Enrollment (Female):</strong><br>
+                    ${isEditing 
+                        ? `<input id="female_enrollment" type="number" value="${t.female_enrollment ?? 0}" class="border px-2 py-1 w-full rounded">`
+                        : (t.female_enrollment ?? 0)}
+                </p>
+
+                <p><strong>Active School Year:</strong><br>
+                    ${activeSchoolYear?.name ?? '-'}
+                </p>
+
             </div>
-            <div>
-                ${isEditing ? `<input id="approved_by" value="${t.approved_by ?? 'Public School District Supervisor'}" class="border px-2 py-1 w-full text-center">`
-                : `<p class="border-t pt-2">Approved by<br><strong>${t.approved_by ?? 'Public School District Supervisor'}</strong></p>`}
+        </div>
+
+        <!-- TEACHING LOAD SECTION -->
+        <div class="mt-8">
+
+            <h3 class="text-center font-bold text-sm mb-3">
+                TEACHER'S PROGRAM / TEACHING LOAD
+            </h3>
+           
+
+            <div class="overflow-auto">
+                <table class="w-full border text-xs">
+                    <thead>
+                        <tr class="bg-gray-200 text-center">
+                            <th class="border px-2 py-1">Time</th>
+                            <th class="border px-2 py-1">Minutes</th>
+                            <th class="border px-2 py-1">Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${t.teaching_load?.length > 0 
+                            ? t.teaching_load.map((l, index) => `
+                                <tr>
+                                    <td class="border px-2 py-1">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="time" value="${l.time}" class="border w-full px-1 rounded">`
+                                            : l.time}
+                                    </td>
+                                    <td class="border px-2 py-1 text-center">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="minutes" value="${l.minutes}" class="border w-full px-1 rounded">`
+                                            : l.minutes}
+                                    </td>
+                                    <td class="border px-2 py-1">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="subject" value="${l.subject}" class="border w-full px-1 rounded">`
+                                            : l.subject}
+                                    </td>
+                                </tr>
+                            `).join('')
+                            : '<tr><td colspan="3" class="border px-2 py-2 text-center">No load assigned</td></tr>'
+                        }
+                    </tbody>
+                </table>
+
+                ${isEditing ? `
+                    <div class="mt-2 text-right">
+                        <button onclick="addTeachingRow()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded shadow">
+                            +
+                        </button>
+                    </div>
+                ` : ''}
             </div>
+        </div>
+
+        <!-- SIGNATURES -->
+        <div class="grid grid-cols-3 gap-8 mt-12 text-center text-sm">
+
+            <div>
+                ${isEditing 
+                    ? `<input id="prepared_by" value="${t.prepared_by ?? 'Principal'}" class="border px-2 py-1 w-full text-center rounded">`
+                    : `<p class="border-t pt-2">Prepared by<br><strong>${t.prepared_by ?? 'Principal'}</strong></p>`}
+            </div>
+
+            <div>
+                ${isEditing 
+                    ? `<input id="conforme" value="${t.conforme ?? 'Adviser'}" class="border px-2 py-1 w-full text-center rounded">`
+                    : `<p class="border-t pt-2">Conforme<br><strong>${t.conforme ?? 'Adviser'}</strong></p>`}
+            </div>
+
+            <div>
+                ${isEditing 
+                    ? `<input id="approved_by" value="${t.approved_by ?? 'Public School District Supervisor'}" class="border px-2 py-1 w-full text-center rounded">`
+                    : `<p class="border-t pt-2">Approved by<br><strong>${t.approved_by ?? 'Public School District Supervisor'}</strong></p>`}
+            </div>
+
         </div>
     `;
 }
+
 
 function enableEditMode() {
     isEditing = true;

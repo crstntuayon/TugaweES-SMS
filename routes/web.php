@@ -367,5 +367,39 @@ Route::prefix('student')->middleware(['auth', 'role:student'])->group(function (
 // routes/web.php
 Route::put('/admin/teachers/{teacher}/program', [App\Http\Controllers\Admin\TeacherController::class, 'updateProgram'])->name('admin.teachers.program.update');
 
+Route::get('/admin/user-search',
+    [AdminUserController::class, 'liveSearch']
+)->name('admin.user.search');
+
+
+use App\Http\Controllers\Auth\StudentRegisterController;
+
+Route::get('/student/register', [StudentRegisterController::class, 'show'])->name('student.register');
+Route::post('/student/register', [StudentRegisterController::class, 'store']);
+
+
+
+
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+
+// Email verification notice
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+// Email verification handler
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Resend verification
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
 
 require __DIR__.'/auth.php';

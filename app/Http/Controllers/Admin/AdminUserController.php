@@ -45,4 +45,17 @@ class AdminUserController extends Controller
         $user->delete();
         return back()->with('success', 'User deleted successfully.');
     }
+  public function liveSearch(Request $request)
+{
+    $search = $request->search;
+
+    $users = User::where('first_name', 'like', "%{$search}%")
+        ->orWhere('last_name', 'like', "%{$search}%")
+        ->limit(5)
+        ->get();
+
+    return response()->json($users);
+}
+
+
 }

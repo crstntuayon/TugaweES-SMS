@@ -111,101 +111,6 @@
 <main class="max-w-7xl mx-auto px-6 py-10">
 
 
- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-
-    <!-- Gender Distribution Slim Card -->
-    <div class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
-        
-       <!-- Counts -->
-<div class="flex flex-col gap-2">
-    <!-- Current School Year -->
-    <p class="text-gray-500 font-medium text-xs mb-1">
-        Active SY: <span class="text-gray-700 font-semibold">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
-    </p>
-
-    <!-- Card Title -->
-    <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Total Enrollees</p>
-
-    <!-- Male Count -->
-    <div class="flex items-center gap-2">
-        <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
-        <span class="text-gray-500 text-sm">Male</span>
-    </div>
-
-    <!-- Female Count -->
-    <div class="flex items-center gap-2">
-        <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
-        <span class="text-gray-500 text-sm">Female</span>
-    </div>
-</div>
-
-
-        <!-- Pie Chart -->
-        <div class="w-24 h-24">
-            <canvas id="sexChart" class="w-full h-full"></canvas>
-        </div>
-    </div>
-
-<!-- Students per Section -->
-<div class="bg-green-50 rounded-xl shadow p-6 flex flex-col">
-    
-    <!-- Title -->
-    <p class="text-gray-700 font-semibold uppercase text-sm mb-4">
-        Students per Section
-    </p>
-
-    <!-- List of Sections -->
-    <ul class="space-y-2 overflow-y-auto max-h-52">
-        @foreach($studentsPerSection as $section => $count)
-            <li class="flex justify-between items-center bg-green-100 rounded-full px-4 py-2 shadow-sm hover:bg-green-200 transition-all duration-200">
-                <!-- Section Name -->
-                <span class="text-green-800 font-medium text-sm truncate" title="{{ $section }}">
-                    {{ $section }}
-                </span>
-
-                <!-- Student Count Badge -->
-                <span class="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    {{ $count }}
-                </span>
-            </li>
-        @endforeach
-    </ul>
-
-    <!-- Issue School IDs Button -->
-    <div class="mt-4">
-        <button 
-            onclick="openSectionModal()"
-            class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors duration-200">
-            Issue School IDs
-        </button>
-    </div>
-
-</div>
-
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const ctx = document.getElementById('sexChart').getContext('2d');
-new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: ['Male', 'Female'],
-        datasets: [{
-            data: [{{ $maleCount }}, {{ $femaleCount }}],
-            backgroundColor: ['#3B82F6', '#EC4899']
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } }
-    }
-});
-</script>
-
-
 
 
     <!-- STATS CARDS -->
@@ -331,6 +236,102 @@ new Chart(ctx, {
 
 </div>
     </section>
+
+
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+    <!-- Gender Distribution Slim Card -->
+    <div class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
+        
+       <!-- Counts -->
+<div class="flex flex-col gap-2">
+    <!-- Current School Year -->
+    <p class="text-gray-500 font-medium text-xs mb-1">
+        Active SY: <span class="text-gray-700 font-semibold">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
+    </p>
+
+    <!-- Card Title -->
+    <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Total Enrollees</p>
+
+    <!-- Male Count -->
+    <div class="flex items-center gap-2">
+        <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
+        <span class="text-gray-500 text-sm">Male</span>
+    </div>
+
+    <!-- Female Count -->
+    <div class="flex items-center gap-2">
+        <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
+        <span class="text-gray-500 text-sm">Female</span>
+    </div>
+</div>
+
+
+        <!-- Pie Chart -->
+        <div class="w-24 h-24">
+            <canvas id="sexChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+<!-- Students per Section -->
+<div class="bg-green-50 rounded-xl shadow p-6 flex flex-col">
+    
+    <!-- Title -->
+    <p class="text-gray-700 font-semibold uppercase text-sm mb-4">
+        Students per Section
+    </p>
+
+    <!-- List of Sections -->
+    <ul class="space-y-2 overflow-y-auto max-h-52">
+        @foreach($studentsPerSection as $section => $count)
+            <li class="flex justify-between items-center bg-green-100 rounded-full px-4 py-2 shadow-sm hover:bg-green-200 transition-all duration-200">
+                <!-- Section Name -->
+                <span class="text-green-800 font-medium text-sm truncate" title="{{ $section }}">
+                    {{ $section }}
+                </span>
+
+                <!-- Student Count Badge -->
+                <span class="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    {{ $count }}
+                </span>
+            </li>
+        @endforeach
+    </ul>
+
+    <!-- Issue School IDs Button -->
+    <div class="mt-4">
+        <button 
+            onclick="openSectionModal()"
+            class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors duration-200">
+            Issue School IDs
+        </button>
+    </div>
+
+</div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('sexChart').getContext('2d');
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            data: [{{ $maleCount }}, {{ $femaleCount }}],
+            backgroundColor: ['#3B82F6', '#EC4899']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } }
+    }
+});
+</script>
+
 </main>
 
 
@@ -707,7 +708,6 @@ function closeSectionModal() {
     </div>
 </div>
 
-
 <!-- ================= MANAGE USERS MODAL ================= -->
 <div id="manageUsersModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl p-6 relative overflow-y-auto max-h-[90vh]">
@@ -718,12 +718,36 @@ function closeSectionModal() {
             <button type="button" onclick="closeManageUsersModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
         </div>
 
+        <!-- Search -->
+        <div class="relative w-full max-w-md mb-4">
+            <input type="text"
+                   id="liveUserSearch"
+                   placeholder="Search name..."
+                   autocomplete="off"
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+            <div id="searchResults"
+                 class="absolute w-full bg-white border rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+            </div>
+        </div>
+
         <!-- Table container with spinner -->
         <div class="relative">
-            <div id="usersLoadingSpinner" class="hidden absolute inset-0 bg-white/70 flex items-center justify-center z-10">
-                <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+
+            <!-- Spinner -->
+            <div id="usersLoadingSpinner"
+                 class="hidden absolute inset-0 bg-white/70 flex items-center justify-center z-10">
+                <svg class="animate-spin h-8 w-8 text-indigo-600"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24">
+                    <circle class="opacity-25"
+                            cx="12" cy="12" r="10"
+                            stroke="currentColor"
+                            stroke-width="4"></circle>
+                    <path class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
             </div>
 
@@ -739,50 +763,52 @@ function closeSectionModal() {
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                       @forelse($users ?? [] as $user)
-<tr class="border-t hover:bg-gray-50 transition"
-    data-id="{{ $user->id }}"
-    data-first-name="{{ $user->first_name }}"
-    data-last-name="{{ $user->last_name }}"
-    data-email="{{ $user->email }}"
-    data-username="{{ $user->username }}"
-    data-role-id="{{ $user->role_id }}">
-    
-    <td class="p-3">{{ $user->first_name }} {{ $user->last_name }}</td>
-    <td>{{ $user->email }}</td>
-    <td>{{ $user->username }}</td>
-    <td>{{ $user->role->name ?? 'N/A' }}</td>
-    <td>{{ $user->created_at->format('M d, Y') }}</td>
-    <td class="p-3 text-center flex justify-center gap-2">
-        <!-- Edit Icon -->
-        <a href="javascript:void(0);" onclick="openEditUserModal({{ $user->id }})"
-           class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
+                    @forelse($users ?? [] as $user)
+                        <tr class="border-t hover:bg-gray-50 transition"
+                            data-id="{{ $user->id }}"
+                            data-first-name="{{ $user->first_name }}"
+                            data-last-name="{{ $user->last_name }}"
+                            data-email="{{ $user->email }}"
+                            data-username="{{ $user->username }}"
+                            data-role-id="{{ $user->role_id }}"
+                            data-name="{{ strtolower($user->first_name . ' ' . $user->last_name) }}">
+
+                            <td class="p-3">{{ $user->first_name }} {{ $user->last_name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->username }}</td>
+                            <td>{{ $user->role->name ?? 'N/A' }}</td>
+                            <td>{{ $user->created_at->format('M d, Y') }}</td>
+
+                            <td class="p-3 text-center flex justify-center gap-2">
+                                <button onclick="openEditUserModal({{ $user->id }})"
+                                         class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
          viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M11 5h2m2 2l6 6-6 6-6-6 6-6zM4 21h16"/>
     </svg>
-        </a>
+                                </button>
 
-        <!-- Delete Button -->
-        <button onclick="openDeleteUserModal({{ $user->id }})"
-               class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
+                                <button onclick="openDeleteUserModal({{ $user->id }})"
+                                        class="text-red-500 hover:text-red-700 transition transform hover:scale-110">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
          viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
                  a2 2 0 01-1.995-1.858L5 7m5-4h4"/>
     </svg>
-        </button>
-    </td>
-</tr>
-@empty
-<tr>
-    <td colspan="6" class="text-center text-gray-500 py-4">No users found.</td>
-</tr>
-@endforelse
-
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-gray-500 py-4">
+                                No users found.
+                            </td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
 
@@ -793,12 +819,252 @@ function closeSectionModal() {
             </div>
         </div>
 
-        <!-- Footer counts -->
+        <!-- Footer -->
         <div class="mt-4 flex justify-between items-center text-gray-700 text-sm">
             <p>Total Users: {{ $users->total() ?? 0 }}</p>
             <p>Showing {{ $users->count() }} of {{ $users->total() ?? 0 }}</p>
         </div>
+
     </div>
+</div>
+
+
+
+<!-- ================= EDIT USER MODAL ================= -->
+<div id="editUserModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] px-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Edit User</h2>
+            <button type="button" onclick="closeEditUserModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+        </div>
+
+        <form id="editUserForm" method="POST">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" name="user_id" id="editUserId">
+
+            <input type="text" name="first_name" id="editFirstName"
+                   placeholder="First Name"
+                   class="w-full px-4 py-2 rounded-lg border mb-2">
+
+            <input type="text" name="last_name" id="editLastName"
+                   placeholder="Last Name"
+                   class="w-full px-4 py-2 rounded-lg border mb-2">
+
+            <input type="email" name="email" id="editEmail"
+                   placeholder="Email"
+                   class="w-full px-4 py-2 rounded-lg border mb-2">
+
+            <input type="text" name="username" id="editUsername"
+                   placeholder="Username"
+                   class="w-full px-4 py-2 rounded-lg border mb-2">
+
+            <select name="role_id" id="editRole"
+                    class="w-full px-4 py-2 rounded-lg border mb-4">
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                @endforeach
+            </select>
+
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                        onclick="closeEditUserModal()"
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- ================= DELETE USER MODAL ================= -->
+<div id="deleteUserModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] px-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Delete User?</h2>
+
+        <p class="text-gray-600 mb-4">
+            This action cannot be undone. Deleting in
+            <span id="deleteCountdown">5</span> seconds.
+        </p>
+
+        <div class="flex justify-center gap-4">
+            <button type="button"
+                    onclick="cancelDelete()"
+                    class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                Cancel
+            </button>
+
+            <form id="deleteUserForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+// ================= MANAGE MODAL =================
+function openManageUsersModal() {
+    document.getElementById('manageUsersModal').classList.remove('hidden');
+    document.getElementById('manageUsersModal').classList.add('flex');
+}
+
+function closeManageUsersModal() {
+    document.getElementById('manageUsersModal').classList.add('hidden');
+    document.getElementById('manageUsersModal').classList.remove('flex');
+}
+
+
+// ================= EDIT USER =================
+function openEditUserModal(userId) {
+
+    const row = document.querySelector(`tr[data-id='${userId}']`);
+    if (!row) return;
+
+    document.getElementById('editUserId').value = userId;
+    document.getElementById('editFirstName').value = row.dataset.firstName;
+    document.getElementById('editLastName').value = row.dataset.lastName;
+    document.getElementById('editEmail').value = row.dataset.email;
+    document.getElementById('editUsername').value = row.dataset.username;
+    document.getElementById('editRole').value = row.dataset.roleId;
+
+    document.getElementById('editUserForm').action =
+        `/admin/users/${userId}`;
+
+    const modal = document.getElementById('editUserModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditUserModal() {
+    const modal = document.getElementById('editUserModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+
+// ================= DELETE USER =================
+let deleteTimer;
+let countdown = 5;
+
+function openDeleteUserModal(userId) {
+
+    document.getElementById('deleteUserForm').action =
+        `/admin/users/${userId}`;
+
+    const modal = document.getElementById('deleteUserModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    countdown = 5;
+    document.getElementById('deleteCountdown').innerText = countdown;
+
+    deleteTimer = setInterval(() => {
+        countdown--;
+        document.getElementById('deleteCountdown').innerText = countdown;
+
+        if (countdown <= 0) {
+            clearInterval(deleteTimer);
+        }
+    }, 1000);
+}
+
+function cancelDelete() {
+    clearInterval(deleteTimer);
+    const modal = document.getElementById('deleteUserModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+
+// ================= LIVE SEARCH (UNCHANGED) =================
+const searchInput = document.getElementById('liveUserSearch');
+const resultsBox = document.getElementById('searchResults');
+
+searchInput.addEventListener('keyup', function () {
+
+    let query = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#usersTableContainer tbody tr');
+
+    resultsBox.innerHTML = '';
+
+    if (query.length < 1) {
+        rows.forEach(row => row.style.display = '');
+        resultsBox.classList.add('hidden');
+        return;
+    }
+
+    let matchCount = 0;
+
+    rows.forEach(row => {
+        let name = row.dataset.name;
+
+        if (name.includes(query)) {
+            row.style.display = '';
+            matchCount++;
+
+            if (matchCount <= 5) {
+                resultsBox.innerHTML += `
+                    <div class="p-2 hover:bg-indigo-50 cursor-pointer"
+                         onclick="selectUser(${row.dataset.id})">
+                        ${row.children[0].innerText}
+                    </div>
+                `;
+            }
+
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    if (matchCount === 0) {
+        resultsBox.innerHTML = `<div class="p-2 text-gray-500">No users found</div>`;
+    }
+
+    resultsBox.classList.remove('hidden');
+});
+
+function selectUser(userId) {
+    const rows = document.querySelectorAll('#usersTableContainer tbody tr');
+
+    rows.forEach(row => {
+        row.style.display = (row.dataset.id == userId) ? '' : 'none';
+    });
+
+    resultsBox.classList.add('hidden');
+}
+
+searchInput.addEventListener('input', function () {
+    if (this.value === '') {
+        const rows = document.querySelectorAll('#usersTableContainer tbody tr');
+        rows.forEach(row => row.style.display = '');
+    }
+});
+
+</script>
+
+
 
   <!-- ================= EDIT USER MODAL ================= -->
 <div id="editUserModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-60 px-4">

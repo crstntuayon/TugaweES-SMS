@@ -33,6 +33,33 @@
             <p class="text-sm text-gray-500">Tugawe Elementary School</p>
         </div>
 
+        @if(session('success'))
+    <div id="success-message"
+         class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        {{ session('success') }}
+        <span id="countdown">5</span> seconds
+    </div>
+
+    <script>
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        const redirectUrl = "{{ route('student.dashboard') }}";
+
+        function updateCountdown() {
+            countdownElement.innerText = countdown;
+            if (countdown <= 0) {
+                window.location.href = redirectUrl;
+            } else {
+                countdown--;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        updateCountdown();
+    </script>
+@endif
+
+
         <!-- Session Status -->
         <x-auth-session-status class="mb-4 text-center" :status="session('status')" />
 
@@ -112,6 +139,13 @@
                 </svg>
             </button>
         </form>
+
+    
+        <p class="mt-6 text-center text-sm text-gray-600">
+            Don't have an account?
+            <a href="{{ route('register') }}" class="text-indigo-600 hover:underline">
+                Register
+            </a>
 
        
         <!-- Footer -->

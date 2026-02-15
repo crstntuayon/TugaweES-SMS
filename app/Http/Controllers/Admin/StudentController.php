@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SchoolYear;
 use Carbon\Carbon;
 
 class StudentController extends Controller
@@ -23,8 +24,9 @@ class StudentController extends Controller
 {
     $students = Student::with('section')->get();
     $sections = Section::all(); // <- fetch all sections
-
-    return view('admin.students.index', compact('students', 'sections'));
+ // ✅ Get all school years for the dropdown
+    $schoolYears = SchoolYear::orderByDesc('name')->get();
+    return view('admin.students.index', compact('students', 'sections', 'schoolYears'));
 }
     // Show form to create new student
     public function create()
@@ -49,10 +51,20 @@ class StudentController extends Controller
         'sex'             => 'required|in:Male,Female',
         'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'password'        => 'required|confirmed|min:6',
+          'school_year_id'  => 'required|exists:school_years,id', // add this
         
     ]);
 
     DB::transaction(function () use ($request, &$validated) {
+
+       // 🔥 GET ACTIVE SCHOOL YEAR
+        $activeSchoolYearId = SchoolYear::where('is_active', 1)->value('id');
+
+        // If no active school year
+        if (!$activeSchoolYearId) {
+            throw new \Exception('No active school year found.');
+        }
+
 
         // ✅ Photo upload
         if ($request->hasFile('photo')) {
@@ -82,7 +94,7 @@ $user = User::create([
         Student::create(array_merge($validated, [
             'user_id' => $user->id,
             'email'   => $email,
-            
+            'school_year_id' => $activeSchoolYearId,
         ]));
     });
 
@@ -115,6 +127,7 @@ public function update(Request $request, Student $student)
         'lrn' => 'nullable|string|max:20',
         'address' => 'required|string|max:255',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        
     ]);
 
     // Update all fields except photo

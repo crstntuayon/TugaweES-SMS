@@ -322,6 +322,21 @@ setTimeout(() => {
                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
             </div>
 
+            <!-- SCHOOL YEAR -->
+<div>
+    <label class="block text-sm text-gray-600 mb-1">School Year</label>
+    <select name="school_year_id" required
+            class="w-full px-4 py-2 rounded-lg border border-gray-300">
+        <option value="">-- Select School Year --</option>
+        @foreach($schoolYears as $year)
+            <option value="{{ $year->id }}"
+                {{ old('school_year_id') == $year->id ? 'selected' : '' }}>
+                {{ $year->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
             <!-- HOME ADDRESS -->
             <div>
                 <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>

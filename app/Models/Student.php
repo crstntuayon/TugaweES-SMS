@@ -13,7 +13,7 @@ class Student extends Model
     protected $fillable = [
         'first_name', 'middle_name', 'last_name', 'suffix',
         'birthday', 'email', 'contact_number', 'sex',
-        'section_id', 'lrn', 'address', 'photo', 'school_id', 'user_id'
+        'section_id', 'lrn', 'address', 'photo', 'school_id', 'user_id', 'school_year_id', 'grade_level'
     ];
 
     public function section()
@@ -48,4 +48,9 @@ public function attendances()
     return $this->hasMany(Attendance::class);
 }
 
+// Link student to school year
+    public function schoolYear()
+    {
+        return $this->belongsTo(SchoolYear::class);
+    }
 }

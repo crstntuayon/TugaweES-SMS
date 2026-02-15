@@ -24,5 +24,11 @@ class SchoolYear extends Model
         // Set the chosen one to true
         self::find($id)->update(['is_active' => true]);
     }
+
+    public function students()
+{
+    return $this->hasMany(Student::class);
+}
+
 }
 

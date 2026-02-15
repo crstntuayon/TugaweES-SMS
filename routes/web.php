@@ -292,7 +292,8 @@ Route::post('/admin/students/issue-ids', [App\Http\Controllers\Admin\StudentCont
     ->name('admin.students.issue-ids');
 Route::post('/admin/students/export-ids', [App\Http\Controllers\Admin\StudentController::class, 'exportIdsPdf'])->name('admin.students.export-ids');
 
-
+Route::get('/admin/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])
+        ->name('admin.reports');
 
 
 // TEACHER ROLE ENROLLMENT ROUTE
@@ -401,5 +402,17 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
+Route::get('/admin/reports/pdf', [App\Http\Controllers\Admin\ReportController::class,'exportPdf'])
+    ->name('admin.reports.pdf');
+
+
+
+    
+
+Route::patch('/profile', [App\Http\Controllers\Teacher\ProfileController::class, 'update'])
+    ->name('profile.update');
+
+Route::patch('/student/profile/update', [App\Http\Controllers\Student\StudentProfileController::class, 'update'])
+    ->name('student.profile.update');
 
 require __DIR__.'/auth.php';

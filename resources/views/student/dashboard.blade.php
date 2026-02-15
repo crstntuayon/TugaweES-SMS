@@ -36,7 +36,13 @@
                     <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
                     <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
                 </div>
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">👤 Profile</a>
+               
+                
+                <a href="#" onclick="openProfileModal()" 
+   class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+   👤 My Profile
+</a>
+
                 <div class="border-t"></div>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
                    class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
@@ -50,6 +56,43 @@
         </div>
     </div>
 </header>
+
+@if(session('success'))
+<div x-data="{ 
+        show: true, 
+        seconds: 3,
+        startCountdown() {
+            let timer = setInterval(() => {
+                if (this.seconds > 0) {
+                    this.seconds--;
+                } else {
+                    this.show = false;
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+    }"
+    x-init="startCountdown()"
+    x-show="show"
+    x-transition
+    class="fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg z-50 w-80">
+
+    <div class="flex justify-between items-start gap-4">
+        <div>
+            <p class="font-semibold">✅ Success</p>
+            <p class="text-sm mt-1">{{ session('success') }}</p>
+            <p class="text-xs mt-2 opacity-80">
+                Closing in <span x-text="seconds"></span> seconds...
+            </p>
+        </div>
+
+        <button @click="show = false" class="text-white font-bold text-lg leading-none">
+            ✕
+        </button>
+    </div>
+</div>
+@endif
+
 
 <main class="max-w-7xl mx-auto space-y-10">
 
@@ -293,7 +336,158 @@
 
 @endif
 
+
+
 </main>
+
+<!-- =================== STUDENT PROFILE MODAL =================== -->
+<div id="profileModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative overflow-y-auto max-h-[90vh]"
+         x-data="{ editMode: false }">
+
+        <h2 class="text-xl font-bold mb-6">My Profile</h2>
+
+        <form method="POST"
+              action="{{ route('student.profile.update') }}"
+              enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+
+            <!-- PHOTO -->
+            <div class="flex items-center gap-6 mb-6">
+                <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                     class="w-24 h-24 rounded-full object-cover shadow">
+
+                <div x-show="editMode">
+                    <input type="file" name="photo" class="block text-sm">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                    <label class="text-sm font-medium">First Name</label>
+                    <input type="text" name="first_name"
+                           value="{{ $student->first_name }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Middle Name</label>
+                    <input type="text" name="middle_name"
+                           value="{{ $student->middle_name }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Last Name</label>
+                    <input type="text" name="last_name"
+                           value="{{ $student->last_name }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Suffix</label>
+                    <input type="text" name="suffix"
+                           value="{{ $student->suffix }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Birthday</label>
+                    <input type="date" name="birthday"
+                           value="{{ $student->birthday }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium">Contact Number</label>
+                    <input type="text" name="contact_number"
+                           value="{{ $student->contact_number }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <!-- USERNAME (FROM USERS TABLE) -->
+                <div>
+                    <label class="text-sm font-medium">Username</label>
+                    <input type="text" name="username"
+                           value="{{ auth()->user()->username }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 disabled:bg-gray-100">
+                </div>
+
+                <!-- EMAIL (NOT EDITABLE) -->
+                <div>
+                    <label class="text-sm font-medium">Email</label>
+                    <input type="email"
+                           value="{{ auth()->user()->email }}"
+                           disabled
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-200">
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="md:col-span-2" x-show="editMode">
+                    <label class="text-sm font-medium">New Password</label>
+                    <input type="password" name="password"
+                           placeholder="Leave blank if not changing"
+                           class="w-full border rounded-lg px-3 py-2 mt-1">
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex justify-end gap-3 mt-8">
+
+                <button type="button"
+                        x-show="!editMode"
+                        @click="editMode = true"
+                        class="bg-indigo-600 text-white px-5 py-2 rounded-lg">
+                    Edit Profile
+                </button>
+
+                <button type="button"
+                        x-show="editMode"
+                        @click="editMode = false"
+                        class="bg-gray-400 text-white px-5 py-2 rounded-lg">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        x-show="editMode"
+                        class="bg-green-600 text-white px-5 py-2 rounded-lg">
+                    Save Changes
+                </button>
+
+            </div>
+        </form>
+
+        <!-- CLOSE -->
+        <button onclick="closeProfileModal()"
+                class="absolute top-3 right-4 text-xl">
+            ✕
+        </button>
+    </div>
+</div>
+<script>
+function openProfileModal() {
+    document.getElementById('profileModal').classList.remove('hidden');
+    document.getElementById('profileModal').classList.add('flex');
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').classList.remove('flex');
+    document.getElementById('profileModal').classList.add('hidden');
+}
+</script>
+
 
 <script src="//unpkg.com/alpinejs" defer></script>
 <script>

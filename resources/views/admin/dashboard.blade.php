@@ -58,23 +58,115 @@
         <!-- Menu Items -->
         <div class="flex flex-col divide-y divide-gray-100">
 
-            <!-- Profile -->
-            <a href="{{ route('profile.edit') }}"
-                class="px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-                👤 Profile
-            </a>
+          <!-- Profile -->
+<a href="{{ route('profile.edit') }}"
+   class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+    
+    <!-- User Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="18" height="18"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
 
-            <!-- Manage Users -->
-            <button type="button" onclick="openManageUsersModal()"
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-                👥 Manage Users
-            </button>
+    <span>Profile</span>
+</a>
 
-            <!-- Create New Admin -->
-            <button type="button" onclick="openAddAdminModal()"
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
-                ➕ Create Admin
-            </button>
+<!-- Manage Users -->
+<button type="button" onclick="openManageUsersModal()"
+    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+    
+    <!-- Users Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="18" height="18"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M7 21v-2a4 4 0 0 1 3-3.87"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
+
+    <span>Manage Users</span>
+</button>
+
+<!-- Create New Admin -->
+<button type="button" onclick="openAddAdminModal()"
+    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+    
+    <!-- User Plus Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="18" height="18"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6"/>
+        <circle cx="9" cy="7" r="4"/>
+        <line x1="19" y1="8" x2="19" y2="14"/>
+        <line x1="22" y1="11" x2="16" y2="11"/>
+    </svg>
+
+    <span>Create Admin</span>
+</button>
+
+             <!-- Issue School IDs Button -->
+    
+        <button 
+    onclick="openSectionModal()"
+    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+    
+    <!-- ID Card Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         width="18" height="18" 
+         viewBox="0 0 24 24" 
+         fill="none" 
+         stroke="currentColor" 
+         stroke-width="2" 
+         stroke-linecap="round" 
+         stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2"/>
+        <circle cx="8" cy="12" r="2"/>
+        <path d="M14 10h4"/>
+        <path d="M14 14h4"/>
+    </svg>
+
+    <span>Issue School IDs</span>
+</button>
+
+<!-- Reports -->
+<a href="{{ route('admin.reports') }}"
+   class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition">
+    
+    <!-- Bar Chart Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="18" height="18"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <line x1="12" y1="20" x2="12" y2="10"/>
+        <line x1="18" y1="20" x2="18" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="16"/>
+    </svg>
+
+    <span>Reports</span>
+</a>
+
+
 
             <!-- Active School Year Selector -->
             <div class="px-4 py-3 bg-gray-50">
@@ -111,7 +203,13 @@
 <main class="max-w-7xl mx-auto px-6 py-10">
 
 
-
+ <!-- NAVIGATION TABS -->
+    <div class="flex flex-wrap gap-3 mb-10">
+        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm shadow">Dashboard</a>
+        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-indigo-50 text-gray-700 text-sm shadow">Students</a>
+        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-green-50 text-gray-700 text-sm shadow">Teachers</a>
+        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-yellow-50 text-gray-700 text-sm shadow">Sections</a>
+    </div>
 
     <!-- STATS CARDS -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -238,99 +336,7 @@
     </section>
 
 
-     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-
-    <!-- Gender Distribution Slim Card -->
-    <div class="bg-white rounded-xl shadow p-4 flex items-center justify-between">
-        
-       <!-- Counts -->
-<div class="flex flex-col gap-2">
-    <!-- Current School Year -->
-    <p class="text-gray-500 font-medium text-xs mb-1">
-        Active SY: <span class="text-gray-700 font-semibold">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
-    </p>
-
-    <!-- Card Title -->
-    <p class="text-gray-700 font-semibold uppercase text-sm mb-2">Total Enrollees</p>
-
-    <!-- Male Count -->
-    <div class="flex items-center gap-2">
-        <span class="text-blue-600 font-bold text-lg">{{ $maleCount }}</span>
-        <span class="text-gray-500 text-sm">Male</span>
-    </div>
-
-    <!-- Female Count -->
-    <div class="flex items-center gap-2">
-        <span class="text-pink-600 font-bold text-lg">{{ $femaleCount }}</span>
-        <span class="text-gray-500 text-sm">Female</span>
-    </div>
-</div>
-
-
-        <!-- Pie Chart -->
-        <div class="w-24 h-24">
-            <canvas id="sexChart" class="w-full h-full"></canvas>
-        </div>
-    </div>
-
-<!-- Students per Section -->
-<div class="bg-green-50 rounded-xl shadow p-6 flex flex-col">
     
-    <!-- Title -->
-    <p class="text-gray-700 font-semibold uppercase text-sm mb-4">
-        Students per Section
-    </p>
-
-    <!-- List of Sections -->
-    <ul class="space-y-2 overflow-y-auto max-h-52">
-        @foreach($studentsPerSection as $section => $count)
-            <li class="flex justify-between items-center bg-green-100 rounded-full px-4 py-2 shadow-sm hover:bg-green-200 transition-all duration-200">
-                <!-- Section Name -->
-                <span class="text-green-800 font-medium text-sm truncate" title="{{ $section }}">
-                    {{ $section }}
-                </span>
-
-                <!-- Student Count Badge -->
-                <span class="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    {{ $count }}
-                </span>
-            </li>
-        @endforeach
-    </ul>
-
-    <!-- Issue School IDs Button -->
-    <div class="mt-4">
-        <button 
-            onclick="openSectionModal()"
-            class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors duration-200">
-            Issue School IDs
-        </button>
-    </div>
-
-</div>
-
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const ctx = document.getElementById('sexChart').getContext('2d');
-new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: ['Male', 'Female'],
-        datasets: [{
-            data: [{{ $maleCount }}, {{ $femaleCount }}],
-            backgroundColor: ['#3B82F6', '#EC4899']
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } } }
-    }
-});
-</script>
 
 </main>
 
@@ -557,6 +563,22 @@ function previewTeacherPhoto(event) {
                        class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
             </div>
 
+            <!-- SCHOOL YEAR -->
+<div>
+    <label class="block text-sm text-gray-600 mb-1">School Year</label>
+    <select name="school_year_id" required
+            class="w-full px-4 py-2 rounded-lg border border-gray-300">
+        <option value="">-- Select School Year --</option>
+        @foreach($schoolYears as $year)
+            <option value="{{ $year->id }}"
+                {{ old('school_year_id') == $year->id ? 'selected' : '' }}>
+                {{ $year->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
             <!-- HOME ADDRESS -->
             <div>
                 <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
@@ -591,6 +613,7 @@ function previewTeacherPhoto(event) {
                     <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
                 </div>
             </div>
+            
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">

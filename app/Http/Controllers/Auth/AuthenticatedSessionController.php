@@ -43,51 +43,91 @@ protected function authenticated(Request $request, $user)
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request)
+  public function store(Request $request)
 {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
+    $user = \App\Models\User::where('email', $request->email)->first();
+
+    // Check if locked
+    if ($user && $user->lock_until && now()->lessThan($user->lock_until)) {
+        return back()->withErrors([
+            'email' => 'Account locked. Try again later.',
+        ]);
+    }
+
     if (Auth::attempt($request->only('email', 'password'))) {
+
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        // Reset attempts
+        $user->update([
+            'login_attempts' => 0,
+            'lock_until' => null,
+        ]);
 
-        // Role-based redirection
         switch ($user->role->name) {
+
             case 'System Admin':
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Welcome Admin! Logged in successfully.');
+
             case 'Registrar':
-                return redirect()->route('registrar.dashboard');
+                return redirect()->route('registrar.dashboard')
+                    ->with('success', 'Welcome Registrar! Logged in successfully.');
+
             case 'Teacher':
-                return redirect()->route('teacher.dashboard');
+                return redirect()->route('teacher.dashboard')
+                    ->with('success', 'Welcome Teacher! Logged in successfully.');
+
             case 'Student':
-                return redirect()->route('student.dashboard');
+                return redirect()->route('student.dashboard')
+                    ->with('success', 'Welcome Student! Logged in successfully.');
+
             default:
                 Auth::logout();
                 return redirect('/login')->withErrors([
-                    'email' => 'Role not assigned. Contact administrator.',
+                    'email' => 'Role not assigned.',
                 ]);
         }
     }
 
+    // Failed login
+    if ($user) {
+        $user->increment('login_attempts');
+
+        if ($user->login_attempts >= 3) {
+            $user->update([
+                'lock_until' => now()->addMinutes(5)
+            ]);
+
+            return back()->withErrors([
+                'email' => 'Too many attempts. Account locked for 5 minutes.',
+            ]);
+        }
+    }
+
     return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
+        'email' => 'Invalid credentials.',
     ]);
 }
+
+
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+  public function destroy(Request $request)
+{
+    Auth::logout();
 
-        $request->session()->invalidate();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $request->session()->regenerateToken();
+    return redirect('/login')
+        ->with('success', 'You have been logged out successfully.');
+}
 
-        return redirect('/');
-    }
 }

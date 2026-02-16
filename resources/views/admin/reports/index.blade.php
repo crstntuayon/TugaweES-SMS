@@ -173,16 +173,18 @@
                         <th class="text-left py-2">Total</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($enrolleesPerYear as $year)
-                        <tr class="text-gray-600 uppercase text-xs tracking-wider">
-                            <td class="py-2 font-medium">{{ $year['school_year'] }}</td>
-                            <td class="py-2 text-blue-600 font-bold">{{ $year['male'] }}</td>
-                            <td class="py-2 text-pink-600 font-bold">{{ $year['female'] }}</td>
-                            <td class="py-2 font-bold text-indigo-600">{{ $year['total'] }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
+               <tbody>
+    @foreach($enrolleesPerYear as $year)
+        <tr class="text-gray-600 uppercase text-xs tracking-wider
+                   {{ $year['school_year'] == $schoolYears->find($activeYearId)->name ? 'bg-indigo-50 font-bold' : '' }}">
+            <td class="py-2 font-medium">{{ $year['school_year'] }}</td>
+            <td class="py-2 text-blue-600 font-bold">{{ $year['male'] }}</td>
+            <td class="py-2 text-pink-600 font-bold">{{ $year['female'] }}</td>
+            <td class="py-2 font-bold text-indigo-600">{{ $year['total'] }}</td>
+        </tr>
+    @endforeach
+</tbody>
+
             </table>
         </div>
 

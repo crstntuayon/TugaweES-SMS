@@ -14,14 +14,14 @@ class ExportController extends Controller
         ->with(['sections.students'])
         ->findOrFail($id);
 
-        $csv = "Teacher,Section,Student\n";
+        $csv = "Teacher:,Section:,Student Name:,Sex:,Year Level:,School Year:,Address:\n";
 
         foreach ($teacher->sections as $section) {
             if ($section->students->isEmpty()) {
                 $csv .= "{$teacher->name},{$section->name},No Students\n";
             } else {
                 foreach ($section->students as $student) {
-                    $csv .= "{$teacher->name},{$section->name},{$student->first_name} {$student->last_name}\n";
+                    $csv .= "{$teacher->name},{$section->name},{$student->last_name} {$student->first_name} {$student->middle_name} {$student->suffix}, {$student->sex}, {$student->year_level}, {$student->school_year}, {$student->address}\n";
                 }
             }
         }

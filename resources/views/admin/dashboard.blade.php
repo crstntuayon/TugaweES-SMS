@@ -166,7 +166,11 @@
     <span>Reports</span>
 </a>
 
-
+ <!-- Buttons 
+        <button onclick="openModal('adminAnnounceModal');"
+                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+            📢 Announcements
+        </button> -->
 
             <!-- Active School Year Selector -->
             <div class="px-4 py-3 bg-gray-50">
@@ -911,6 +915,12 @@ function closeSectionModal() {
 
 
 
+
+
+
+
+
+
 <!-- ================= DELETE USER MODAL ================= -->
 <div id="deleteUserModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] px-4">
@@ -1351,6 +1361,23 @@ function closeAddStudentModal() {
     modal.classList.remove('flex');
 }
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
+    });
+});
+</script>
+@endif
 
 </body>
 </html>

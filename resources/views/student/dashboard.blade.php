@@ -57,7 +57,7 @@
     </div>
 </header>
 
-@if(session('success'))
+<!--@if(session('success'))
 <div x-data="{ 
         show: true, 
         seconds: 3,
@@ -91,7 +91,7 @@
         </button>
     </div>
 </div>
-@endif
+@endif -->
 
 
 <main class="max-w-7xl mx-auto space-y-10">
@@ -495,5 +495,22 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
+    });
+});
+</script>
+@endif
+
 </body>
 </html>

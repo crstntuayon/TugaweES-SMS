@@ -82,5 +82,9 @@ public function teacher()
 {
     return $this->hasOne(\App\Models\Teacher::class);
 }
+public function announcements()
+{
+    return $this->hasMany(Announcement::class);
+}
 
 }

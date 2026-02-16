@@ -62,6 +62,14 @@
 
                 <a href="#" @click="document.getElementById('enrollStudentModal').classList.remove('hidden'); open = false;"
                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">➕ Enroll Student</a>
+<!-- Create Announcement -->
+<a href="#"
+   @click="open = false; document.getElementById('announcementModal').classList.remove('hidden'); document.getElementById('announcementModal').classList.add('flex');"
+   class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+   📢 Create Announcement
+</a>
+
+<div class="border-t"></div>
 
                 <div class="border-t"></div>
 
@@ -252,6 +260,172 @@
                 class="absolute top-3 right-3 text-xl">✕</button>
     </div>
 </div>
+
+
+<!-- ANNOUNCEMENT MODAL -->
+<div id="announcementModal"
+     class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 relative animate-fadeIn">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-indigo-600">📢 Create Announcement</h2>
+            <button onclick="closeAnnouncementModal()"
+                    class="text-gray-400 hover:text-red-500 text-xl">&times;</button>
+        </div>
+
+        <!-- Form to create new announcement -->
+        <form action="{{ route('teacher.announcements.store') }}" method="POST" class="mb-4">
+            @csrf
+
+            <!-- Title -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" name="title" required
+                       class="w-full mt-1 px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+            </div>
+
+            <!-- Message -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Message</label>
+                <textarea name="message" rows="4" required
+                          class="w-full mt-1 px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-3">
+                <button type="button"
+                        onclick="closeAnnouncementModal()"
+                        class="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="px-5 py-2 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition">
+                    Post Announcement
+                </button>
+            </div>
+        </form>
+
+        <!-- List of announcements -->
+        <ul class="space-y-4 mt-4">
+            @foreach($announcements as $announcement)
+            <li x-data="{ editing: false, title: '{{ addslashes($announcement->title) }}', content: '{{ addslashes($announcement->content) }}' }"
+                class="bg-indigo-50 p-4 rounded-2xl shadow hover:shadow-lg transition">
+
+                <!-- Display Mode -->
+                <div x-show="!editing">
+                    <h3 class="font-semibold text-indigo-900 text-lg mb-1" x-text="title"></h3>
+                    <p class="text-gray-700 text-sm" x-text="content"></p>
+                    <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
+                        <span>Posted by: {{ $announcement->user->name }}</span>
+                        <span>{{ $announcement->created_at->format('M d, Y') }}</span>
+                    </div>
+
+                    <div class="flex gap-2 mt-2">
+                        <button @click="editing = true"
+                                class="text-indigo-600 hover:underline text-sm">Edit</button>
+
+                        <form @submit.prevent="deleteAnnouncement({{ $announcement->id }}, $el)" class="inline">
+                            @csrf
+                            @method('DELETE')
+                          <!--  <button type="submit" class="text-red-600 hover:underline text-sm">Delete</button> -->
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit Mode -->
+                <div x-show="editing" x-cloak class="space-y-2">
+                    <input type="text" x-model="title" class="w-full px-3 py-2 rounded-xl border" />
+                    <textarea x-model="content" class="w-full px-3 py-2 rounded-xl border"></textarea>
+
+                    <div class="flex gap-2">
+                        <button @click="
+                            updateAnnouncement({{ $announcement->id }}, title, content);
+                            editing = false;
+                        "
+                                class="bg-indigo-600 text-white px-3 py-1 rounded-xl hover:bg-indigo-700 text-sm">Save</button>
+
+                        <button @click="editing = false"
+                                class="bg-gray-300 px-3 py-1 rounded-xl text-sm">Cancel</button>
+                    </div>
+                </div>
+
+            </li>
+            @endforeach
+        </ul>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function closeAnnouncementModal() {
+    const modal = document.getElementById('announcementModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+// Inline Update
+function updateAnnouncement(id, title, content) {
+    axios.put(`/teacher/announcements/${id}`, {
+        title: title,
+        message: content
+    })
+    .then(() => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'Announcement updated successfully.',
+            confirmButtonColor: '#6366f1'
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update announcement.',
+            confirmButtonColor: '#f87171'
+        });
+    });
+}
+
+// Inline Delete
+function deleteAnnouncement(id, formElement) {
+    axios.delete(`/teacher/announcements/${id}`)
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Announcement deleted successfully.',
+                confirmButtonColor: '#6366f1'
+            });
+            formElement.closest('li').remove();
+        })
+        .catch(() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to delete announcement.',
+                confirmButtonColor: '#f87171'
+            });
+        });
+}
+</script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.2s ease-out;
+}
+</style>
+
 
 <!-- PROFILE MODAL -->
 <div id="profileModal"
@@ -481,10 +655,27 @@ function globalSearch(value) {
 </script>
 
 <script src="//unpkg.com/alpinejs" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
+    });
+});
+</script>
+@endif
+
 </body>
 
 
-@if(session('success'))
+<!--@if(session('success'))
 <div x-data="{ 
         show: true, 
         seconds: 3,
@@ -518,7 +709,7 @@ function globalSearch(value) {
         </button>
     </div>
 </div>
-@endif
+@endif-->
 
 
 </html>

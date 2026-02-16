@@ -415,4 +415,34 @@ Route::patch('/profile', [App\Http\Controllers\Teacher\ProfileController::class,
 Route::patch('/student/profile/update', [App\Http\Controllers\Student\StudentProfileController::class, 'update'])
     ->name('student.profile.update');
 
+
+
+   Route::post('/teacher/announcements', 
+        [App\Http\Controllers\Teacher\AnnouncementController::class, 'store'])
+        ->name('teacher.announcements.store');
+
+    Route::get('/teacher/announcements', 
+        [App\Http\Controllers\Teacher\AnnouncementController::class, 'index'])
+        ->name('teacher.announcements.index');
+
+    Route::delete('/teacher/announcements/{id}', 
+        [App\Http\Controllers\Teacher\AnnouncementController::class, 'destroy'])
+        ->name('teacher.announcements.destroy');
+
+Route::put('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\AnnouncementController::class, 'update'])->name('teacher.announcements.update');
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+   
 require __DIR__.'/auth.php';

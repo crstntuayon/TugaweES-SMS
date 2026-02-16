@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Announcement;
 use App\Models\SchoolYear;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,13 +21,21 @@ class DashboardController extends Controller
             ->get();
 
              // Sections assigned to this teacher
+
+              // Get announcements created by this teacher or admin announcements
+    $announcements = Announcement::where('type', 'teacher')
+                                 ->where('user_id', $teacherId)
+                                 ->orWhere('type', 'admin') // show admin announcements too
+                                 ->latest()
+                                 ->get();
+
        
  // Students **not yet enrolled in any section**
         $students = Student::whereNull('section_id')->get();
 
  $activeSchoolYear = \App\Models\SchoolYear::where('is_active', true)->first();
    
-        return view('teacher.dashboard', compact('students', 'sections', 'activeSchoolYear'));
+        return view('teacher.dashboard', compact('students', 'sections', 'activeSchoolYear', 'announcements'));
     }
     // Enroll student into a section
  public function enroll(Request $request)

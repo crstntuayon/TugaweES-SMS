@@ -8,6 +8,7 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Models\Role;
 use App\Models\SchoolYear;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 
 
@@ -42,6 +43,11 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
      $schoolYears = SchoolYear::orderBy('name', 'asc')->get();
     $activeSchoolYear = SchoolYear::where('is_active', true)->first();
 
+     // Fetch admin announcements
+    $announcements = Announcement::where('type', 'admin')
+                                 ->latest()
+                                 ->get();
+
        $roles = Role::all(); // <-- add this line
 $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school_year ?? null;
 
@@ -58,8 +64,8 @@ $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school
         'studentsPerSection',
         'currentSchoolYear',
         'schoolYears',
-        'activeSchoolYear'
-       
+        'activeSchoolYear',
+       'announcements'
     ));
 }
 

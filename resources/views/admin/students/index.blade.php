@@ -37,15 +37,46 @@
 
             <!-- RIGHT: SEARCH + ADD BUTTON -->
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <!-- SEARCH -->
-                <div class="relative w-full md:w-64">
-                    <input type="text" id="searchInput"
-                           placeholder="Search..."
-                           class="w-full px-4 py-2.5 rounded-xl shadow-md border border-gray-200
-                                  focus:outline-none focus:ring-2 focus:ring-indigo-400
-                                  focus:border-indigo-400 transition">
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                </div>
+            
+
+    <!-- SEARCH INPUT -->
+    <input type="text"
+           id="studentSearch"
+           placeholder="Search student..."
+           class="px-4 py-2 rounded-xl border border-gray-300 
+                  focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400
+                  shadow-sm w-full md:w-64">
+<script>
+document.getElementById('studentSearch').addEventListener('keyup', function() {
+
+    let searchValue = this.value.toLowerCase();
+    let rows = document.querySelectorAll('.student-row');
+
+    rows.forEach(row => {
+        let data = row.getAttribute('data-search');
+
+        if (data.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // Hide empty sections automatically
+    document.querySelectorAll('tbody').forEach(tbody => {
+        let visibleRows = tbody.querySelectorAll('.student-row:not([style*="display: none"])');
+        let sectionContainer = tbody.closest('.mb-10');
+
+        if (visibleRows.length === 0) {
+            sectionContainer.style.display = 'none';
+        } else {
+            sectionContainer.style.display = '';
+        }
+    });
+
+});
+</script>
+
 
                 <!-- ADD STUDENT BUTTON -->
                 <button onclick="openAddStudentModal()"
@@ -120,20 +151,28 @@ setTimeout(() => {
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-100 uppercase text-xs text-gray-600">
                     <tr>
+                        <th class="px-5 py-3 text-left">No.</th>
                         <th class="px-5 py-3 text-left">Student</th>
-                        <th class="px-5 py-3 text-left">Email</th>
-                        <th class="px-5 py-3 text-left">Contact</th>
-                        <th class="px-5 py-3 text-left">Sex</th>
-                        <th class="px-5 py-3 text-left">Birthday</th>
-                        <th class="px-5 py-3 text-left">Address</th>
-                        <th class="px-5 py-3 text-left">Section / Year</th>
-                        <th class="px-5 py-3 text-center">Action</th>
+                        
+                        <th class="px-5 py-3 text-center">Actions</th>
                     </tr>
                 </thead>
 
+               
+
+
+
                 <tbody class="divide-y">
                     @foreach($groupStudents as $student)
-                        <tr class="hover:bg-indigo-50 transition">
+                       <tr class="hover:bg-indigo-50 transition student-row"
+    data-search="{{ strtolower($student->first_name . ' ' . $student->middle_name . ' ' . $student->last_name . ' ' . $student->school_id . ' ' . $student->lrn) }}">
+
+
+
+                            <!-- NUMBER -->
+                            <td class="px-5 py-4">
+                                {{ $loop->iteration }}
+                            </td>
 
                             <!-- STUDENT -->
                             <td class="px-5 py-4">
@@ -156,65 +195,67 @@ setTimeout(() => {
                                 </div>
                             </td>
 
-                            <!-- EMAIL -->
-                            <td class="px-5 py-4">
-                                {{ $student->email ?? '—' }}
-                            </td>
+                            
+                           <td class="px-5 py-4 text-center">
+    <div class="flex justify-center gap-3 relative">
 
-                            <!-- CONTACT -->
-                            <td class="px-5 py-4">
-                                {{ $student->contact_number ?? '—' }}
-                            </td>
+        <!-- SCHOOL FORMS BUTTON -->
+<div class="relative inline-block text-left">
+    <button onclick="toggleFormDropdown({{ $student->id }})"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs">
+        School Forms
+    </button>
 
-                            <!-- SEX -->
-                            <td class="px-5 py-4">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                    {{ $student->sex === 'Male' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700' }}">
-                                    {{ ucfirst($student->sex) }}
-                                </span>
-                            </td>
+    <!-- DROPDOWN -->
+    <div id="formDropdown{{ $student->id }}"
+        class="hidden absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-50">
 
-                            <!-- BIRTHDAY -->
-                            <td class="px-5 py-4">
-                                {{ \Carbon\Carbon::parse($student->birthday)->format('M d, Y') }}
-                            </td>
+        <a href="{{ route('admin.sf9.show', $student->id) }}"
+           class="block px-4 py-2 text-sm hover:bg-indigo-100">
+           SF9
+        </a>
 
-                            <!-- ADDRESS -->
-                            <td class="px-5 py-4 max-w-xs truncate">
-                                {{ $student->address ?? '—' }}
-                            </td>
+        <a href="{{ route('admin.sf10.show', $student->id) }}"
+           class="block px-4 py-2 text-sm hover:bg-indigo-100">
+           SF10
+        </a>
 
-                            <!-- SECTION -->
-                            <td class="px-5 py-4 text-xs font-semibold text-indigo-700">
-                                {{ $student->section->name ?? 'Not Assigned' }}<br>
-                                {{ $student->section->year_level ?? 'N/A' }} |
-                                {{ $student->section->school_year ?? 'N/A' }}
-                            </td>
+        <button
+            onclick="openEditStudentModal(this)"
+            data-id="{{ $student->id }}"
+            data-first="{{ $student->first_name }}"
+            data-middle="{{ $student->middle_name ?? '' }}"
+            data-last="{{ $student->last_name }}"
+            data-birthday="{{ $student->birthday }}"
+            data-email="{{ $student->email }}"
+            data-contact="{{ $student->contact_number ?? '' }}"
+            data-sex="{{ $student->sex }}"
+            data-section_id="{{ $student->section_id ?? '' }}"
+            class="block px-4 py-2 text-sm hover:bg-indigo-100">
+            Update Student
+        </button>
 
-                            <!-- ACTIONS -->
-                            <td class="px-5 py-4 text-center">
-                                <div class="flex justify-center gap-3">
-                                    <button
-                                        onclick="openEditStudentModal(this)"
-                                        data-id="{{ $student->id }}"
-                                        data-first="{{ $student->first_name }}"
-                                        data-middle="{{ $student->middle_name ?? '' }}"
-                                        data-last="{{ $student->last_name }}"
-                                        data-birthday="{{ $student->birthday }}"
-                                        data-email="{{ $student->email }}"
-                                        data-contact="{{ $student->contact_number ?? '' }}"
-                                        data-sex="{{ $student->sex }}"
-                                        data-section_id="{{ $student->section_id ?? '' }}"
-                                         class="text-yellow-500 hover:text-yellow-700 transition transform hover:scale-110">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-         viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11 5h2m2 2l6 6-6 6-6-6 6-6zM4 21h16"/>
-    </svg>
-                                    </button>
+    </div>
+</div>
 
-                                </div>
-                            </td>
+<script>
+function toggleFormDropdown(studentId) {
+    let dropdown = document.getElementById('formDropdown' + studentId);
+    dropdown.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    // Loop through all dropdowns
+    document.querySelectorAll('[id^="formDropdown"]').forEach(dropdown => {
+        if (!dropdown.contains(event.target) &&
+            !dropdown.previousElementSibling.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+});
+</script>
+
 
                         </tr>
                     @endforeach
@@ -230,7 +271,7 @@ setTimeout(() => {
 @endforelse
 
 
-<!-- DELETE MODAL -->
+<!-- DELETE MODAL 
 <div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center">
         <h3 class="text-lg font-bold mb-4">Confirm Deletion</h3>
@@ -250,7 +291,7 @@ setTimeout(() => {
             </form>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <!-- ================= ADD STUDENT MODAL ================= -->
@@ -560,13 +601,7 @@ document.getElementById('editPhoto').addEventListener('change', function() {
         document.getElementById('deleteModal').classList.add('hidden');
     }
 
-    // Live search
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        const value = this.value.toLowerCase();
-        document.querySelectorAll('.student-card').forEach(card => {
-            card.style.display = card.innerText.toLowerCase().includes(value) ? 'block' : 'none';
-        });
-    });
+ 
 
     // ADD STUDENT MODAL
     function openAddStudentModal() {

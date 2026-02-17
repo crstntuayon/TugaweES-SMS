@@ -38,14 +38,7 @@
 
             <div class="flex items-center gap-3 w-full md:w-auto">
 
-                <div class="relative w-full md:w-64">
-                    <input type="text" id="searchInput"
-                        placeholder="Search teacher or section..."
-                        class="w-full px-4 py-2.5 rounded-xl shadow-md border border-gray-200
-                               focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                </div>
-
+   
                 <button onclick="openAddSectionModal()"
                     class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
                            px-5 py-2.5 rounded-xl shadow-lg hover:scale-105 transition">
@@ -401,8 +394,16 @@ setTimeout(() => {
 <!-- ================= SCRIPTS ================= -->
 <script>
 function toggleGroup(btn){
-    btn.nextElementSibling.classList.toggle('hidden');
+    const content = btn.nextElementSibling;
+    const teacherName = btn.querySelector('h2').innerText;
+
+    content.classList.toggle('hidden');
     btn.querySelector('.rotate-icon').classList.toggle('rotate-180');
+
+    // Save state in localStorage
+    const expanded = JSON.parse(localStorage.getItem('expandedTeachers') || '{}');
+    expanded[teacherName] = !content.classList.contains('hidden');
+    localStorage.setItem('expandedTeachers', JSON.stringify(expanded));
 }
 
 function openEditSectionModal(id, name, year, sy){
@@ -459,6 +460,24 @@ function closeEditSectionModal(){
         clearInterval(deleteTimeout);
         document.getElementById('deleteModal').classList.add('hidden');
     }
+
+
+
+// Restore expanded sections on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const expanded = JSON.parse(localStorage.getItem('expandedTeachers') || '{}');
+
+    document.querySelectorAll('.teacher-card').forEach(card => {
+        const btn = card.querySelector('button');
+        const content = card.querySelector('.group-content');
+        const teacherName = btn.querySelector('h2').innerText;
+
+        if(expanded[teacherName]){
+            content.classList.remove('hidden');
+            btn.querySelector('.rotate-icon').classList.add('rotate-180');
+        }
+    });
+});
 
 </script>
 

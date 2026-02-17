@@ -9,6 +9,24 @@
 
 <body class="min-h-screen bg-gradient-to-br from-emerald-100 via-sky-100 to-indigo-200 p-4">
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
+    });
+});
+</script>
+@endif
+
+
 <!-- ================= ENHANCED HEADER ================= -->
 
 <header class="mb-6">
@@ -52,7 +70,7 @@
             <p class="text-sm text-gray-600 flex items-center gap-2 pl-14">
                 🏫 School Year:
                 <span class="font-semibold text-gray-700">
-                    {{ $section->school_year ?? 'N/A' }}
+                    {{ $section->schoolYear?->name ?? 'N/A' }}
                 </span>
             </p>
 
@@ -105,12 +123,13 @@
                             </td>
 
 <td class="border px-3 py-2 text-center">
-    <button
-        onclick="openReportCard({{ $student->id }})"
-        class="bg-indigo-600 text-white px-4 py-1 rounded text-xs hover:bg-indigo-700">
-        📄 View Report Card
-    </button>
+    <button onclick="openReportCard({{ $student->id }})"
+    class="bg-indigo-600 text-white px-4 py-1 rounded text-xs hover:bg-indigo-700">
+    📄 View Report Card
+</button>
+
 </td>
+
 
 </tr>
 @endforeach
@@ -120,71 +139,252 @@
 </div>
 
 <!-- ================= REPORT CARD MODAL ================= -->
-
 <div id="reportModal"
-     class="fixed inset-0 hidden bg-black/50 z-50 items-center justify-center">
+     class="fixed inset-0 hidden bg-black/50 z-50 flex items-center justify-center p-4 overflow-auto">
 
-<div class="bg-white w-full max-w-5xl rounded-xl shadow-lg p-6 relative">
+    <div class="bg-white w-full max-w-3xl rounded-xl shadow-lg p-6 relative">
 
-<button onclick="closeReportCard()"
-        class="absolute top-3 right-4 text-xl text-gray-500 hover:text-red-600">
-    ✕
-</button>
+        <!-- CLOSE BUTTON -->
+        <button onclick="closeReportCard()"
+                class="absolute top-3 right-3 text-xl text-gray-500 hover:text-red-600">
+            ✕
+        </button>
 
-<h2 class="text-xl font-bold text-center">
-    ELEMENTARY SCHOOL REPORT CARD
-</h2>
+        <!-- ================= HEADER ================= -->
+        <div class="border-b pb-3 mb-4">
+            <div class="flex items-center justify-center gap-4">
 
-<p class="text-center text-sm text-gray-600 mb-4">
-    <span id="rc-student-name"></span> |
-    {{ $section->year_level }} {{ $section->name }}
-</p>
+                <!-- LEFT LOGO -->
+                <div class="w-20 flex-shrink-0">
+                    <img src="{{ asset('images/logo1.png') }}"
+                         alt="DepEd Logo"
+                         class="w-full h-auto object-contain">
+                </div>
 
-<!-- ================= REPORT TABLE ================= -->
+                <!-- CENTER TEXT -->
+                <div class="text-center">
+                    <p class="text-xs">Republic of the Philippines</p>
+                    <p class="text-sm font-semibold">Department of Education</p>
+                    <p class="text-xs">Division of Negros Oriental</p>
 
-<div class="overflow-auto">
-<table class="min-w-full text-sm border">
+                    <h2 class="text-lg font-bold mt-1 tracking-wide">
+                        TUGAWE ELEMENTARY SCHOOL
+                    </h2>
 
-<thead class="bg-gray-100">
-<tr>
-    <th class="border px-3 py-2 text-left">Learning Areas</th>
-    <th class="border px-2 py-2">1st</th>
-    <th class="border px-2 py-2">2nd</th>
-    <th class="border px-2 py-2">3rd</th>
-    <th class="border px-2 py-2">4th</th>
-    <th class="border px-2 py-2 bg-indigo-100">Final</th>
-</tr>
-</thead>
+                    <p class="text-sm font-semibold mt-1">
+                        STUDENT REPORT CARD
+                    </p>
+                </div>
 
-<tbody id="report-body"></tbody>
+                <!-- RIGHT LOGO -->
+                <div class="w-20 flex-shrink-0">
+                    <img src="{{ asset('images/logo.jpg') }}"
+                         alt="School Logo"
+                         class="w-full h-auto object-contain">
+                </div>
 
-<tfoot class="font-semibold bg-gray-50">
-<tr>
-    <td class="border px-3 py-2">Quarterly Average</td>
-    <td class="border text-center" id="q1">—</td>
-    <td class="border text-center" id="q2">—</td>
-    <td class="border text-center" id="q3">—</td>
-    <td class="border text-center" id="q4">—</td>
-    <td class="border text-center bg-indigo-200" id="general">—</td>
-</tr>
-</tfoot>
+            </div>
+        </div>
 
-</table>
+        <!-- ================= STUDENT INFO ================= -->
+        <div class="grid grid-cols-3 gap-3 text-sm text-gray-700 mb-4">
+
+            <div>
+                <p><span class="font-semibold">Name:</span></p>
+                <p id="modalStudentName" class="border-b border-gray-400 pb-1"></p>
+            </div>
+
+            <div>
+                <p><span class="font-semibold">Student ID:</span></p>
+                <p id="modalStudentId" class="border-b border-gray-400 pb-1"></p>
+            </div>
+
+            <div>
+                <p><span class="font-semibold">Address:</span></p>
+                <p id="modalStudentAddress" class="border-b border-gray-400 pb-1"></p>
+            </div>
+
+        </div>
+
+        <!-- ================= TABLE ================= -->
+        <div class="overflow-auto max-h-[50vh] border border-gray-300 rounded">
+            <table class="min-w-full text-sm border border-gray-400">
+
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border border-gray-400 px-3 py-2 text-left">
+                            Learning Areas
+                        </th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">1st</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">2nd</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">3rd</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">4th</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center bg-indigo-100">
+                            Average
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody id="report-body"></tbody>
+
+            </table>
+        </div>
+
+        <!-- ================= SAVE BUTTON ================= -->
+        <div class="mt-4 text-right">
+            <button onclick="saveModalGrades()"
+                class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 shadow">
+                💾 Save Grades
+            </button>
+        </div>
+
+    </div>
 </div>
 
-<div class="mt-5 text-right">
-    <button onclick="saveModalGrades()"
-        class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
-        💾 Save Grades
-    </button>
-</div>
 
-</div>
-</div>
+<script>
+function reportCard() {
+    return {
+        open: false,
+        studentId: null,
+        grades: {},
+        studentName: '',
+        subjects: @json($subjects),
+        allSubjectsByGrade: @json($allSubjectsByGrade),
+        finalQuarterTotals: {1:0,2:0,3:0,4:0},
+        finalQuarterCounts: {1:0,2:0,3:0,4:0},
+        finalAllSum: 0,
+        finalAllCount: 0,
+
+        openModal(id) {
+            this.studentId = id;
+            this.open = true;
+            
+            // get student info
+            const student = @json($section->students->mapWithKeys(fn($s)=>[$s->id=>$s]))[id];
+            this.studentName = `${student.first_name} ${student.last_name}`;
+            
+            // initialize grades
+            this.grades = {};
+            const subjectsByGrade = this.allSubjectsByGrade;
+            Object.values(subjectsByGrade).forEach(subjects => {
+                subjects.forEach(sub => {
+                    if(sub.components){
+                        this.grades[sub.id] = {};
+                        JSON.parse(sub.components).forEach(comp => {
+                            this.grades[sub.id][comp] = {1:'',2:'',3:'',4:''};
+                        });
+                    } else {
+                        this.grades[sub.id] = {'': {1:'',2:'',3:'',4:''}};
+                    }
+                });
+            });
+
+            this.computeFinal();
+        },
+
+        closeModal() {
+            this.open = false;
+        },
+
+        saveModalGrades() {
+            fetch("{{ route('teacher.grades.modal.save') }}", {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    student_id: this.studentId,
+                    grades: this.grades
+                })
+            })
+            .then(r=>r.json())
+            .then(()=> {
+                alert('Grades saved successfully');
+                this.open = false;
+                location.reload();
+            });
+        },
+
+        computeComponentAverage(subjectId, comp) {
+            let compGrades = this.grades[subjectId]?.[comp] || {};
+            let sum = 0, count = 0;
+            Object.values(compGrades).forEach(v => {
+                if(v !== null && v !== undefined && v !== '') { sum += parseFloat(v); count++; }
+            });
+            return count ? (sum / count).toFixed(2) : '-';
+        },
+
+        computeMAPEHAverage(subjectId, quarter) {
+            let comps = this.grades[subjectId] || {};
+            let sum=0, count=0;
+            Object.values(comps).forEach(compGrades => {
+                let val = parseFloat(compGrades[quarter]);
+                if(!isNaN(val)) { sum += val; count++; }
+            });
+            return count ? (sum/count).toFixed(2) : '-';
+        },
+
+        computeMAPEHFinalAverage(subjectId) {
+            let comps = this.grades[subjectId] || {};
+            let sum=0, count=0;
+            Object.values(comps).forEach(compGrades => {
+                Object.values(compGrades).forEach(v=>{
+                    if(v !== null && v !== undefined && v !== '') { sum+=parseFloat(v); count++; }
+                });
+            });
+            return count ? (sum/count).toFixed(2) : '-';
+        },
+
+        computeSubjectAverage(subjectId) {
+            let subject = this.grades[subjectId] || {};
+            let sum=0, count=0;
+            Object.values(subject).forEach(compGrades=>{
+                Object.values(compGrades).forEach(v=>{
+                    if(v !== null && v !== undefined && v !== '') { sum+=parseFloat(v); count++; }
+                });
+            });
+            return count ? (sum/count).toFixed(2) : '-';
+        },
+
+        computeFinal() {
+            this.finalQuarterTotals = {1:0,2:0,3:0,4:0};
+            this.finalQuarterCounts = {1:0,2:0,3:0,4:0};
+            this.finalAllSum = 0;
+            this.finalAllCount = 0;
+
+            Object.values(this.grades).forEach(subject=>{
+                Object.values(subject).forEach(comp=>{
+                    Object.entries(comp).forEach(([q,v])=>{
+                        let val=parseFloat(v);
+                        if(!isNaN(val)){
+                            this.finalQuarterTotals[q]+=val;
+                            this.finalQuarterCounts[q]++;
+                            this.finalAllSum+=val;
+                            this.finalAllCount++;
+                        }
+                    });
+                });
+            });
+        },
+
+        finalQuarterAverage(q) {
+            return this.finalQuarterCounts[q] ? (this.finalQuarterTotals[q]/this.finalQuarterCounts[q]).toFixed(2) : '-';
+        },
+
+        finalAverage() {
+            return this.finalAllCount ? (this.finalAllSum/this.finalAllCount).toFixed(2) : '-';
+        }
+    }
+}
+</script>
+
 
 <!-- ================= JAVASCRIPT ================= -->
 
 <script>
+
 const students = @json(
     $section->students->mapWithKeys(fn($s)=>[
         $s->id => [
@@ -197,95 +397,184 @@ const students = @json(
 );
 
 const subjects = @json(
-    $subjects->map(fn($s)=>['id'=>$s->id,'name'=>$s->name])
+    $subjects->map(fn($s)=>[
+        'id'=>$s->id,
+        'name'=>$s->name,
+        'grade_level'=>$s->grade_level
+    ])
 );
 
 let activeStudentId = null;
 
-/* ---------- OPEN MODAL ---------- */
+
+/* ================= OPEN MODAL ================= */
 function openReportCard(id){
+
     activeStudentId = id;
     const student = students[id];
-    document.getElementById('rc-student-name').textContent = student.name;
+
+    document.getElementById('modalStudentName').textContent = student.name;
 
     let body = '';
+
+    // GROUP SUBJECTS BY YEAR LEVEL
+    const grouped = {};
+
     subjects.forEach(sub => {
-        body += `<tr>
-            <td class="border px-3 py-2">${sub.name}</td>`;
-
-        for(let q=1;q<=4;q++){
-            const val = student.grades?.[sub.id]?.[q] ?? '';
-            body += `
-            <td class="border text-center">
-                <input type="number" min="0" max="100" step="0.01"
-                    class="grade-input w-16 text-center border rounded"
-                    data-subject="${sub.id}"
-                    data-quarter="${q}"
-                    value="${val}">
-            </td>`;
+        if(!grouped[sub.grade_level]){
+            grouped[sub.grade_level] = [];
         }
-
-        body += `<td class="border text-center bg-indigo-50 subject-final">—</td></tr>`;
+        grouped[sub.grade_level].push(sub);
     });
 
-    document.getElementById('report-body').innerHTML = body;
-    calculateAll();
+    // LOOP PER YEAR LEVEL
+    for(const year in grouped){
 
-    document.getElementById('reportModal').classList.remove('hidden');
-    document.getElementById('reportModal').classList.add('flex');
-}
+        // YEAR HEADER
+        body += `
+            <tr class="bg-indigo-50 font-bold year-header" data-year="${year}">
+                <td colspan="6" class="border px-3 py-2">
+                    ${year}
+                </td>
+            </tr>
+        `;
 
-/* ---------- CALCULATIONS ---------- */
-function calculateAll(){
-    let quarterTotals = {1:[],2:[],3:[],4:[]};
+        grouped[year].forEach(sub => {
 
-    document.querySelectorAll('#report-body tr').forEach(row=>{
-        let subjectGrades = [];
+            body += `<tr class="subject-row" data-year="${year}">
+                <td class="border px-3 py-2">${sub.name}</td>`;
 
-        row.querySelectorAll('.grade-input').forEach(input=>{
-            const q = input.dataset.quarter;
-            const v = parseFloat(input.value);
-            if(!isNaN(v)){
-                subjectGrades.push(v);
-                quarterTotals[q].push(v);
+            for(let q=1;q<=4;q++){
+                const val = student.grades?.[sub.id]?.[q] ?? '';
+
+                body += `
+                    <td class="border text-center">
+                        <input type="number"
+                            class="grade-input w-16 text-center border rounded"
+                            data-subject="${sub.id}"
+                            data-quarter="${q}"
+                            data-year="${year}"
+                            value="${val}">
+                    </td>`;
             }
+
+            body += `
+                <td class="border text-center bg-indigo-50 subject-final">—</td>
+            </tr>`;
         });
 
-        const finalCell = row.querySelector('.subject-final');
-        finalCell.textContent = subjectGrades.length
-            ? (subjectGrades.reduce((a,b)=>a+b,0)/subjectGrades.length).toFixed(2)
-            : '—';
-    });
-
-    let overall = [];
-    for(let q=1;q<=4;q++){
-        const avg = quarterTotals[q].length
-            ? (quarterTotals[q].reduce((a,b)=>a+b,0)/quarterTotals[q].length).toFixed(2)
-            : '—';
-        document.getElementById('q'+q).textContent = avg;
-        if(avg!=='—') overall.push(parseFloat(avg));
+        // YEAR LEVEL FOOTER (AVERAGE)
+        body += `
+            <tr class="bg-gray-100 font-semibold year-footer" data-year="${year}">
+                <td class="border px-3 py-2">Year Level Average</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="1">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="2">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="3">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="4">—</td>
+                <td class="border text-center bg-indigo-100 year-final" data-year="${year}">—</td>
+            </tr>
+        `;
     }
 
-    document.getElementById('general').textContent =
-        overall.length
-            ? (overall.reduce((a,b)=>a+b,0)/overall.length).toFixed(2)
-            : '—';
+    document.getElementById('report-body').innerHTML = body;
+
+    calculateAll();
+
+    const modal = document.getElementById('reportModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
+
+/* ================= CLOSE MODAL ================= */
+function closeReportCard(){
+    const modal = document.getElementById('reportModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+
+/* ================= CALCULATE PER YEAR ================= */
+function calculateAll(){
+
+    const years = [...document.querySelectorAll('.year-header')]
+                    .map(row => row.dataset.year);
+
+    years.forEach(year => {
+
+        let quarterTotals = {1:[],2:[],3:[],4:[]};
+
+        document.querySelectorAll(`.subject-row[data-year="${year}"]`)
+            .forEach(row => {
+
+                let subjectGrades = [];
+
+                row.querySelectorAll('.grade-input').forEach(input => {
+
+                    const q = input.dataset.quarter;
+                    const v = parseFloat(input.value);
+
+                    if(!isNaN(v)){
+                        subjectGrades.push(v);
+                        quarterTotals[q].push(v);
+                    }
+                });
+
+                const finalCell = row.querySelector('.subject-final');
+
+                finalCell.textContent =
+                    subjectGrades.length
+                        ? (subjectGrades.reduce((a,b)=>a+b,0)/subjectGrades.length).toFixed(2)
+                        : '—';
+            });
+
+        // QUARTER AVERAGE
+        let overall = [];
+
+        for(let q=1;q<=4;q++){
+
+            const avg = quarterTotals[q].length
+                ? (quarterTotals[q].reduce((a,b)=>a+b,0)/quarterTotals[q].length).toFixed(2)
+                : '—';
+
+            document.querySelector(
+                `.year-q[data-year="${year}"][data-quarter="${q}"]`
+            ).textContent = avg;
+
+            if(avg !== '—') overall.push(parseFloat(avg));
+        }
+
+        // FINAL AVERAGE
+        document.querySelector(
+            `.year-final[data-year="${year}"]`
+        ).textContent =
+            overall.length
+                ? (overall.reduce((a,b)=>a+b,0)/overall.length).toFixed(2)
+                : '—';
+    });
+}
+
+
+/* AUTO RECALCULATE */
 document.addEventListener('input', e=>{
     if(e.target.classList.contains('grade-input')){
         calculateAll();
     }
 });
 
-/* ---------- SAVE ---------- */
+
+/* ================= SAVE ================= */
 function saveModalGrades(){
+
     let grades = {};
 
     document.querySelectorAll('.grade-input').forEach(input=>{
+
         const subject = input.dataset.subject;
         const quarter = input.dataset.quarter;
+
         if(!grades[subject]) grades[subject] = {};
+
         grades[subject][quarter] = input.value;
     });
 
@@ -303,14 +592,13 @@ function saveModalGrades(){
     .then(r=>r.json())
     .then(()=>{
         alert('Grades saved successfully');
+        closeReportCard();
         location.reload();
     });
 }
 
-function closeReportCard(){
-    document.getElementById('reportModal').classList.add('hidden');
-}
 </script>
+
 
 </body>
 </html>

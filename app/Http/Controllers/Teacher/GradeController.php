@@ -17,7 +17,10 @@ class GradeController extends Controller
         $section = Section::with(['students.grades'])->findOrFail($sectionId);
         $subjects = Subject::all(); // Or filter subjects for the section if needed
 
-        return view('teacher.grades', compact('section', 'subjects'));
+        // Group subjects by grade level for the view
+        $allSubjectsByGrade = $subjects->groupBy('grade_level');
+
+        return view('teacher.grades', compact('section', 'subjects', 'allSubjectsByGrade'));
     }
 
     // Store grades

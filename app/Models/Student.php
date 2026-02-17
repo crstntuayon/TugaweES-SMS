@@ -53,4 +53,20 @@ public function attendances()
     {
         return $this->belongsTo(SchoolYear::class);
     }
+
+    public function gradesGroupedByLearningArea()
+{
+    return $this->grades
+        ->groupBy('learning_area')
+        ->map(function ($grades) {
+            return [
+                'q1'    => $grades->where('quarter', 1)->first()?->grade,
+                'q2'    => $grades->where('quarter', 2)->first()?->grade,
+                'q3'    => $grades->where('quarter', 3)->first()?->grade,
+                'q4'    => $grades->where('quarter', 4)->first()?->grade,
+                'final' => $grades->avg('grade'),
+            ];
+        });
+}
+
 }

@@ -166,11 +166,7 @@
     <span>Reports</span>
 </a>
 
- <!-- Buttons 
-        <button onclick="openModal('adminAnnounceModal');"
-                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-            📢 Announcements
-        </button> -->
+
 
             <!-- Active School Year Selector -->
             <div class="px-4 py-3 bg-gray-50">

@@ -106,7 +106,7 @@
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-4 rounded-2xl mb-6">
                     <div class="font-bold text-lg md:text-xl">{{ $section->year_level }} - {{ $section->name }}</div>
                     <span class="mt-2 md:mt-0 text-sm bg-white/20 px-4 py-1 rounded-full">
-                        SY {{ $section->school_year ?? 'N/A' }}
+                        SY  {{ $section->schoolYear?->name ?? 'N/A' }}
                     </span>
                 </div>
 

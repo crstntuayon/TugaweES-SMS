@@ -435,7 +435,16 @@ Route::put('/teacher/announcements/{announcement}', [App\Http\Controllers\Teache
 
 
 
+Route::get('/admin/sf9/{student}', [App\Http\Controllers\Admin\SchoolFormController::class, 'sf9'])
+    ->name('admin.sf9.show');
+    Route::get('/admin/sf9/{student}/download', 
+    [App\Http\Controllers\Admin\SchoolFormController::class, 'downloadSf9'])
+    ->name('admin.sf9.download');
 
+Route::get('/admin/sf10/{student}', [App\Http\Controllers\Admin\SchoolFormController::class, 'sf10'])
+    ->name('admin.sf10.show');
+Route::get('/admin/sf10/{student}/download', 
+    [App\Http\Controllers\Admin\SchoolFormController::class, 'downloadSf10'])->name('admin.sf10.download');
 
 
 

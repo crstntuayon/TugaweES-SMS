@@ -57,41 +57,7 @@
     </div>
 </header>
 
-<!--@if(session('success'))
-<div x-data="{ 
-        show: true, 
-        seconds: 3,
-        startCountdown() {
-            let timer = setInterval(() => {
-                if (this.seconds > 0) {
-                    this.seconds--;
-                } else {
-                    this.show = false;
-                    clearInterval(timer);
-                }
-            }, 1000);
-        }
-    }"
-    x-init="startCountdown()"
-    x-show="show"
-    x-transition
-    class="fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg z-50 w-80">
 
-    <div class="flex justify-between items-start gap-4">
-        <div>
-            <p class="font-semibold">✅ Success</p>
-            <p class="text-sm mt-1">{{ session('success') }}</p>
-            <p class="text-xs mt-2 opacity-80">
-                Closing in <span x-text="seconds"></span> seconds...
-            </p>
-        </div>
-
-        <button @click="show = false" class="text-white font-bold text-lg leading-none">
-            ✕
-        </button>
-    </div>
-</div>
-@endif -->
 
 
 <main class="max-w-7xl mx-auto space-y-10">
@@ -115,104 +81,196 @@
 
     <!-- =================== ACTION BUTTONS =================== -->
     <div class="flex flex-wrap gap-4 mt-6">
+<!-- Grades Button -->
+<div x-data="{ openGrades: false }">
+    <button @click="openGrades = true" 
+        class="bg-indigo-600 text-white px-6 py-2 rounded-xl shadow-sm hover:bg-indigo-700 transition transform hover:scale-105">
+        📄 View Report Card
+    </button>
 
-        <!-- Grades Button -->
-        <div x-data="{ openGrades: false }">
-            <button @click="openGrades = true" class="bg-indigo-600/70 text-white px-6 py-2 rounded-xl shadow-sm hover:bg-indigo-700/70 transition transform hover:scale-105">
-                📄 View Report Card
-            </button>
+    <!-- Grades Modal -->
+    <div x-show="openGrades" x-cloak 
+         class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-md max-w-6xl w-full p-6 relative overflow-auto max-h-[90vh]">
 
-            <!-- Grades Modal -->
-            <div x-show="openGrades" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div class="bg-white/60 rounded-3xl shadow-md max-w-6xl w-full p-6 relative overflow-auto max-h-[90vh] backdrop-blur-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">
+                    📄 Report Card
+                    <span class="text-sm text-gray-500 font-normal ml-2">
+                        Section: {{ $section->year_level }} - {{ $section->name }}
+                    </span>
+                    <span class="text-gray-500 text-base font-normal">
+                        - Active SY: {{ $activeSchoolYear->name ?? 'N/A' }}
+                    </span>
+                </h2>
+                <button @click="openGrades = false" class="text-xl font-bold hover:text-red-500">✕</button>
+            </div>
 
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">📄 Report Card
-                            <span class="text-sm text-gray-500 font-normal ml-2">Section: {{ $section->year_level }} - {{ $section->name }}</span>
-                             <span class="text-gray-500 text-base font-normal"> - Active SY: {{ $activeSchoolYear->name ?? 'N/A' }}</span>
-                        </h2>
-                        <button @click="openGrades = false" class="text-xl font-bold hover:text-red-500">✕</button>
-                    </div>
+            @php
+                $quarters = [1,2,3,4];
 
-                    @php 
-                        $quarters = [1,2,3,4]; 
-                        $quarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                        $quarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                        $finalTotal = 0;
-                        $finalCount = 0;
-                    @endphp
+                $allSubjectsByGrade = \App\Models\Subject::orderByRaw(
+                    "FIELD(grade_level, 'Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6')"
+                )->get()->groupBy('grade_level');
 
-                    <table class="min-w-full border text-sm rounded-lg overflow-hidden shadow-sm">
-                        <thead class="bg-indigo-50/70 text-gray-700 sticky top-0 z-10">
-                            <tr>
-                                <th class="border px-3 py-2 text-left">Subject</th>
-                                @foreach($quarters as $q)
-                                    <th class="border px-3 py-2 text-center">Q{{ $q }}</th>
-                                @endforeach
-                                <th class="border px-3 py-2 text-center">Average</th>
-                                <th class="border px-3 py-2 text-center">Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($student->grades->groupBy('subject_id') as $subjectGrades)
+                $currentYear = $section->year_level;
+                if($allSubjectsByGrade->has($currentYear)){
+                    $currentSubjects = $allSubjectsByGrade->pull($currentYear);
+                    $allSubjectsByGrade = collect([$currentYear => $currentSubjects])->merge($allSubjectsByGrade);
+                }
+
+                $finalQuarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                $finalQuarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                $finalAllSum = 0;
+                $finalAllCount = 0;
+            @endphp
+
+            @foreach($allSubjectsByGrade as $grade => $subjects)
+                <h3 class="text-lg font-bold text-indigo-800 mt-6 mb-2">{{ $grade }}</h3>
+
+                <table class="min-w-full border text-sm rounded-lg overflow-hidden shadow-sm mb-6">
+                    <thead class="bg-indigo-50 text-gray-700 sticky top-0 z-10">
+                        <tr>
+                            <th class="border px-3 py-2 text-left">Subject</th>
+                            @foreach($quarters as $q)
+                                <th class="border px-3 py-2 text-center">Q{{ $q }}</th>
+                            @endforeach
+                            <th class="border px-3 py-2 text-center">Average</th>
+                            <th class="border px-3 py-2 text-center">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $quarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                            $quarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                            $gradeSum = 0;
+                            $gradeCount = 0;
+                        @endphp
+
+                        @foreach($subjects as $subject)
+                            @if($subject->components)
                                 @php
-                                    $subject = $subjectGrades->first()->subject ?? null;
+                                    $components = json_decode($subject->components);
+                                @endphp
+                                <tr class="bg-gray-100 font-semibold">
+                                    <td class="border px-4 py-2 text-gray-800">{{ $subject->name }}</td>
+                                    @foreach($quarters as $q)
+                                        <td class="border px-4 py-2 text-center">-</td>
+                                    @endforeach
+                                    <td class="border px-4 py-2 text-center">-</td>
+                                    <td class="border px-4 py-2 text-center">-</td>
+                                </tr>
+
+                                @foreach($components as $comp)
+                                    @php
+                                        $grades = $student->grades
+                                            ->where('subject_id', $subject->id)
+                                            ->where('component', $comp)
+                                            ->keyBy('quarter');
+
+                                        $qValues = [];
+                                        $compSum = 0;
+                                        $compCount = 0;
+
+                                        foreach($quarters as $q){
+                                            $grade = $grades[$q]->grade ?? '-';
+                                            $qValues[$q] = $grade;
+
+                                            if($grade !== '-') {
+                                                $quarterTotals[$q] += $grade;
+                                                $quarterCounts[$q]++;
+                                                $finalQuarterTotals[$q] += $grade;
+                                                $finalQuarterCounts[$q]++;
+                                                $compSum += $grade;
+                                                $compCount++;
+                                                $finalAllSum += $grade;
+                                                $finalAllCount++;
+                                            }
+                                        }
+                                        $average = $compCount ? round($compSum/$compCount,2) : '-';
+                                        $remarks = $average !== '-' ? ($average >= 75 ? 'Passed' : 'Failed') : '-';
+                                    @endphp
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="border px-8 py-2 text-gray-700 font-medium">{{ $comp }}</td>
+                                        @foreach($quarters as $q)
+                                            <td class="border px-4 py-2 text-center text-gray-600">{{ $qValues[$q] }}</td>
+                                        @endforeach
+                                        <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $average }}</td>
+                                        <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $remarks }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                @php
+                                    $grades = $student->grades
+                                        ->where('subject_id', $subject->id)
+                                        ->keyBy('quarter');
+
                                     $qValues = [];
                                     foreach($quarters as $q){
-                                        $grade = $subjectGrades->where('quarter', $q)->first()?->grade ?? null;
-                                        $qValues[$q] = $grade ?? '-';
-                                        if($grade !== null){
+                                        $grade = $grades[$q]->grade ?? '-';
+                                        $qValues[$q] = $grade;
+
+                                        if($grade !== '-') {
                                             $quarterTotals[$q] += $grade;
                                             $quarterCounts[$q]++;
-                                            $finalTotal += $grade;
-                                            $finalCount++;
+                                            $finalQuarterTotals[$q] += $grade;
+                                            $finalQuarterCounts[$q]++;
+                                            $gradeSum += $grade;
+                                            $gradeCount++;
+                                            $finalAllSum += $grade;
+                                            $finalAllCount++;
                                         }
                                     }
-                                    $gradesArray = array_filter($qValues, fn($g) => $g !== '-');
-                                    $average = count($gradesArray) ? round(array_sum($gradesArray)/count($gradesArray),2) : '-';
+                                    $average = $gradeCount ? round($gradeSum/$gradeCount,2) : '-';
                                     $remarks = $average !== '-' ? ($average >= 75 ? 'Passed' : 'Failed') : '-';
                                 @endphp
-                                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                    <td class="border px-4 py-3 font-medium text-gray-700">{{ $subject->name ?? 'N/A' }}</td>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="border px-4 py-2 font-medium text-gray-700">{{ $subject->name }}</td>
                                     @foreach($quarters as $q)
-                                        <td class="border px-4 py-3 text-center text-gray-600">{{ $qValues[$q] }}</td>
+                                        <td class="border px-4 py-2 text-center text-gray-600">{{ $qValues[$q] }}</td>
                                     @endforeach
-                                    <td class="border px-4 py-3 text-center font-semibold text-gray-800">{{ $average }}</td>
-                                    <td class="border px-4 py-3 text-center text-gray-700 font-medium">{{ $remarks }}</td>
+                                    <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $average }}</td>
+                                    <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $remarks }}</td>
                                 </tr>
-                            @endforeach
+                            @endif
+                        @endforeach
 
-                            <!-- Quarterly Average Row -->
-                            <tr class="bg-gray-100/50 font-semibold text-gray-800">
-                                <td class="border px-4 py-3 text-left">Quarterly Average</td>
-                                @foreach($quarters as $q)
-                                    @php
-                                        $qAvg = $quarterCounts[$q] ? round($quarterTotals[$q]/$quarterCounts[$q],2) : '-';
-                                    @endphp
-                                    <td class="border px-4 py-3 text-center">{{ $qAvg }}</td>
-                                @endforeach
-                                <td class="border px-4 py-3 text-center"></td>
-                                <td class="border px-4 py-3 text-center"></td>
-                            </tr>
-
-                            <!-- Final Average Row -->
-                            <tr class="bg-indigo-50/50 font-semibold text-gray-800">
-                                <td class="border px-4 py-3 text-left">Final Average</td>
-                                @foreach($quarters as $q)
-                                    <td class="border px-4 py-3 text-center"></td>
-                                @endforeach
+                        <!-- Quarterly Average Row -->
+                        <tr class="bg-gray-100/50 font-semibold text-gray-800">
+                            <td class="border px-4 py-2 text-left">Quarterly Average</td>
+                            @foreach($quarters as $q)
                                 @php
-                                    $finalAverage = $finalCount ? round($finalTotal / $finalCount, 2) : '-';
-                                    $finalRemarks = $finalAverage !== '-' ? ($finalAverage >= 75 ? 'Passed' : 'Failed') : '-';
+                                    $qAvg = $quarterCounts[$q] ? round($quarterTotals[$q]/$quarterCounts[$q],2) : '-';
                                 @endphp
-                                <td class="border px-4 py-3 text-center font-semibold text-gray-800">{{ $finalAverage }}</td>
-                                <td class="border px-4 py-3 text-center text-gray-700 font-medium">{{ $finalRemarks }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                <td class="border px-4 py-2 text-center">{{ $qAvg }}</td>
+                            @endforeach
+                            <td class="border px-4 py-2 text-center"></td>
+                            <td class="border px-4 py-2 text-center"></td>
+                        </tr>
+
+                        <!-- Final Average Row -->
+                        <tr class="bg-indigo-50/50 font-semibold text-gray-800">
+                            <td class="border px-4 py-2 text-left">Final Average</td>
+                            @foreach($quarters as $q)
+                                <td class="border px-4 py-2 text-center"></td>
+                            @endforeach
+                            @php
+                                $finalAverage = $gradeCount ? round($gradeSum/$gradeCount,2) : '-';
+                                $finalRemarks = $finalAverage !== '-' ? ($finalAverage >= 75 ? 'Passed' : 'Failed') : '-';
+                            @endphp
+                            <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $finalAverage }}</td>
+                            <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $finalRemarks }}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            @endforeach
+
         </div>
+    </div>
+</div>
+
+
 
         <!-- Attendance Button -->
         <div x-data="{ openAttendance: false, month: '{{ now()->format('F Y') }}', view: 'table' }">

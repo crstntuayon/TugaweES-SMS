@@ -93,7 +93,13 @@ $announcements = Announcement::latest()->get();
     <input type="email" name="email" required
            placeholder="Email Address"
            class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm bg-white/80 backdrop-blur-sm text-sm hover:shadow-md">
-</div>
+@error('email')
+    <div class="text-red-500 text-xs mt-1">
+        {{ $message }}
+    </div>
+@enderror
+        </div>
+
 
 <!-- Password Input -->
 <div class="relative mb-4">
@@ -199,7 +205,7 @@ $modalClass = "hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-cent
 
         <!-- Description -->
         <p class="text-gray-600 mb-6">
-            This Student Management System was developed by <strong>TriniTech</strong>, a team of 4th-year Information Technology students (Batch 2022-2026).
+            This Student Management System was developed by <strong>TriniTech</strong>, a team of 4th-year Information Technology students (Batch 2022-2026). - Negros Oriental State University
         </p>
 
         <!-- Developer List -->

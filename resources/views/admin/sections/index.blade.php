@@ -200,7 +200,10 @@ setTimeout(() => {
 </td>
 
 <td class="px-4 py-3">{{ $section->year_level }}</td>
-<td class="px-4 py-3">{{ $section->school_year }}</td>
+<td class="px-4 py-3">
+    {{ $section->schoolYear?->name ?? 'N/A' }}
+</td>
+
 
 <td class="px-4 py-3 flex gap-3">
 
@@ -247,48 +250,65 @@ setTimeout(() => {
 <!-- ================= EDIT SECTION MODAL ================= -->
 <div id="editSectionModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-<div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
 
-<h2 class="text-xl font-bold text-gray-800 mb-4">Edit Section</h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Edit Section</h2>
 
-<form id="editSectionForm" method="POST" class="space-y-4">
-@csrf
-@method('PUT')
+    <form id="editSectionForm" method="POST" class="space-y-4" action="{{ route('admin.sections.update', $section->id ?? 0) }}">
+      @csrf
+      @method('PUT')
 
-<input id="edit_name" name="name" required
-class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+      <!-- SECTION NAME -->
+      <input id="edit_name" name="name" required
+             value="{{ old('name', $section->name ?? '') }}"
+             class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400"
+             placeholder="Section Name">
 
-<select id="edit_year_level" name="year_level" required
-class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
-<option>Kindergarten</option>
-<option>Grade 1</option>
-<option>Grade 2</option>
-<option>Grade 3</option>
-<option>Grade 4</option>
-<option>Grade 5</option>
-<option>Grade 6</option>
-</select>
+      <!-- YEAR LEVEL -->
+      <select id="edit_year_level" name="year_level" required
+              class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+        @php
+          $levels = ['Kindergarten', 'Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6'];
+        @endphp
+        @foreach($levels as $level)
+          <option value="{{ $level }}" {{ (old('year_level', $section->year_level ?? '') == $level) ? 'selected' : '' }}>
+            {{ $level }}
+          </option>
+        @endforeach
+      </select>
 
-<input id="edit_school_year" name="school_year" required
-class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+      <!-- SCHOOL YEAR -->
+      <select id="edit_school_year" name="school_year_id" required
+              class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+        <option value="">-- Select School Year --</option>
+        @foreach($schoolYears as $year)
+          <option value="{{ $year->id }}"
+                  {{ (old('school_year_id', $section->school_year_id ?? '') == $year->id) ? 'selected' : '' }}>
+            {{ $year->name }}
+          </option>
+        @endforeach
+      </select>
 
-<div class="flex justify-end gap-3 pt-4">
-<button type="button" onclick="closeEditSectionModal()"
-class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg">
-Cancel
-</button>
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3 pt-4">
+        <button type="button" onclick="closeEditSectionModal()"
+                class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg">
+          Cancel
+        </button>
 
-<button type="submit"
-class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg">
-Update Section
-</button>
+        <button type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg">
+          Update Section
+        </button>
+      </div>
+    </form>
+
+    <!-- Close Modal Button -->
+    <button onclick="closeEditSectionModal()"
+            class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">✕</button>
+  </div>
 </div>
-</form>
 
-<button onclick="closeEditSectionModal()"
-class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">✕</button>
-</div>
-</div>
 
 <!-- DELETE MODAL -->
 <div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
@@ -339,9 +359,21 @@ class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">✕</but
                 <option value="Grade 6">Grade 6</option>
             </select>
             
-            <!-- SCHOOL YEAR -->
-            <input type="text" name="school_year" placeholder="School Year (e.g. 2025-2026)" required
-                   class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+            <!-- SCHOOL YEAR -->   
+       <select name="school_year_id" required
+        class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+
+    <option value="">-- Select School Year --</option>
+
+    @foreach($schoolYears as $year)
+        <option value="{{ $year->id }}"
+            {{ old('school_year_id', $section->school_year_id ?? '') == $year->id ? 'selected' : '' }}>
+            {{ $year->name }}
+        </option>
+    @endforeach
+
+</select>
+
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">

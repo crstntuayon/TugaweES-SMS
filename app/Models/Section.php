@@ -9,14 +9,14 @@ class Section extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 
-        'name',
-        'year_level',   // MUST be fillable
-        'school_year',  // MUST be fillable
-        'capacity',
-        'teacher_id',   // if you are assigning teachers
-        
-        ];
+    protected $fillable = [
+    'name',
+    'teacher_id',
+    'year_level',
+    'school_year_id',
+    'capacity',
+];
+
 
     public function teacher()
     {
@@ -47,6 +47,10 @@ public function attendances()
 public function announcements()
 {
     return $this->hasMany(Announcement::class);
+}
+public function schoolYear()
+{
+    return $this->belongsTo(\App\Models\SchoolYear::class);
 }
 
 

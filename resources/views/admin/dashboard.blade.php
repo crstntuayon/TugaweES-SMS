@@ -458,7 +458,7 @@ function previewTeacherPhoto(event) {
             <input type="text" name="name" placeholder="Section Name (e.g. A, B, Einstein)" required
                    class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
 
-            <!-- YEAR LEVEL -->
+            
              <!-- YEAR LEVEL -->
             <select name="year_level" required
                     class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
@@ -471,10 +471,23 @@ function previewTeacherPhoto(event) {
                 <option value="Grade 5">Grade 5</option>
                 <option value="Grade 6">Grade 6</option>
             </select>
+
             
-            <!-- SCHOOL YEAR -->
-            <input type="text" name="school_year" placeholder="School Year (e.g. 2025-2026)" required
-                   class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+         <!-- SCHOOL YEAR -->   
+       <select name="school_year_id" required
+        class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+
+    <option value="">-- Select School Year --</option>
+
+    @foreach($schoolYears as $year)
+        <option value="{{ $year->id }}"
+            {{ old('school_year_id', $section->school_year_id ?? '') == $year->id ? 'selected' : '' }}>
+            {{ $year->name }}
+        </option>
+    @endforeach
+
+</select>
+
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
@@ -845,6 +858,21 @@ function closeSectionModal() {
                 </div>
             </div>
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: "{{ session('success') }}",
+    confirmButtonColor: '#4f46e5',
+    background: '#eef2ff',
+    color: '#1e1b4b'
+});
+</script>
+@endif
 
         <!-- Footer -->
         <div class="mt-4 flex justify-between items-center text-gray-700 text-sm">

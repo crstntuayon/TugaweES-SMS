@@ -93,7 +93,7 @@ class RegisteredUserController extends Controller
         ]);
 
         // Login the user
-        Auth::login($user);
+       // Auth::login($user);
     });
 
   return redirect()->route('login')

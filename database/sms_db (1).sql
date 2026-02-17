@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 16, 2026 at 02:35 PM
+-- Generation Time: Feb 17, 2026 at 01:45 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -36,16 +36,17 @@ CREATE TABLE `announcements` (
   `section_id` bigint UNSIGNED DEFAULT NULL,
   `is_pinned` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `announcements`
 --
 
-INSERT INTO `announcements` (`id`, `title`, `content`, `type`, `user_id`, `section_id`, `is_pinned`, `created_at`, `updated_at`) VALUES
-(4, 'Meeting', 'Grade 2 Parents. February 23, 2026 @3:00 PM.', 'teacher', 42, NULL, 0, '2026-02-16 05:47:09', '2026-02-16 05:56:03'),
-(5, 'PTA Meeting', 'All parents. @2:00 PM..', 'admin', 1, NULL, 0, '2026-02-16 05:59:16', '2026-02-16 06:13:01');
+INSERT INTO `announcements` (`id`, `title`, `content`, `type`, `user_id`, `section_id`, `is_pinned`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 'Meeting', 'Grade 2 Parents. February 23, 2026 @3:00 PM.', 'teacher', 42, NULL, 0, '2026-02-16 05:47:09', '2026-02-16 05:56:03', NULL),
+(5, 'PTA Meeting', 'All parents. @2:00 PM.', 'admin', 1, NULL, 0, '2026-02-16 05:59:16', '2026-02-16 08:02:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -348,7 +349,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (62, '2026_02_15_110502_make_birthday_nullable_in_teachers_table', 54),
 (63, '2026_02_16_052424_create_announcements_table', 55),
 (64, '2026_02_16_114809_add_login_attempts_to_users_table', 56),
-(65, '2026_02_16_121943_create_announcements_table', 57);
+(65, '2026_02_16_121943_create_announcements_table', 57),
+(66, '2026_02_16_155026_add_soft_deletes_to_announcements_table', 58),
+(67, '2026_02_16_164310_add_birthday_to_users_table', 59);
 
 -- --------------------------------------------------------
 
@@ -424,7 +427,6 @@ CREATE TABLE `sections` (
   `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `year_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N/A',
-  `school_year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2026-2027',
   `teacher_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -436,18 +438,22 @@ CREATE TABLE `sections` (
 -- Dumping data for table `sections`
 --
 
-INSERT INTO `sections` (`id`, `name`, `year_level`, `school_year`, `teacher_id`, `created_at`, `updated_at`, `capacity`, `school_year_id`) VALUES
-(40, 'ASDILLO - AM', 'Kindergarten', '2025-2026', 43, '2026-02-10 04:28:24', '2026-02-11 22:52:39', 40, 0),
-(41, 'MANGINSAY', 'Grade 1', '2025-2026', 44, '2026-02-11 22:47:19', '2026-02-11 22:53:03', 40, 0),
-(42, 'NOCETE', 'Grade 2', '2025-2026', 45, '2026-02-11 22:47:33', '2026-02-11 22:53:11', 40, 0),
-(43, 'ASDILLO - PM', 'Kindergarten', '2025-2026', 43, '2026-02-11 22:48:20', '2026-02-11 22:53:24', 40, 0),
-(44, 'RUBIA', 'Grade 3', '2025-2026', 47, '2026-02-11 22:49:05', '2026-02-11 22:53:39', 40, 0),
-(45, 'SOJOR', 'Grade 3', '2025-2026', 46, '2026-02-11 22:49:24', '2026-02-11 22:53:49', 40, 0),
-(46, 'ALAMA', 'Grade 4', '2025-2026', 48, '2026-02-11 22:51:06', '2026-02-11 22:54:01', 40, 0),
-(47, 'RIO', 'Grade 5', '2025-2026', 49, '2026-02-11 22:51:27', '2026-02-11 22:54:10', 40, 0),
-(48, 'MONOPOLLO', 'Grade 6', '2025-2026', 50, '2026-02-11 22:51:44', '2026-02-11 22:54:19', 40, 0),
-(49, 'ALCORIZA', 'Grade 6', '2025-2026', 51, '2026-02-11 22:52:19', '2026-02-11 22:54:27', 40, 0),
-(50, 'SAMPAGUITA', 'Grade 6', '2025-2026', 42, '2026-02-14 01:35:15', '2026-02-15 02:07:30', 40, 0);
+INSERT INTO `sections` (`id`, `name`, `year_level`, `teacher_id`, `created_at`, `updated_at`, `capacity`, `school_year_id`) VALUES
+(40, 'ASDILLO - AM', 'Kindergarten', 43, '2026-02-10 04:28:24', '2026-02-16 17:27:45', 40, 2),
+(41, 'MANGINSAY', 'Grade 1', 44, '2026-02-11 22:47:19', '2026-02-16 17:38:14', 40, 1),
+(42, 'NOCETE', 'Grade 2', 45, '2026-02-11 22:47:33', '2026-02-16 17:38:27', 40, 2),
+(43, 'ASDILLO - PM', 'Kindergarten', 43, '2026-02-11 22:48:20', '2026-02-11 22:53:24', 40, 0),
+(44, 'RUBIA', 'Grade 3', 47, '2026-02-11 22:49:05', '2026-02-11 22:53:39', 40, 0),
+(45, 'SOJOR', 'Grade 3', 46, '2026-02-11 22:49:24', '2026-02-11 22:53:49', 40, 0),
+(46, 'ALAMA', 'Grade 4', 48, '2026-02-11 22:51:06', '2026-02-11 22:54:01', 40, 0),
+(47, 'RIO', 'Grade 5', 49, '2026-02-11 22:51:27', '2026-02-11 22:54:10', 40, 0),
+(48, 'MONOPOLLO', 'Grade 6', 50, '2026-02-11 22:51:44', '2026-02-11 22:54:19', 40, 0),
+(49, 'ALCORIZA', 'Grade 6', 51, '2026-02-11 22:52:19', '2026-02-11 22:54:27', 40, 0),
+(50, 'SAMPAGUITA', 'Grade 6', 42, '2026-02-14 01:35:15', '2026-02-16 17:37:24', 40, 9),
+(51, 'Gulamela', 'Grade 2', NULL, '2026-02-16 17:09:40', '2026-02-16 17:37:09', 40, 3),
+(52, 'Santan', 'Grade 4', NULL, '2026-02-16 17:16:09', '2026-02-16 17:16:09', 40, 2),
+(53, 'Daisy', 'Grade 1', NULL, '2026-02-16 17:38:53', '2026-02-16 17:39:07', 40, 2),
+(54, 'Lily', 'Grade 2', NULL, '2026-02-16 17:42:51', '2026-02-16 17:43:02', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -512,7 +518,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('foJCFHEYe3BmNIObrcP5Pm9igugVRXuuydFMprSz', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoib2cyajVERHpuUWw4YTdDQlhpeWt4T1pLWFp1ekxZR1BhQUI1cnhNdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fX0=', 1771252466);
+('alwQdtBE0biygxIfZcWfgopHzlFCcShHqZJbBhbw', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNGd0QzRid2VnU2gzcUViSFZDSzZsOWY3cUs5ZzVXaWdzc20wRVpraCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9kYXNoYm9hcmQvc3RhdHMiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLmRhc2hib2FyZC5zdGF0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1771292720);
 
 -- --------------------------------------------------------
 
@@ -630,7 +636,9 @@ INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `
 (140, '120231260079', 'Ellyza Mae', 'Ballovar', 'Tuble', NULL, 'Female', NULL, '2026-02-12', 'tubleellyzamae@gmail.com', NULL, NULL, 130, 41, '2026-02-12 03:52:46', '2026-02-12 20:38:40', NULL, 'S-120231260079', NULL, NULL, NULL),
 (142, '120231260080', 'Jillianne Shane', 'Tubio', 'Villamil', NULL, 'Female', NULL, '2026-02-13', 'villamiljillianneshan@gmail.com', NULL, NULL, 132, 41, '2026-02-12 18:02:40', '2026-02-12 20:38:40', NULL, 'S-120231260080', NULL, NULL, NULL),
 (155, '120231090041', 'Crestian', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2026-02-15', 'cresttuayon7@gmail.com', NULL, 'Tugawe, Dauin, Negros Oriental', 153, 45, '2026-02-15 00:12:46', '2026-02-15 00:16:46', NULL, NULL, NULL, 3, NULL),
-(156, '120231260082', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2026-02-15', 'troituayon@gmail.com', NULL, 'Tugawe, Dauin, Negros Oriental', 154, 50, '2026-02-15 01:11:47', '2026-02-15 01:13:18', NULL, NULL, 'photos/0WRKM7POVwIgw18nQCFFP8hP62eCTT8tdfsT2Aa1.jpg', 1, NULL);
+(156, '120231260082', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2026-02-15', 'troituayon@gmail.com', NULL, 'Tugawe, Dauin, Negros Oriental', 154, 50, '2026-02-15 01:11:47', '2026-02-15 01:13:18', NULL, NULL, 'photos/0WRKM7POVwIgw18nQCFFP8hP62eCTT8tdfsT2Aa1.jpg', 1, NULL),
+(157, '120231260085', 'Ejie Mae', 'Santos', 'Tradio', NULL, 'Female', NULL, '2003-10-31', 'ezimeitradio@gmail.com', NULL, NULL, 157, NULL, '2026-02-16 08:34:24', '2026-02-16 08:34:24', NULL, NULL, NULL, 1, NULL),
+(162, '120231260087', 'Noime', 'T.', 'Baldomar', NULL, 'Female', NULL, '2026-02-17', 'baldomarnoime@gmail.com', '09759264665', 'Bayawan City, Negros Oriental', 162, NULL, '2026-02-16 15:07:01', '2026-02-16 15:07:01', NULL, NULL, 'students/dYDpWT4X2IOjP5PafYzb3rXOw5cLUVA3AjK8L8nB.jpg', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -762,6 +770,7 @@ INSERT INTO `teaching_loads` (`id`, `teacher_id`, `session`, `time`, `minutes`, 
 
 CREATE TABLE `users` (
   `id` bigint UNSIGNED NOT NULL,
+  `lrn` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role_id` bigint UNSIGNED DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
@@ -773,6 +782,7 @@ CREATE TABLE `users` (
   `middle_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `suffix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `login_attempts` int NOT NULL DEFAULT '0',
   `lock_until` timestamp NULL DEFAULT NULL
@@ -782,102 +792,104 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `username`, `login_attempts`, `lock_until`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', '4a7PCQKlJxVRySElbtdc4nTSNrXiKqOYcZ3VIhpiCXjhHbD0HaYgYxNJVHXS', '2026-01-27 05:37:20', '2026-02-16 04:35:23', '', NULL, '', NULL, '', 1, NULL),
-(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, '', 0, NULL),
-(39, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$6hxW91UwOUdbxrUxrP7QxucAWPs5ylptuX30Dk0qCQcZpIb7HGt7u', NULL, '2026-02-10 03:52:06', '2026-02-16 06:30:50', 'Crestian', NULL, 'Tuayon', NULL, 'ctuayon620', 1, NULL),
-(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-16 06:11:16', 'Juan', NULL, 'Cruz', NULL, 'juandelacruz', 1, NULL),
-(43, 2, 'asdilloleeneth@gmail.com', NULL, '$2y$12$msUYN.TKY3W85BIabLfFIuCydYrZblJYSksVDaeCl7.f7KE9ue.Gu', NULL, '2026-02-11 22:28:20', '2026-02-11 22:28:20', 'Leeneth', NULL, 'Asdillo', NULL, 'leenethasdillo', 0, NULL),
-(44, 2, 'manginsayantonieta@gmail.com', NULL, '$2y$12$p8q2BH/cn9Q8jh4F4pB6DOeNaZnuLl8pq/BpBJhv4fy2Rhe0iBU1y', NULL, '2026-02-11 22:30:44', '2026-02-11 22:30:44', 'Antonieta', NULL, 'Manginsay', NULL, 'antonietamanginsay', 0, NULL),
-(45, 2, 'nocetealelyn@gmail.com', NULL, '$2y$12$QTg/Cq5XqxnbdNedFLgaUub10LFBrlFNnidbQqOAxC6HIofJjIKpu', NULL, '2026-02-11 22:32:28', '2026-02-11 22:32:28', 'Alelyn', 'D.', 'Nocete', NULL, 'alelynnocete@gmail.com', 0, NULL),
-(46, 2, 'sojorvictoria@gmail.com', NULL, '$2y$12$DNufZwV0xkGSkKKD/myAOOfokXT27UtrfjAWGhSAr52aiS2wx51lq', NULL, '2026-02-11 22:33:47', '2026-02-11 22:33:47', 'Victoria', 'A.', 'Sojor', NULL, 'victoriasojor', 0, NULL),
-(47, 2, 'rubiareneegen@gmail.com', NULL, '$2y$12$TCMiMoDlqWoNnSlm13Zl6empLYX4HIXHGurmzQQ/P/jKlX6JKA5Cu', NULL, '2026-02-11 22:35:27', '2026-02-11 22:35:27', 'Reneegen', NULL, 'Rubia', NULL, 'reneegenrubia', 0, NULL),
-(48, 2, 'alamaeva@gmail.com', NULL, '$2y$12$IKVdqoJQ25uWdgZHvDqX/ehu2EEemzMDLMZ.bSrPXoPDuFVT2v4wO', NULL, '2026-02-11 22:36:30', '2026-02-11 22:36:30', 'Eva', 'A.', 'Alama', NULL, 'evaalama', 0, NULL),
-(49, 2, 'riowilz@gmail.com', NULL, '$2y$12$dywGTgY0H48pirQ2ZbRPK./7CMcKtHPJZ/ZcrtiosC9NTxLdagKlq', NULL, '2026-02-11 22:37:48', '2026-02-11 22:37:48', 'Wilz', NULL, 'Rio', NULL, 'wilzrio', 0, NULL),
-(50, 2, 'monopollocarmel@gmail.com', NULL, '$2y$12$D6J3kp69GRItD2v8vIAuyuh/0buQx5KjCFK6Nqc/9QD1H115hT/Iu', NULL, '2026-02-11 22:44:47', '2026-02-11 22:44:47', 'Carmel', NULL, 'Monopollo', NULL, 'carmelmonopollo', 0, NULL),
-(51, 2, 'alcorizavictor@gmail.com', NULL, '$2y$12$Ot2hzYu5hc4X0oVOvmcW3es0m9mptBCXCUbSM0PILaV7p42mlLDym', NULL, '2026-02-11 22:45:28', '2026-02-11 22:45:28', 'Victor', NULL, 'Alcoriza', NULL, 'victoralcoriza', 0, NULL),
-(52, 4, 'kristianalsola@gmail.com', NULL, '$2y$12$E9Z4IF9EZ1N68i2zTnY2P.MU58iEODEpN2LofGf3yBODOOOXFSiZC', NULL, '2026-02-11 23:00:56', '2026-02-11 23:00:56', 'Kristian', NULL, 'Alsola', NULL, 'kalsola703', 0, NULL),
-(53, 4, 'aranetareferjohn@gmail.com', NULL, '$2y$12$ruVIhy6LiCij4XMDkMMaLeC2LTwEt/wDPM9Z0NdNwzVDThZX6N606', NULL, '2026-02-11 23:02:34', '2026-02-11 23:02:34', 'Rofer John', NULL, 'Araneta', NULL, 'raraneta101', 0, NULL),
-(54, 4, 'delesmeraldjay@gmail.com', NULL, '$2y$12$WfPu0EeMmo92fLICmLvImuA4vTBOODSSbujFs8.M603TA.1aLtV2C', NULL, '2026-02-11 23:06:52', '2026-02-11 23:06:52', 'MERALD JAY', NULL, 'DELES', NULL, 'mdeles911', 0, NULL),
-(56, 4, 'mondidogeo@gmail.com', NULL, '$2y$12$8cgI03dTLcihpLMb23Gw8OpashieJ9drHm0G3MzMMEIfClpRaoH02', NULL, '2026-02-11 23:12:38', '2026-02-11 23:12:38', 'Geo', NULL, 'Mondido', NULL, 'gmondido308', 0, NULL),
-(57, 4, 'emmanmondido@gmail.com', NULL, '$2y$12$9nBOPT8pdjDZT2RzclRqHebg.QH0U77kegBfDgqhWf6u6kxfuFEeO', NULL, '2026-02-11 23:23:56', '2026-02-11 23:23:56', 'Emman', NULL, 'Mondido', NULL, 'emondido203', 0, NULL),
-(58, 4, 'ivanmondido@gmail.com', NULL, '$2y$12$kDos1ve615xmPlYCjlxjaelP0/..0UZ/vNwbfEuEvSTLUs6veqDIa', NULL, '2026-02-11 23:25:04', '2026-02-11 23:25:04', 'Ivan', NULL, 'Mondido', NULL, 'imondido318', 0, NULL),
-(59, 4, 'christangelopelayo@gmail.com', NULL, '$2y$12$/Fqok1ZTYRzhSxQDNsvDPOM17tm8tMYk3SmDeWLMLYTZbxdLo8YHC', NULL, '2026-02-11 23:26:42', '2026-02-11 23:26:42', 'Christ Angelo', NULL, 'Pelayo', NULL, 'cpelayo388', 0, NULL),
-(60, 4, 'sisondaryl@gmail.com', NULL, '$2y$12$oc2i6DLflznzv4Quwoj5Vec1GX0w4WKpLaVg12lzC0L8WQb6KnKOu', NULL, '2026-02-11 23:28:14', '2026-02-11 23:28:14', 'Daryl', NULL, 'Sison', NULL, 'dsison531', 0, NULL),
-(61, 4, 'johnmarcotinambacan@gmail.com', NULL, '$2y$12$RGpMfxDyTFKXab8EbKfjtuNWFliFbgRgHQOkk26A/5ksSZVb6Fqpm', NULL, '2026-02-11 23:29:52', '2026-02-11 23:29:52', 'John Marco', NULL, 'Tinambacan', NULL, 'jtinambacan917', 0, NULL),
-(62, 4, 'shawnedriantubog@gmail.com', NULL, '$2y$12$l1F0IBX7g.TSgn6A1M6VHO5UoRQYlMf1G839flF3lP8CfFq5ouSVu', NULL, '2026-02-11 23:31:26', '2026-02-11 23:31:26', 'Shawn Edrian', NULL, 'Tubog', NULL, 'stubog314', 0, NULL),
-(63, 4, 'violajeron@gmail.com', NULL, '$2y$12$pHUe2CndPMpewDh56YXCr.lYhpcy7Ljvk4o7GtgUotOgcYawFQLoO', NULL, '2026-02-11 23:40:57', '2026-02-11 23:40:57', 'Jeron', NULL, 'Viola', NULL, 'jviola986', 0, NULL),
-(64, 4, 'alamanathaliazymth@gmail.com', NULL, '$2y$12$0lBQZFiMh8YG8HJ2FGlGney42s9u3TshTkHBnrharYWsixqk6zF.G', NULL, '2026-02-11 23:46:47', '2026-02-11 23:46:47', 'Nathalia Zymth', NULL, 'Alama', NULL, 'nalama814', 0, NULL),
-(65, 4, 'callorasofianicole@gmail.com', NULL, '$2y$12$NXeIJaTs/95hppdV./LDsucYpJdt7sq.KeOLOjVg4UP45btxFVe3K', NULL, '2026-02-11 23:48:08', '2026-02-11 23:48:08', 'Sofia Nicole', NULL, 'Callora', NULL, 'scallora807', 0, NULL),
-(66, 4, 'cofinomiahele@gmail.com', NULL, '$2y$12$r1GOG2WoAAKHc5MZRRR44.EQOn1j84Bf1CQlwh3/WBcHLk0abKtNK', NULL, '2026-02-11 23:49:28', '2026-02-11 23:49:28', 'Miah Ele', NULL, 'Cofino', NULL, 'mcofino400', 0, NULL),
-(67, 4, 'moratoaaliyahgabrielle@gmail.com', NULL, '$2y$12$XqkZwCYiijZmDYiwoDDdWuunaBk1V/CnMrg4RgWe7Y53Gk6rm3gLW', NULL, '2026-02-11 23:51:32', '2026-02-11 23:51:32', 'Aaliyah Gabrielle', NULL, 'Morato', NULL, 'amorato474', 0, NULL),
-(68, 4, 'tabanganzoe@gmail.com', NULL, '$2y$12$PgvkzjBFh56Q.anAWQ2o5OBi2WkpMt7nCSlws03rcibpVDoGkhl9q', NULL, '2026-02-11 23:52:52', '2026-02-11 23:52:52', 'Zoe', NULL, 'Tabangan', NULL, 'ztabangan729', 0, NULL),
-(69, 4, 'toroprincesscoleen@gmail.com', NULL, '$2y$12$2EAyzKUuxDB2mDIvbjBmEecZSS7fJDxLNFVRpp7BaP/GcwTbSQgxe', NULL, '2026-02-11 23:54:32', '2026-02-11 23:54:32', 'Princess Coleen', NULL, 'Toro', NULL, 'ptoro381', 0, NULL),
-(70, 4, 'tubanjaneshannel@gmail.com', NULL, '$2y$12$LtFchyoFGPNGjVRosGrB8uM3mGCEDrbvUmQDPbM8cpEQZIehxYe6G', NULL, '2026-02-11 23:56:30', '2026-02-11 23:56:30', 'Jane Shannel', NULL, 'Tuban', NULL, 'jtuban320', 0, NULL),
-(71, 4, 'tubannianamarithe@gmail.com', NULL, '$2y$12$Q74/.NDPhP9UmUwUNITqx.glE0zhMAAJjnnAg.tFwUsjwoyauRqGm', NULL, '2026-02-11 23:58:12', '2026-02-11 23:58:12', 'Niana Marithe', NULL, 'Tuban', NULL, 'ntuban551', 0, NULL),
-(72, 4, 'tublejian@gmail.com', NULL, '$2y$12$Wfsu13M9yJQAMLFQGYNLMe2seCsGZ9ctFk.a4Tm3K.c6b8ah1pP5C', NULL, '2026-02-11 23:59:43', '2026-02-11 23:59:43', 'Jian', NULL, 'Tuble', NULL, 'jtuble103', 0, NULL),
-(73, 4, 'alasasalexander@gmail.com', NULL, '$2y$12$nDfucyFGU2qfttoldtLgXOJ8Kz1YuFu2KFg5QTVhYqKLuK77czAn2', NULL, '2026-02-12 00:15:01', '2026-02-12 00:15:01', 'Alexander', NULL, 'Alas-as', NULL, 'aalas-as346', 0, NULL),
-(74, 4, 'bantotodonnkieffer@gmail.com', NULL, '$2y$12$tmBNPiBIqh1ppdSORWaCmOgnDBYL7jy.Ja6UJv.ptPiPKJhBvbOVe', NULL, '2026-02-12 00:18:20', '2026-02-12 00:18:20', 'Donn Kieffer', NULL, 'Bantoto', NULL, 'dbantoto563', 0, NULL),
-(75, 4, 'bantotomaxwelllaurent@gmail.com', NULL, '$2y$12$cRjt21RiUFxp9KVyKpMKru/7kB4N9y5fAjWCA9YzpKA6Zb2vBM7aW', NULL, '2026-02-12 00:20:22', '2026-02-12 00:20:22', 'Maxwell Laurent', NULL, 'Bantoto', NULL, 'mbantoto819', 0, NULL),
-(76, 4, 'pajentemarkchristian@gmail.com', NULL, '$2y$12$m6/zyuDblNsB3pXL.jzHbOLy1FgXQn9nIfvnfFbi1yPF02JCztDM6', NULL, '2026-02-12 00:22:12', '2026-02-12 00:22:12', 'Mark Christian', NULL, 'Pajente', NULL, 'mpajente534', 0, NULL),
-(77, 4, 'sardannoel@gmail.com', NULL, '$2y$12$G/zjE8.aqzZjptnotthi3uIpHQLkdps38RjXs1rePNyLkG51u8N8C', NULL, '2026-02-12 00:23:22', '2026-02-12 00:23:22', 'Noel', NULL, 'Sardan', NULL, 'nsardan951', 0, NULL),
-(78, 4, 'velozchristian@gmail.com', NULL, '$2y$12$HoHngjOXYumt6S.qL4D2Lei2sKGGnF/JenaBQefcaEhfCSPEQJ4GO', NULL, '2026-02-12 00:26:34', '2026-02-12 00:26:34', 'Christian', NULL, 'Veloz', NULL, 'cveloz905', 0, NULL),
-(79, 4, 'agadhainegerhaine@gmail.com', NULL, '$2y$12$F8K6S1naqfdrxBHBIY3A3.K4CTxyenk1bPoRxxyYucOZU4n2t/CTm', NULL, '2026-02-12 00:28:17', '2026-02-12 00:28:17', 'Dhaine Gerhaine', NULL, 'Aga', NULL, 'daga722', 0, NULL),
-(80, 4, 'alcorizacarren@gmail.com', NULL, '$2y$12$VjfwhT7OxeMv2aDmMGc/qe8DLoQBqxssd3S/B6WzQnu.THTZ5S5yS', NULL, '2026-02-12 00:30:04', '2026-02-12 00:30:04', 'Carren', NULL, 'Alcoriza', NULL, 'calcoriza759', 0, NULL),
-(81, 4, 'bantotomarchell@gmail.com', NULL, '$2y$12$0NJcJMohtkB1c7szLs0FHuYmFfZHjzhlh4/8064y3NyrLJ4w9RTom', NULL, '2026-02-12 00:31:50', '2026-02-12 00:31:50', 'Marchell', NULL, 'Bantoto', NULL, 'mbantoto332', 0, NULL),
-(82, 4, 'bantotomerriam@gmail.com', NULL, '$2y$12$pptFjizLd0LwtktyUWBnguTJKceVTPiwIUcHjQI6S4Ol.K93xl57G', NULL, '2026-02-12 00:35:00', '2026-02-12 00:35:00', 'Merriam', NULL, 'Bantoto', NULL, 'mbantoto588', 0, NULL),
-(83, 4, 'martinezelizabellecelyn@gmail.com', NULL, '$2y$12$anhcHq.OJKbfkPkkOufVluKO13lGafapEso7EW63yorJSikP3/soq', NULL, '2026-02-12 00:38:53', '2026-02-12 00:38:53', 'Elizabelle Celyn', NULL, 'Martinez', NULL, 'emartinez933', 0, NULL),
-(84, 4, 'orellanajairajane@gmail.com', NULL, '$2y$12$KgILoWaJYbLwhbc4M2MO6u7OOZb7CRPrS9myGcQ3dDPabwYGlgcXG', NULL, '2026-02-12 00:42:07', '2026-02-12 00:42:07', 'Jaira Jane', NULL, 'Orellana', NULL, 'jorellana753', 0, NULL),
-(85, 4, 'patilanojellianagennely@gmail.com', NULL, '$2y$12$esv3fodGdbhR1FAMJFqmiO4hya3oTVNubmUqHDybkzPOR11LgWDPG', NULL, '2026-02-12 00:43:35', '2026-02-12 00:43:35', 'Jelliana Gennely', NULL, 'Patilano', NULL, 'jpatilano613', 0, NULL),
-(86, 4, 'quitoymishca@gmail.com', NULL, '$2y$12$Ct7I.VkJEhvCmrRioVuL7..dvHPYeiPFc1r6mH4x919674z1tjr82', NULL, '2026-02-12 00:45:22', '2026-02-12 00:45:22', 'Mishca', NULL, 'Quitoy', NULL, 'mquitoy729', 0, NULL),
-(87, 4, 'salatanambermcquenzie@gmail.com', NULL, '$2y$12$1JDVJbIIkWEQ6Be0Zme9vuRHw4bPgmtKJFV13WwLQEW8aGTlo/d92', NULL, '2026-02-12 00:47:08', '2026-02-12 00:47:08', 'Amber Mcquenzie', NULL, 'Salatan', NULL, 'asalatan786', 0, NULL),
-(88, 4, 'tosejelah@gmail.com', NULL, '$2y$12$TEPYh.R95jOTrkzSz0EY3.O1cqLWQI5wNIltTgnSB9xTKSeJQyEoi', NULL, '2026-02-12 00:48:13', '2026-02-12 00:48:13', 'Jelah', NULL, 'Tose', NULL, 'jtose441', 0, NULL),
-(89, 4, 'trumatacalistadior@gmail.com', NULL, '$2y$12$rY56KPSTSHzAKLdGlOYOU.Nl8LhrNWmkyDXzEjv8QOlDayW4Ega86', NULL, '2026-02-12 00:49:26', '2026-02-12 00:49:26', 'Calista Dior', NULL, 'Trumata', NULL, 'ctrumata444', 0, NULL),
-(90, 4, 'tublezhiamae@gmail.com', NULL, '$2y$12$8OdU96T8HKyJbDo9YveJd.T4ANk6YxlAgQd1xMu.A7U55uNkW7vVq', NULL, '2026-02-12 00:50:31', '2026-02-12 00:50:31', 'Zhia Mae', NULL, 'Tuble', NULL, 'ztuble413', 0, NULL),
-(91, 4, 'tubogchristine@gmail.com', NULL, '$2y$12$s/dLSLwQkQ2zsnqIf8tx8Ou2D6cg41xei/nAP/KgIkixN28OGppF2', NULL, '2026-02-12 00:51:38', '2026-02-12 00:51:38', 'Christine', NULL, 'Tubog', NULL, 'ctubog123', 0, NULL),
-(92, 4, 'alegredravenryle@gmail.com', NULL, '$2y$12$ajZZMqHQhsk5zoa21pJ8eOnk1o1aOu03SxFrFz4y9oBxTvMs/VLOO', NULL, '2026-02-12 01:05:28', '2026-02-12 01:05:28', 'Draven Ryle', NULL, 'Alegre', NULL, 'dalegre534', 0, NULL),
-(93, 4, 'bajadohanzelbin@gmail.com', NULL, '$2y$12$qvOzusX9QqH4uodjzCJDMOw.f1nzaQzyEewN3C2ABi5TvG4hvLL5W', NULL, '2026-02-12 01:06:47', '2026-02-12 01:06:47', 'Hanz Elbin', NULL, 'Bajado', NULL, 'hbajado429', 0, NULL),
-(94, 4, 'bantilanpablitojr@gmail.com', NULL, '$2y$12$dBPFY8uR/x.8OiSpdhlxnOsWK66aLVpcYzoLaMkFmGVW3l9P.MUm.', NULL, '2026-02-12 01:09:16', '2026-02-12 01:09:16', 'Pablito, Jr', NULL, 'Bantilan', NULL, 'pbantilan719', 0, NULL),
-(95, 4, 'biyodominique@gmail.com', NULL, '$2y$12$Cmu3u0dsiRSda203xWUI8ONWSR6j.WMzo7EaJ5VKj6IwtEGZryT2O', NULL, '2026-02-12 01:11:02', '2026-02-12 01:11:02', 'Dominique Shaun Vincent', NULL, 'Biyo', NULL, 'dbiyo803', 0, NULL),
-(96, 4, 'carbakurtreign@gmail.com', NULL, '$2y$12$pTIphsY/zxt8jtq5XKthS.UqVMfsbkVLGSdGQpBKx9ulGCYLCiTyO', NULL, '2026-02-12 01:13:00', '2026-02-12 01:13:00', 'Kurt Reign', NULL, 'Carba', NULL, 'kcarba932', 0, NULL),
-(97, 4, 'dacotdacotstethan@gmail.com', NULL, '$2y$12$D.EoAt7lpVoPe37ohY64hOaGIVB1PZgXW9ehoRgJIoOzq5vZxboOW', NULL, '2026-02-12 01:14:38', '2026-02-12 01:14:38', 'Stethan', NULL, 'Dacotdacot', NULL, 'sdacotdacot810', 0, NULL),
-(98, 4, 'daymilzayn@gmail.com', NULL, '$2y$12$2wONubMrE8hitdgkWfsqd.XNCbnzMuVfCK.PpkPmh1arTNq648Lx.', NULL, '2026-02-12 01:18:57', '2026-02-12 01:18:57', 'Zayn', NULL, 'Daymil', NULL, 'zdaymil265', 0, NULL),
-(99, 4, 'fernandouzumaki@gmail.com', NULL, '$2y$12$6LHhvD4iYMUarkZfXcTTuuGkHdjTNvArXiMS5REyPsDk0v058mRFe', NULL, '2026-02-12 01:20:34', '2026-02-12 01:20:34', 'Uzumaki', NULL, 'Fernando', NULL, 'ufernando842', 0, NULL),
-(100, 4, 'gestupanoahmatteo@gmail.com', NULL, '$2y$12$9nrfLD0aV31hWFOlzBOhBOfrUTtGVUKYz2rOjbq9QNoRto93ZS1E6', NULL, '2026-02-12 01:22:57', '2026-02-12 01:22:57', 'Noah Matteo', NULL, 'Gestupa', NULL, 'ngestupa817', 0, NULL),
-(101, 4, 'otedagiean@gmail.com', NULL, '$2y$12$EiCLWwdDAJxwNVXzulMtMOIbkzPtC6afXE2x84v5M3QIURe7Giixe', NULL, '2026-02-12 01:24:39', '2026-02-12 01:24:39', 'Giean', NULL, 'Oteda', NULL, 'goteda238', 0, NULL),
-(102, 4, 'partosajonas@gmail.com', NULL, '$2y$12$3kSoB.XMCSxUhrDT18mgkeFK.c00EU2hxqvKQjmjL5Esqat2rdRjO', NULL, '2026-02-12 01:29:19', '2026-02-12 01:29:19', 'Jonas', NULL, 'Partosa', NULL, 'jpartosa727', 0, NULL),
-(103, 4, 'saraoprinceandy@gmail.com', NULL, '$2y$12$3A5APAXhrC4.3i68DT0BpO9HO1q717ylux8O27pqqYyjZTUZyyv22', NULL, '2026-02-12 01:30:49', '2026-02-12 01:30:49', 'Prince Andy', NULL, 'Sarao', NULL, 'psarao773', 0, NULL),
-(104, 4, 'serojanocharliejr@gmail.com', NULL, '$2y$12$RQokFsPmi9kOK2SVNMPfG.Np5CDxTfMLoDsM0gmWBAqipIED9.DRG', NULL, '2026-02-12 01:33:19', '2026-02-12 01:33:19', 'Charlie, Jr', NULL, 'Serojano', NULL, 'cserojano554', 0, NULL),
-(105, 4, 'sonlitprincejohn@gmail.com', NULL, '$2y$12$A70OWh0S3d4MBthC4zwRIusSQFP1FTZAJ71xYGFDCySIAMAx3OGAm', NULL, '2026-02-12 01:40:07', '2026-02-12 01:40:07', 'Prince John', NULL, 'Sonlit', NULL, 'psonlit443', 0, NULL),
-(106, 4, 'tolomiachristoff@gmail.com', NULL, '$2y$12$oYmeD6qUiytCLk7q1x.FtOL56kbCHVeeb70yUKuesRriASwYCokkG', NULL, '2026-02-12 01:41:47', '2026-02-12 01:41:47', 'Christoff', NULL, 'Tolomia', NULL, 'ctolomia904', 0, NULL),
-(107, 4, 'totorejay@gmail.com', NULL, '$2y$12$wJFo9zpauQmxUQ7MgtNIb.j8pjimLWoPtK9e22DU5pnJD.DjyPJw6', NULL, '2026-02-12 01:44:32', '2026-02-12 01:44:32', 'Rejay', NULL, 'Toro', NULL, 'rtoro755', 0, NULL),
-(108, 4, 'ubayprincejullian@gmail.com', NULL, '$2y$12$XqT42jc7luEXThY1XSwTjOlEHMTAmRllekDgmJlkvSu8y9xHlrlM6', NULL, '2026-02-12 01:45:56', '2026-02-12 01:45:56', 'Prince Jullian', NULL, 'Ubay', NULL, 'pubay454', 0, NULL),
-(109, 4, 'usmanfranceaethan@gmail.com', NULL, '$2y$12$32rRs2wcBf..i4DnN1CCleq1AzXRc0FGddxsWmDXDpDFvIUyPUjLu', NULL, '2026-02-12 01:47:09', '2026-02-12 01:47:09', 'France Aethan', NULL, 'Usman', NULL, 'fusman372', 0, NULL),
-(110, 4, 'verzanohohnmartin@gmail.com', NULL, '$2y$12$KIIBtBSTjzdLA5FrYKunLexT6KowB9A6pX6T71hA15kgCyl.ccwnq', NULL, '2026-02-12 01:48:44', '2026-02-12 01:48:44', 'John Martin', NULL, 'Verzano', NULL, 'jverzano239', 0, NULL),
-(111, 4, 'villarosakurternest@gmail.com', NULL, '$2y$12$iZLw2xrZTFgTnt95QCLjBOy11xRRRxbPiAhUFbNn1jbUIYAdlIkf6', NULL, '2026-02-12 01:50:13', '2026-02-12 01:50:13', 'Kurt Ernest', NULL, 'Villarosa', NULL, 'kvillarosa277', 0, NULL),
-(112, 4, 'badrinachike@gmail.com', NULL, '$2y$12$Dmb4l8Y7qMCf5T2qCe6ICupPe.zAnB9M6zXI8YGgOF8AOmvt9e9Ey', NULL, '2026-02-12 03:02:10', '2026-02-12 03:02:10', 'Chike', NULL, 'Badrina', NULL, 'cbadrina944', 0, NULL),
-(113, 4, 'bantotoclarissa@gmail.com', NULL, '$2y$12$16GYTqOB.va0a.RouGDlRuF9.3t.StXmf3becXWJzrRnI1/URb832', NULL, '2026-02-12 03:04:21', '2026-02-12 03:04:21', 'Clarissa Niña', NULL, 'Bantoto', NULL, 'cbantoto845', 0, NULL),
-(114, 4, 'cabanillacriskeira@gmail.com', NULL, '$2y$12$hF4pNHk355KxgjtDG3GP9e6wx96smgU9BcHK/TgcBzY34lQIPFDBK', NULL, '2026-02-12 03:05:44', '2026-02-12 03:05:44', 'Cris Keira', NULL, 'Cabanilla', NULL, 'ccabanilla400', 0, NULL),
-(115, 4, 'camachobriannazia@gmail.com', NULL, '$2y$12$KK7AyzqNTfF4dvNJ443BTuf4ndFmi24eiglx0SxIOPaV2XpesIPYu', NULL, '2026-02-12 03:08:18', '2026-02-12 03:08:18', 'Brianna Zia', NULL, 'Camacho', NULL, 'bcamacho756', 0, NULL),
-(116, 4, 'carvellidaprimrose@gmail.com', NULL, '$2y$12$Mfwq/zMaSb42.8XDfpVoA..jMwFvVoN8JY4.2ywnC9IpYKUIbbHzG', NULL, '2026-02-12 03:09:40', '2026-02-12 03:09:40', 'Prim Rose', NULL, 'Carvellida', NULL, 'pcarvellida701', 0, NULL),
-(117, 4, 'chukynleigh@gmail.com', NULL, '$2y$12$PW1cnAS4gHkj05We03VewO65sOoB0Yb3ljl2ZiLn75CiWPYR6gU1.', NULL, '2026-02-12 03:11:08', '2026-02-12 03:11:08', 'Kynleigh', NULL, 'Chu', NULL, 'kchu755', 0, NULL),
-(118, 4, 'divinajhellamae@gmail.com', NULL, '$2y$12$CFKr29Iq3A312uHwt6sCOu5Xe09E/fezPG0TVD2lNwy2zBrkiStp6', NULL, '2026-02-12 03:12:34', '2026-02-12 03:12:34', 'Jhella Mae', NULL, 'Divina', NULL, 'jdivina246', 0, NULL),
-(119, 4, 'gargarjewelscarlet@gmail.com', NULL, '$2y$12$kWCeBSuzkljX5JxnEL3WiOsjqpiNErtSI1MMc8PvSGeSs2h2YB3F.', NULL, '2026-02-12 03:14:00', '2026-02-12 03:14:00', 'Jewel Scarlet', NULL, 'Gargar', NULL, 'jgargar863', 0, NULL),
-(120, 4, 'icaonapoasherahelsie@gmail.com', NULL, '$2y$12$ABEdoyuBrvC1mdui.Cb8sO3M1L2zbeY31gBqvAlkEsyvM5SJMxbge', NULL, '2026-02-12 03:15:32', '2026-02-12 03:15:32', 'Asherah Elsie', NULL, 'Icaonapo', NULL, 'aicaonapo374', 0, NULL),
-(121, 4, 'lampasojairilmonette@gmail.com', NULL, '$2y$12$uTcTGB8klfSit3qKMrGYPuvKEpEDMB/VVgFWG5Y4tT.Cqu2fOnJkK', NULL, '2026-02-12 03:17:06', '2026-02-12 03:17:06', 'Jairil Monette', NULL, 'Lampaso', NULL, 'jlampaso786', 0, NULL),
-(122, 4, 'lozadafrancine@gmail.com', NULL, '$2y$12$qXHsdBxt/A2TVjwOBwy3L.jrUKNWgx3J6d3LCtpDJMM0r5nlfiiFy', NULL, '2026-02-12 03:18:14', '2026-02-12 03:18:14', 'Francine', NULL, 'Lozada', NULL, 'flozada386', 0, NULL),
-(123, 4, 'mohammadcrissmalyn@gmail.com', NULL, '$2y$12$qUHgAbys1/KCP4suaJbEN.Ym4DRDQ0fg1OLSZX6lmy8Ykxc.UUESS', NULL, '2026-02-12 03:19:50', '2026-02-12 03:19:50', 'Crissmalyn Faye', NULL, 'Mohammad', NULL, 'cmohammad253', 0, NULL),
-(124, 4, 'mohellolianah@gmail.com', NULL, '$2y$12$O9s9MfGcF67c6SlWFfCJHOgq7jEbd3ZvZfAM80.jIMiGJy0CVvqLq', NULL, '2026-02-12 03:21:28', '2026-02-12 03:21:28', 'Lianah', NULL, 'Mohello', NULL, 'lmohello339', 0, NULL),
-(125, 4, 'paoarianne@gmail.com', NULL, '$2y$12$aCjxozpilp29mmbe18QqROIUkyYboO.EYgZYWT4eQ4b20/EbNeX0e', NULL, '2026-02-12 03:22:40', '2026-02-12 03:22:40', 'Arianne', NULL, 'Pao', NULL, 'apao617', 0, NULL),
-(126, 4, 'paquinolavrilkate@gmail.com', NULL, '$2y$12$KNJlt2OtaTp4mRzuecgFoONC18nPdvZJfTs0VdvWbWzZgyoocPDYC', NULL, '2026-02-12 03:24:11', '2026-02-12 03:24:11', 'Avril Kate', NULL, 'Paquinol', NULL, 'apaquinol664', 0, NULL),
-(127, 4, 'salatanmariacelestine@gmail.com', NULL, '$2y$12$MKgZdSdtAe7qsuOELF8oXO4FSVWrgAwGGVMbffRQrSQRyHjZNCyY2', NULL, '2026-02-12 03:47:51', '2026-02-12 18:53:01', 'Maria Celestine', NULL, 'Salatan', NULL, 'mssalatan111', 0, NULL),
-(128, 4, 'senahondjanne@gmail.com', NULL, '$2y$12$1j9wT96qPtyJ3Swzf7/v0OB1JUt.OZEnHtq/D0whXhqkWr6sATEcm', NULL, '2026-02-12 03:49:36', '2026-02-12 19:24:20', 'DJ Anne', NULL, 'Senahon', NULL, 'dsenahon72', 0, NULL),
-(129, 4, 'tenedoelainejoy@gmail.com', NULL, '$2y$12$fsbO4rOx1NHH1/AHczKWdOlpz7okmydKxhKIiFrFHO31aoVcweczW', NULL, '2026-02-12 03:51:07', '2026-02-12 03:51:07', 'Elaine Joy', NULL, 'Tenedo', NULL, 'etenedo678', 0, NULL),
-(130, 4, 'tubleellyzamae@gmail.com', NULL, '$2y$12$XVHDIfwgZXr9eOcBHnnUzO.SxMAXYiqvYT2n0yM2ujkwErnv59joa', NULL, '2026-02-12 03:52:46', '2026-02-12 18:44:31', 'Ellyza Mae', NULL, 'Tuble', NULL, 'etuble321', 0, NULL),
-(132, 4, 'villamiljillianneshan@gmail.com', NULL, '$2y$12$VvPgmBYL02dhct8T07TXd.AvreRHTae3OD7TvYo36MBHxO39sFgvG', NULL, '2026-02-12 18:02:40', '2026-02-12 18:02:40', 'Jillianne Shane', NULL, 'Villamil', NULL, 'jvillamil438', 0, NULL),
-(150, 2, 'tugaweESadmin@gmail.com', NULL, '$2y$12$XJxk7PBRdGhBSAeb/kfQ4.oe.QiGClDMC9/F2MBr99..DxBFDWv92', NULL, '2026-02-13 18:04:40', '2026-02-13 18:04:40', 'System', NULL, 'Administrator', NULL, 'admin123', 0, NULL),
-(153, 4, 'cresttuayon7@gmail.com', NULL, '$2y$12$BvuxxgYVKMCbiksYw4fCpOKyEgxrPiFWgfyj1plZfqzIpOHP7BOa6', NULL, '2026-02-15 00:12:46', '2026-02-15 00:12:46', 'Crestian', NULL, 'Tuayon', NULL, 'ctuayon282', 0, NULL),
-(154, 4, 'troituayon@gmail.com', NULL, '$2y$12$VIz.r7oGtGx106kigWzdFug7dISIT6rP5slDfFZVzbBXgWPRc5Omy', NULL, '2026-02-15 01:11:47', '2026-02-15 01:11:47', 'Troilan', NULL, 'Tuayon', NULL, 'ttuayon698', 0, NULL);
+INSERT INTO `users` (`id`, `lrn`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
+(1, '', 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'kvFytHvQSPKYgWyYwg59VTxM4EV0Slu3HuA7KzAT0PVSUCQoweoCpCgT98hm', '2026-01-27 05:37:20', '2026-02-16 04:35:23', '', NULL, '', NULL, NULL, '', 1, NULL),
+(2, '', 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
+(39, '', 4, 'cresttuayon@gmail.com', NULL, '$2y$12$6hxW91UwOUdbxrUxrP7QxucAWPs5ylptuX30Dk0qCQcZpIb7HGt7u', NULL, '2026-02-10 03:52:06', '2026-02-16 14:52:19', 'Crestian', NULL, 'Tuayon', NULL, NULL, 'ctuayon620', 3, NULL),
+(42, '', 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-16 06:11:16', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 1, NULL),
+(43, '', 2, 'asdilloleeneth@gmail.com', NULL, '$2y$12$msUYN.TKY3W85BIabLfFIuCydYrZblJYSksVDaeCl7.f7KE9ue.Gu', NULL, '2026-02-11 22:28:20', '2026-02-11 22:28:20', 'Leeneth', NULL, 'Asdillo', NULL, NULL, 'leenethasdillo', 0, NULL),
+(44, '', 2, 'manginsayantonieta@gmail.com', NULL, '$2y$12$p8q2BH/cn9Q8jh4F4pB6DOeNaZnuLl8pq/BpBJhv4fy2Rhe0iBU1y', NULL, '2026-02-11 22:30:44', '2026-02-11 22:30:44', 'Antonieta', NULL, 'Manginsay', NULL, NULL, 'antonietamanginsay', 0, NULL),
+(45, '', 2, 'nocetealelyn@gmail.com', NULL, '$2y$12$QTg/Cq5XqxnbdNedFLgaUub10LFBrlFNnidbQqOAxC6HIofJjIKpu', NULL, '2026-02-11 22:32:28', '2026-02-11 22:32:28', 'Alelyn', 'D.', 'Nocete', NULL, NULL, 'alelynnocete@gmail.com', 0, NULL),
+(46, '', 2, 'sojorvictoria@gmail.com', NULL, '$2y$12$DNufZwV0xkGSkKKD/myAOOfokXT27UtrfjAWGhSAr52aiS2wx51lq', NULL, '2026-02-11 22:33:47', '2026-02-11 22:33:47', 'Victoria', 'A.', 'Sojor', NULL, NULL, 'victoriasojor', 0, NULL),
+(47, '', 2, 'rubiareneegen@gmail.com', NULL, '$2y$12$TCMiMoDlqWoNnSlm13Zl6empLYX4HIXHGurmzQQ/P/jKlX6JKA5Cu', NULL, '2026-02-11 22:35:27', '2026-02-11 22:35:27', 'Reneegen', NULL, 'Rubia', NULL, NULL, 'reneegenrubia', 0, NULL),
+(48, '', 2, 'alamaeva@gmail.com', NULL, '$2y$12$IKVdqoJQ25uWdgZHvDqX/ehu2EEemzMDLMZ.bSrPXoPDuFVT2v4wO', NULL, '2026-02-11 22:36:30', '2026-02-11 22:36:30', 'Eva', 'A.', 'Alama', NULL, NULL, 'evaalama', 0, NULL),
+(49, '', 2, 'riowilz@gmail.com', NULL, '$2y$12$dywGTgY0H48pirQ2ZbRPK./7CMcKtHPJZ/ZcrtiosC9NTxLdagKlq', NULL, '2026-02-11 22:37:48', '2026-02-11 22:37:48', 'Wilz', NULL, 'Rio', NULL, NULL, 'wilzrio', 0, NULL),
+(50, '', 2, 'monopollocarmel@gmail.com', NULL, '$2y$12$D6J3kp69GRItD2v8vIAuyuh/0buQx5KjCFK6Nqc/9QD1H115hT/Iu', NULL, '2026-02-11 22:44:47', '2026-02-11 22:44:47', 'Carmel', NULL, 'Monopollo', NULL, NULL, 'carmelmonopollo', 0, NULL),
+(51, '', 2, 'alcorizavictor@gmail.com', NULL, '$2y$12$Ot2hzYu5hc4X0oVOvmcW3es0m9mptBCXCUbSM0PILaV7p42mlLDym', NULL, '2026-02-11 22:45:28', '2026-02-11 22:45:28', 'Victor', NULL, 'Alcoriza', NULL, NULL, 'victoralcoriza', 0, NULL),
+(52, '', 4, 'kristianalsola@gmail.com', NULL, '$2y$12$E9Z4IF9EZ1N68i2zTnY2P.MU58iEODEpN2LofGf3yBODOOOXFSiZC', NULL, '2026-02-11 23:00:56', '2026-02-11 23:00:56', 'Kristian', NULL, 'Alsola', NULL, NULL, 'kalsola703', 0, NULL),
+(53, '', 4, 'aranetareferjohn@gmail.com', NULL, '$2y$12$ruVIhy6LiCij4XMDkMMaLeC2LTwEt/wDPM9Z0NdNwzVDThZX6N606', NULL, '2026-02-11 23:02:34', '2026-02-11 23:02:34', 'Rofer John', NULL, 'Araneta', NULL, NULL, 'raraneta101', 0, NULL),
+(54, '', 4, 'delesmeraldjay@gmail.com', NULL, '$2y$12$WfPu0EeMmo92fLICmLvImuA4vTBOODSSbujFs8.M603TA.1aLtV2C', NULL, '2026-02-11 23:06:52', '2026-02-11 23:06:52', 'MERALD JAY', NULL, 'DELES', NULL, NULL, 'mdeles911', 0, NULL),
+(56, '', 4, 'mondidogeo@gmail.com', NULL, '$2y$12$8cgI03dTLcihpLMb23Gw8OpashieJ9drHm0G3MzMMEIfClpRaoH02', NULL, '2026-02-11 23:12:38', '2026-02-11 23:12:38', 'Geo', NULL, 'Mondido', NULL, NULL, 'gmondido308', 0, NULL),
+(57, '', 4, 'emmanmondido@gmail.com', NULL, '$2y$12$9nBOPT8pdjDZT2RzclRqHebg.QH0U77kegBfDgqhWf6u6kxfuFEeO', NULL, '2026-02-11 23:23:56', '2026-02-11 23:23:56', 'Emman', NULL, 'Mondido', NULL, NULL, 'emondido203', 0, NULL),
+(58, '', 4, 'ivanmondido@gmail.com', NULL, '$2y$12$kDos1ve615xmPlYCjlxjaelP0/..0UZ/vNwbfEuEvSTLUs6veqDIa', NULL, '2026-02-11 23:25:04', '2026-02-11 23:25:04', 'Ivan', NULL, 'Mondido', NULL, NULL, 'imondido318', 0, NULL),
+(59, '', 4, 'christangelopelayo@gmail.com', NULL, '$2y$12$/Fqok1ZTYRzhSxQDNsvDPOM17tm8tMYk3SmDeWLMLYTZbxdLo8YHC', NULL, '2026-02-11 23:26:42', '2026-02-11 23:26:42', 'Christ Angelo', NULL, 'Pelayo', NULL, NULL, 'cpelayo388', 0, NULL),
+(60, '', 4, 'sisondaryl@gmail.com', NULL, '$2y$12$oc2i6DLflznzv4Quwoj5Vec1GX0w4WKpLaVg12lzC0L8WQb6KnKOu', NULL, '2026-02-11 23:28:14', '2026-02-11 23:28:14', 'Daryl', NULL, 'Sison', NULL, NULL, 'dsison531', 0, NULL),
+(61, '', 4, 'johnmarcotinambacan@gmail.com', NULL, '$2y$12$RGpMfxDyTFKXab8EbKfjtuNWFliFbgRgHQOkk26A/5ksSZVb6Fqpm', NULL, '2026-02-11 23:29:52', '2026-02-11 23:29:52', 'John Marco', NULL, 'Tinambacan', NULL, NULL, 'jtinambacan917', 0, NULL),
+(62, '', 4, 'shawnedriantubog@gmail.com', NULL, '$2y$12$l1F0IBX7g.TSgn6A1M6VHO5UoRQYlMf1G839flF3lP8CfFq5ouSVu', NULL, '2026-02-11 23:31:26', '2026-02-11 23:31:26', 'Shawn Edrian', NULL, 'Tubog', NULL, NULL, 'stubog314', 0, NULL),
+(63, '', 4, 'violajeron@gmail.com', NULL, '$2y$12$pHUe2CndPMpewDh56YXCr.lYhpcy7Ljvk4o7GtgUotOgcYawFQLoO', NULL, '2026-02-11 23:40:57', '2026-02-11 23:40:57', 'Jeron', NULL, 'Viola', NULL, NULL, 'jviola986', 0, NULL),
+(64, '', 4, 'alamanathaliazymth@gmail.com', NULL, '$2y$12$0lBQZFiMh8YG8HJ2FGlGney42s9u3TshTkHBnrharYWsixqk6zF.G', NULL, '2026-02-11 23:46:47', '2026-02-11 23:46:47', 'Nathalia Zymth', NULL, 'Alama', NULL, NULL, 'nalama814', 0, NULL),
+(65, '', 4, 'callorasofianicole@gmail.com', NULL, '$2y$12$NXeIJaTs/95hppdV./LDsucYpJdt7sq.KeOLOjVg4UP45btxFVe3K', NULL, '2026-02-11 23:48:08', '2026-02-11 23:48:08', 'Sofia Nicole', NULL, 'Callora', NULL, NULL, 'scallora807', 0, NULL),
+(66, '', 4, 'cofinomiahele@gmail.com', NULL, '$2y$12$r1GOG2WoAAKHc5MZRRR44.EQOn1j84Bf1CQlwh3/WBcHLk0abKtNK', NULL, '2026-02-11 23:49:28', '2026-02-11 23:49:28', 'Miah Ele', NULL, 'Cofino', NULL, NULL, 'mcofino400', 0, NULL),
+(67, '', 4, 'moratoaaliyahgabrielle@gmail.com', NULL, '$2y$12$XqkZwCYiijZmDYiwoDDdWuunaBk1V/CnMrg4RgWe7Y53Gk6rm3gLW', NULL, '2026-02-11 23:51:32', '2026-02-11 23:51:32', 'Aaliyah Gabrielle', NULL, 'Morato', NULL, NULL, 'amorato474', 0, NULL),
+(68, '', 4, 'tabanganzoe@gmail.com', NULL, '$2y$12$PgvkzjBFh56Q.anAWQ2o5OBi2WkpMt7nCSlws03rcibpVDoGkhl9q', NULL, '2026-02-11 23:52:52', '2026-02-11 23:52:52', 'Zoe', NULL, 'Tabangan', NULL, NULL, 'ztabangan729', 0, NULL),
+(69, '', 4, 'toroprincesscoleen@gmail.com', NULL, '$2y$12$2EAyzKUuxDB2mDIvbjBmEecZSS7fJDxLNFVRpp7BaP/GcwTbSQgxe', NULL, '2026-02-11 23:54:32', '2026-02-11 23:54:32', 'Princess Coleen', NULL, 'Toro', NULL, NULL, 'ptoro381', 0, NULL),
+(70, '', 4, 'tubanjaneshannel@gmail.com', NULL, '$2y$12$LtFchyoFGPNGjVRosGrB8uM3mGCEDrbvUmQDPbM8cpEQZIehxYe6G', NULL, '2026-02-11 23:56:30', '2026-02-11 23:56:30', 'Jane Shannel', NULL, 'Tuban', NULL, NULL, 'jtuban320', 0, NULL),
+(71, '', 4, 'tubannianamarithe@gmail.com', NULL, '$2y$12$Q74/.NDPhP9UmUwUNITqx.glE0zhMAAJjnnAg.tFwUsjwoyauRqGm', NULL, '2026-02-11 23:58:12', '2026-02-11 23:58:12', 'Niana Marithe', NULL, 'Tuban', NULL, NULL, 'ntuban551', 0, NULL),
+(72, '', 4, 'tublejian@gmail.com', NULL, '$2y$12$Wfsu13M9yJQAMLFQGYNLMe2seCsGZ9ctFk.a4Tm3K.c6b8ah1pP5C', NULL, '2026-02-11 23:59:43', '2026-02-11 23:59:43', 'Jian', NULL, 'Tuble', NULL, NULL, 'jtuble103', 0, NULL),
+(73, '', 4, 'alasasalexander@gmail.com', NULL, '$2y$12$nDfucyFGU2qfttoldtLgXOJ8Kz1YuFu2KFg5QTVhYqKLuK77czAn2', NULL, '2026-02-12 00:15:01', '2026-02-12 00:15:01', 'Alexander', NULL, 'Alas-as', NULL, NULL, 'aalas-as346', 0, NULL),
+(74, '', 4, 'bantotodonnkieffer@gmail.com', NULL, '$2y$12$tmBNPiBIqh1ppdSORWaCmOgnDBYL7jy.Ja6UJv.ptPiPKJhBvbOVe', NULL, '2026-02-12 00:18:20', '2026-02-12 00:18:20', 'Donn Kieffer', NULL, 'Bantoto', NULL, NULL, 'dbantoto563', 0, NULL),
+(75, '', 4, 'bantotomaxwelllaurent@gmail.com', NULL, '$2y$12$cRjt21RiUFxp9KVyKpMKru/7kB4N9y5fAjWCA9YzpKA6Zb2vBM7aW', NULL, '2026-02-12 00:20:22', '2026-02-12 00:20:22', 'Maxwell Laurent', NULL, 'Bantoto', NULL, NULL, 'mbantoto819', 0, NULL),
+(76, '', 4, 'pajentemarkchristian@gmail.com', NULL, '$2y$12$m6/zyuDblNsB3pXL.jzHbOLy1FgXQn9nIfvnfFbi1yPF02JCztDM6', NULL, '2026-02-12 00:22:12', '2026-02-12 00:22:12', 'Mark Christian', NULL, 'Pajente', NULL, NULL, 'mpajente534', 0, NULL),
+(77, '', 4, 'sardannoel@gmail.com', NULL, '$2y$12$G/zjE8.aqzZjptnotthi3uIpHQLkdps38RjXs1rePNyLkG51u8N8C', NULL, '2026-02-12 00:23:22', '2026-02-12 00:23:22', 'Noel', NULL, 'Sardan', NULL, NULL, 'nsardan951', 0, NULL),
+(78, '', 4, 'velozchristian@gmail.com', NULL, '$2y$12$HoHngjOXYumt6S.qL4D2Lei2sKGGnF/JenaBQefcaEhfCSPEQJ4GO', NULL, '2026-02-12 00:26:34', '2026-02-12 00:26:34', 'Christian', NULL, 'Veloz', NULL, NULL, 'cveloz905', 0, NULL),
+(79, '', 4, 'agadhainegerhaine@gmail.com', NULL, '$2y$12$F8K6S1naqfdrxBHBIY3A3.K4CTxyenk1bPoRxxyYucOZU4n2t/CTm', NULL, '2026-02-12 00:28:17', '2026-02-12 00:28:17', 'Dhaine Gerhaine', NULL, 'Aga', NULL, NULL, 'daga722', 0, NULL),
+(80, '', 4, 'alcorizacarren@gmail.com', NULL, '$2y$12$VjfwhT7OxeMv2aDmMGc/qe8DLoQBqxssd3S/B6WzQnu.THTZ5S5yS', NULL, '2026-02-12 00:30:04', '2026-02-12 00:30:04', 'Carren', NULL, 'Alcoriza', NULL, NULL, 'calcoriza759', 0, NULL),
+(81, '', 4, 'bantotomarchell@gmail.com', NULL, '$2y$12$0NJcJMohtkB1c7szLs0FHuYmFfZHjzhlh4/8064y3NyrLJ4w9RTom', NULL, '2026-02-12 00:31:50', '2026-02-12 00:31:50', 'Marchell', NULL, 'Bantoto', NULL, NULL, 'mbantoto332', 0, NULL),
+(82, '', 4, 'bantotomerriam@gmail.com', NULL, '$2y$12$pptFjizLd0LwtktyUWBnguTJKceVTPiwIUcHjQI6S4Ol.K93xl57G', NULL, '2026-02-12 00:35:00', '2026-02-12 00:35:00', 'Merriam', NULL, 'Bantoto', NULL, NULL, 'mbantoto588', 0, NULL),
+(83, '', 4, 'martinezelizabellecelyn@gmail.com', NULL, '$2y$12$anhcHq.OJKbfkPkkOufVluKO13lGafapEso7EW63yorJSikP3/soq', NULL, '2026-02-12 00:38:53', '2026-02-12 00:38:53', 'Elizabelle Celyn', NULL, 'Martinez', NULL, NULL, 'emartinez933', 0, NULL),
+(84, '', 4, 'orellanajairajane@gmail.com', NULL, '$2y$12$KgILoWaJYbLwhbc4M2MO6u7OOZb7CRPrS9myGcQ3dDPabwYGlgcXG', NULL, '2026-02-12 00:42:07', '2026-02-12 00:42:07', 'Jaira Jane', NULL, 'Orellana', NULL, NULL, 'jorellana753', 0, NULL),
+(85, '', 4, 'patilanojellianagennely@gmail.com', NULL, '$2y$12$esv3fodGdbhR1FAMJFqmiO4hya3oTVNubmUqHDybkzPOR11LgWDPG', NULL, '2026-02-12 00:43:35', '2026-02-12 00:43:35', 'Jelliana Gennely', NULL, 'Patilano', NULL, NULL, 'jpatilano613', 0, NULL),
+(86, '', 4, 'quitoymishca@gmail.com', NULL, '$2y$12$Ct7I.VkJEhvCmrRioVuL7..dvHPYeiPFc1r6mH4x919674z1tjr82', NULL, '2026-02-12 00:45:22', '2026-02-12 00:45:22', 'Mishca', NULL, 'Quitoy', NULL, NULL, 'mquitoy729', 0, NULL),
+(87, '', 4, 'salatanambermcquenzie@gmail.com', NULL, '$2y$12$1JDVJbIIkWEQ6Be0Zme9vuRHw4bPgmtKJFV13WwLQEW8aGTlo/d92', NULL, '2026-02-12 00:47:08', '2026-02-12 00:47:08', 'Amber Mcquenzie', NULL, 'Salatan', NULL, NULL, 'asalatan786', 0, NULL),
+(88, '', 4, 'tosejelah@gmail.com', NULL, '$2y$12$TEPYh.R95jOTrkzSz0EY3.O1cqLWQI5wNIltTgnSB9xTKSeJQyEoi', NULL, '2026-02-12 00:48:13', '2026-02-12 00:48:13', 'Jelah', NULL, 'Tose', NULL, NULL, 'jtose441', 0, NULL),
+(89, '', 4, 'trumatacalistadior@gmail.com', NULL, '$2y$12$rY56KPSTSHzAKLdGlOYOU.Nl8LhrNWmkyDXzEjv8QOlDayW4Ega86', NULL, '2026-02-12 00:49:26', '2026-02-12 00:49:26', 'Calista Dior', NULL, 'Trumata', NULL, NULL, 'ctrumata444', 0, NULL),
+(90, '', 4, 'tublezhiamae@gmail.com', NULL, '$2y$12$8OdU96T8HKyJbDo9YveJd.T4ANk6YxlAgQd1xMu.A7U55uNkW7vVq', NULL, '2026-02-12 00:50:31', '2026-02-12 00:50:31', 'Zhia Mae', NULL, 'Tuble', NULL, NULL, 'ztuble413', 0, NULL),
+(91, '', 4, 'tubogchristine@gmail.com', NULL, '$2y$12$s/dLSLwQkQ2zsnqIf8tx8Ou2D6cg41xei/nAP/KgIkixN28OGppF2', NULL, '2026-02-12 00:51:38', '2026-02-12 00:51:38', 'Christine', NULL, 'Tubog', NULL, NULL, 'ctubog123', 0, NULL),
+(92, '', 4, 'alegredravenryle@gmail.com', NULL, '$2y$12$ajZZMqHQhsk5zoa21pJ8eOnk1o1aOu03SxFrFz4y9oBxTvMs/VLOO', NULL, '2026-02-12 01:05:28', '2026-02-12 01:05:28', 'Draven Ryle', NULL, 'Alegre', NULL, NULL, 'dalegre534', 0, NULL),
+(93, '', 4, 'bajadohanzelbin@gmail.com', NULL, '$2y$12$qvOzusX9QqH4uodjzCJDMOw.f1nzaQzyEewN3C2ABi5TvG4hvLL5W', NULL, '2026-02-12 01:06:47', '2026-02-12 01:06:47', 'Hanz Elbin', NULL, 'Bajado', NULL, NULL, 'hbajado429', 0, NULL),
+(94, '', 4, 'bantilanpablitojr@gmail.com', NULL, '$2y$12$dBPFY8uR/x.8OiSpdhlxnOsWK66aLVpcYzoLaMkFmGVW3l9P.MUm.', NULL, '2026-02-12 01:09:16', '2026-02-12 01:09:16', 'Pablito, Jr', NULL, 'Bantilan', NULL, NULL, 'pbantilan719', 0, NULL),
+(95, '', 4, 'biyodominique@gmail.com', NULL, '$2y$12$Cmu3u0dsiRSda203xWUI8ONWSR6j.WMzo7EaJ5VKj6IwtEGZryT2O', NULL, '2026-02-12 01:11:02', '2026-02-12 01:11:02', 'Dominique Shaun Vincent', NULL, 'Biyo', NULL, NULL, 'dbiyo803', 0, NULL),
+(96, '', 4, 'carbakurtreign@gmail.com', NULL, '$2y$12$pTIphsY/zxt8jtq5XKthS.UqVMfsbkVLGSdGQpBKx9ulGCYLCiTyO', NULL, '2026-02-12 01:13:00', '2026-02-12 01:13:00', 'Kurt Reign', NULL, 'Carba', NULL, NULL, 'kcarba932', 0, NULL),
+(97, '', 4, 'dacotdacotstethan@gmail.com', NULL, '$2y$12$D.EoAt7lpVoPe37ohY64hOaGIVB1PZgXW9ehoRgJIoOzq5vZxboOW', NULL, '2026-02-12 01:14:38', '2026-02-12 01:14:38', 'Stethan', NULL, 'Dacotdacot', NULL, NULL, 'sdacotdacot810', 0, NULL),
+(98, '', 4, 'daymilzayn@gmail.com', NULL, '$2y$12$2wONubMrE8hitdgkWfsqd.XNCbnzMuVfCK.PpkPmh1arTNq648Lx.', NULL, '2026-02-12 01:18:57', '2026-02-12 01:18:57', 'Zayn', NULL, 'Daymil', NULL, NULL, 'zdaymil265', 0, NULL),
+(99, '', 4, 'fernandouzumaki@gmail.com', NULL, '$2y$12$6LHhvD4iYMUarkZfXcTTuuGkHdjTNvArXiMS5REyPsDk0v058mRFe', NULL, '2026-02-12 01:20:34', '2026-02-12 01:20:34', 'Uzumaki', NULL, 'Fernando', NULL, NULL, 'ufernando842', 0, NULL),
+(100, '', 4, 'gestupanoahmatteo@gmail.com', NULL, '$2y$12$9nrfLD0aV31hWFOlzBOhBOfrUTtGVUKYz2rOjbq9QNoRto93ZS1E6', NULL, '2026-02-12 01:22:57', '2026-02-12 01:22:57', 'Noah Matteo', NULL, 'Gestupa', NULL, NULL, 'ngestupa817', 0, NULL),
+(101, '', 4, 'otedagiean@gmail.com', NULL, '$2y$12$EiCLWwdDAJxwNVXzulMtMOIbkzPtC6afXE2x84v5M3QIURe7Giixe', NULL, '2026-02-12 01:24:39', '2026-02-12 01:24:39', 'Giean', NULL, 'Oteda', NULL, NULL, 'goteda238', 0, NULL),
+(102, '', 4, 'partosajonas@gmail.com', NULL, '$2y$12$3kSoB.XMCSxUhrDT18mgkeFK.c00EU2hxqvKQjmjL5Esqat2rdRjO', NULL, '2026-02-12 01:29:19', '2026-02-12 01:29:19', 'Jonas', NULL, 'Partosa', NULL, NULL, 'jpartosa727', 0, NULL),
+(103, '', 4, 'saraoprinceandy@gmail.com', NULL, '$2y$12$3A5APAXhrC4.3i68DT0BpO9HO1q717ylux8O27pqqYyjZTUZyyv22', NULL, '2026-02-12 01:30:49', '2026-02-12 01:30:49', 'Prince Andy', NULL, 'Sarao', NULL, NULL, 'psarao773', 0, NULL),
+(104, '', 4, 'serojanocharliejr@gmail.com', NULL, '$2y$12$RQokFsPmi9kOK2SVNMPfG.Np5CDxTfMLoDsM0gmWBAqipIED9.DRG', NULL, '2026-02-12 01:33:19', '2026-02-12 01:33:19', 'Charlie, Jr', NULL, 'Serojano', NULL, NULL, 'cserojano554', 0, NULL),
+(105, '', 4, 'sonlitprincejohn@gmail.com', NULL, '$2y$12$A70OWh0S3d4MBthC4zwRIusSQFP1FTZAJ71xYGFDCySIAMAx3OGAm', NULL, '2026-02-12 01:40:07', '2026-02-12 01:40:07', 'Prince John', NULL, 'Sonlit', NULL, NULL, 'psonlit443', 0, NULL),
+(106, '', 4, 'tolomiachristoff@gmail.com', NULL, '$2y$12$oYmeD6qUiytCLk7q1x.FtOL56kbCHVeeb70yUKuesRriASwYCokkG', NULL, '2026-02-12 01:41:47', '2026-02-12 01:41:47', 'Christoff', NULL, 'Tolomia', NULL, NULL, 'ctolomia904', 0, NULL),
+(107, '', 4, 'totorejay@gmail.com', NULL, '$2y$12$wJFo9zpauQmxUQ7MgtNIb.j8pjimLWoPtK9e22DU5pnJD.DjyPJw6', NULL, '2026-02-12 01:44:32', '2026-02-12 01:44:32', 'Rejay', NULL, 'Toro', NULL, NULL, 'rtoro755', 0, NULL),
+(108, '', 4, 'ubayprincejullian@gmail.com', NULL, '$2y$12$XqT42jc7luEXThY1XSwTjOlEHMTAmRllekDgmJlkvSu8y9xHlrlM6', NULL, '2026-02-12 01:45:56', '2026-02-12 01:45:56', 'Prince Jullian', NULL, 'Ubay', NULL, NULL, 'pubay454', 0, NULL),
+(109, '', 4, 'usmanfranceaethan@gmail.com', NULL, '$2y$12$32rRs2wcBf..i4DnN1CCleq1AzXRc0FGddxsWmDXDpDFvIUyPUjLu', NULL, '2026-02-12 01:47:09', '2026-02-12 01:47:09', 'France Aethan', NULL, 'Usman', NULL, NULL, 'fusman372', 0, NULL),
+(110, '', 4, 'verzanohohnmartin@gmail.com', NULL, '$2y$12$KIIBtBSTjzdLA5FrYKunLexT6KowB9A6pX6T71hA15kgCyl.ccwnq', NULL, '2026-02-12 01:48:44', '2026-02-12 01:48:44', 'John Martin', NULL, 'Verzano', NULL, NULL, 'jverzano239', 0, NULL),
+(111, '', 4, 'villarosakurternest@gmail.com', NULL, '$2y$12$iZLw2xrZTFgTnt95QCLjBOy11xRRRxbPiAhUFbNn1jbUIYAdlIkf6', NULL, '2026-02-12 01:50:13', '2026-02-12 01:50:13', 'Kurt Ernest', NULL, 'Villarosa', NULL, NULL, 'kvillarosa277', 0, NULL),
+(112, '', 4, 'badrinachike@gmail.com', NULL, '$2y$12$Dmb4l8Y7qMCf5T2qCe6ICupPe.zAnB9M6zXI8YGgOF8AOmvt9e9Ey', NULL, '2026-02-12 03:02:10', '2026-02-12 03:02:10', 'Chike', NULL, 'Badrina', NULL, NULL, 'cbadrina944', 0, NULL),
+(113, '', 4, 'bantotoclarissa@gmail.com', NULL, '$2y$12$16GYTqOB.va0a.RouGDlRuF9.3t.StXmf3becXWJzrRnI1/URb832', NULL, '2026-02-12 03:04:21', '2026-02-12 03:04:21', 'Clarissa Niña', NULL, 'Bantoto', NULL, NULL, 'cbantoto845', 0, NULL),
+(114, '', 4, 'cabanillacriskeira@gmail.com', NULL, '$2y$12$hF4pNHk355KxgjtDG3GP9e6wx96smgU9BcHK/TgcBzY34lQIPFDBK', NULL, '2026-02-12 03:05:44', '2026-02-12 03:05:44', 'Cris Keira', NULL, 'Cabanilla', NULL, NULL, 'ccabanilla400', 0, NULL),
+(115, '', 4, 'camachobriannazia@gmail.com', NULL, '$2y$12$KK7AyzqNTfF4dvNJ443BTuf4ndFmi24eiglx0SxIOPaV2XpesIPYu', NULL, '2026-02-12 03:08:18', '2026-02-12 03:08:18', 'Brianna Zia', NULL, 'Camacho', NULL, NULL, 'bcamacho756', 0, NULL),
+(116, '', 4, 'carvellidaprimrose@gmail.com', NULL, '$2y$12$Mfwq/zMaSb42.8XDfpVoA..jMwFvVoN8JY4.2ywnC9IpYKUIbbHzG', NULL, '2026-02-12 03:09:40', '2026-02-12 03:09:40', 'Prim Rose', NULL, 'Carvellida', NULL, NULL, 'pcarvellida701', 0, NULL),
+(117, '', 4, 'chukynleigh@gmail.com', NULL, '$2y$12$PW1cnAS4gHkj05We03VewO65sOoB0Yb3ljl2ZiLn75CiWPYR6gU1.', NULL, '2026-02-12 03:11:08', '2026-02-12 03:11:08', 'Kynleigh', NULL, 'Chu', NULL, NULL, 'kchu755', 0, NULL),
+(118, '', 4, 'divinajhellamae@gmail.com', NULL, '$2y$12$CFKr29Iq3A312uHwt6sCOu5Xe09E/fezPG0TVD2lNwy2zBrkiStp6', NULL, '2026-02-12 03:12:34', '2026-02-12 03:12:34', 'Jhella Mae', NULL, 'Divina', NULL, NULL, 'jdivina246', 0, NULL),
+(119, '', 4, 'gargarjewelscarlet@gmail.com', NULL, '$2y$12$kWCeBSuzkljX5JxnEL3WiOsjqpiNErtSI1MMc8PvSGeSs2h2YB3F.', NULL, '2026-02-12 03:14:00', '2026-02-12 03:14:00', 'Jewel Scarlet', NULL, 'Gargar', NULL, NULL, 'jgargar863', 0, NULL),
+(120, '', 4, 'icaonapoasherahelsie@gmail.com', NULL, '$2y$12$ABEdoyuBrvC1mdui.Cb8sO3M1L2zbeY31gBqvAlkEsyvM5SJMxbge', NULL, '2026-02-12 03:15:32', '2026-02-12 03:15:32', 'Asherah Elsie', NULL, 'Icaonapo', NULL, NULL, 'aicaonapo374', 0, NULL),
+(121, '', 4, 'lampasojairilmonette@gmail.com', NULL, '$2y$12$uTcTGB8klfSit3qKMrGYPuvKEpEDMB/VVgFWG5Y4tT.Cqu2fOnJkK', NULL, '2026-02-12 03:17:06', '2026-02-12 03:17:06', 'Jairil Monette', NULL, 'Lampaso', NULL, NULL, 'jlampaso786', 0, NULL),
+(122, '', 4, 'lozadafrancine@gmail.com', NULL, '$2y$12$qXHsdBxt/A2TVjwOBwy3L.jrUKNWgx3J6d3LCtpDJMM0r5nlfiiFy', NULL, '2026-02-12 03:18:14', '2026-02-12 03:18:14', 'Francine', NULL, 'Lozada', NULL, NULL, 'flozada386', 0, NULL),
+(123, '', 4, 'mohammadcrissmalyn@gmail.com', NULL, '$2y$12$qUHgAbys1/KCP4suaJbEN.Ym4DRDQ0fg1OLSZX6lmy8Ykxc.UUESS', NULL, '2026-02-12 03:19:50', '2026-02-12 03:19:50', 'Crissmalyn Faye', NULL, 'Mohammad', NULL, NULL, 'cmohammad253', 0, NULL),
+(124, '', 4, 'mohellolianah@gmail.com', NULL, '$2y$12$O9s9MfGcF67c6SlWFfCJHOgq7jEbd3ZvZfAM80.jIMiGJy0CVvqLq', NULL, '2026-02-12 03:21:28', '2026-02-12 03:21:28', 'Lianah', NULL, 'Mohello', NULL, NULL, 'lmohello339', 0, NULL),
+(125, '', 4, 'paoarianne@gmail.com', NULL, '$2y$12$aCjxozpilp29mmbe18QqROIUkyYboO.EYgZYWT4eQ4b20/EbNeX0e', NULL, '2026-02-12 03:22:40', '2026-02-12 03:22:40', 'Arianne', NULL, 'Pao', NULL, NULL, 'apao617', 0, NULL),
+(126, '', 4, 'paquinolavrilkate@gmail.com', NULL, '$2y$12$KNJlt2OtaTp4mRzuecgFoONC18nPdvZJfTs0VdvWbWzZgyoocPDYC', NULL, '2026-02-12 03:24:11', '2026-02-12 03:24:11', 'Avril Kate', NULL, 'Paquinol', NULL, NULL, 'apaquinol664', 0, NULL),
+(127, '', 4, 'salatanmariacelestine@gmail.com', NULL, '$2y$12$MKgZdSdtAe7qsuOELF8oXO4FSVWrgAwGGVMbffRQrSQRyHjZNCyY2', NULL, '2026-02-12 03:47:51', '2026-02-12 18:53:01', 'Maria Celestine', NULL, 'Salatan', NULL, NULL, 'mssalatan111', 0, NULL),
+(128, '', 4, 'senahondjanne@gmail.com', NULL, '$2y$12$1j9wT96qPtyJ3Swzf7/v0OB1JUt.OZEnHtq/D0whXhqkWr6sATEcm', NULL, '2026-02-12 03:49:36', '2026-02-16 14:46:55', 'DJ Anne', NULL, 'Senahon', NULL, NULL, 'dsenahon72', 1, NULL),
+(129, '', 4, 'tenedoelainejoy@gmail.com', NULL, '$2y$12$fsbO4rOx1NHH1/AHczKWdOlpz7okmydKxhKIiFrFHO31aoVcweczW', NULL, '2026-02-12 03:51:07', '2026-02-12 03:51:07', 'Elaine Joy', NULL, 'Tenedo', NULL, NULL, 'etenedo678', 0, NULL),
+(130, '', 4, 'tubleellyzamae@gmail.com', NULL, '$2y$12$XVHDIfwgZXr9eOcBHnnUzO.SxMAXYiqvYT2n0yM2ujkwErnv59joa', NULL, '2026-02-12 03:52:46', '2026-02-12 18:44:31', 'Ellyza Mae', NULL, 'Tuble', NULL, NULL, 'etuble321', 0, NULL),
+(132, '', 4, 'villamiljillianneshan@gmail.com', NULL, '$2y$12$VvPgmBYL02dhct8T07TXd.AvreRHTae3OD7TvYo36MBHxO39sFgvG', NULL, '2026-02-12 18:02:40', '2026-02-12 18:02:40', 'Jillianne Shane', NULL, 'Villamil', NULL, NULL, 'jvillamil438', 0, NULL),
+(150, '', 2, 'tugaweESadmin@gmail.com', NULL, '$2y$12$XJxk7PBRdGhBSAeb/kfQ4.oe.QiGClDMC9/F2MBr99..DxBFDWv92', NULL, '2026-02-13 18:04:40', '2026-02-13 18:04:40', 'System', NULL, 'Administrator', NULL, NULL, 'admin123', 0, NULL),
+(153, '', 4, 'cresttuayon7@gmail.com', NULL, '$2y$12$BvuxxgYVKMCbiksYw4fCpOKyEgxrPiFWgfyj1plZfqzIpOHP7BOa6', NULL, '2026-02-15 00:12:46', '2026-02-15 00:12:46', 'Crestian', NULL, 'Tuayon', NULL, NULL, 'ctuayon282', 0, NULL),
+(154, '', 4, 'troituayon@gmail.com', NULL, '$2y$12$VIz.r7oGtGx106kigWzdFug7dISIT6rP5slDfFZVzbBXgWPRc5Omy', NULL, '2026-02-15 01:11:47', '2026-02-15 01:11:47', 'Troilan', NULL, 'Tuayon', NULL, NULL, 'ttuayon698', 0, NULL),
+(157, '', 4, 'ezimeitradio@gmail.com', NULL, '$2y$12$gmLyg8u6kF4S81B/gALKMemehDWRKESxE/FVhimibLKduFYCqA8s2', NULL, '2026-02-16 08:34:24', '2026-02-16 08:34:24', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio758', 0, NULL),
+(162, '120231260087', 4, 'baldomarnoime@gmail.com', NULL, '$2y$12$gvviHzsTBwHM0goohaeaYOryjcBU2xr4VEEeey8L389A6S5qPn7py', NULL, '2026-02-16 15:07:01', '2026-02-16 15:07:01', 'Noime', 'T.', 'Baldomar', NULL, '2026-02-17', 'evarocksredhell', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1156,7 +1168,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1174,7 +1186,7 @@ ALTER TABLE `school_years`
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `section_student`
@@ -1198,7 +1210,7 @@ ALTER TABLE `section_teacher`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 
 --
 -- AUTO_INCREMENT for table `student_subjects`
@@ -1228,7 +1240,7 @@ ALTER TABLE `teaching_loads`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 
 --
 -- AUTO_INCREMENT for table `year_levels`

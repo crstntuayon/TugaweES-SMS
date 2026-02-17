@@ -40,7 +40,7 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
     $students = Student::with('section')->get();
     $sections = Section::all(); // ✅ REQUIRED
 
-     $schoolYears = SchoolYear::orderBy('name', 'asc')->get();
+     $schoolYears = SchoolYear::orderBy('name', 'desc')->get();
     $activeSchoolYear = SchoolYear::where('is_active', true)->first();
 
      // Fetch admin announcements
@@ -49,7 +49,7 @@ $users = User::with('role')->latest()->paginate(10); // 10 per page
                                  ->get();
 
        $roles = Role::all(); // <-- add this line
-$currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school_year ?? null;
+
 
     return view('admin.dashboard', compact(
         'students',
@@ -62,7 +62,7 @@ $currentSchoolYear = \App\Models\Section::latest('school_year')->first()->school
         'maleCount', 
         'femaleCount', 
         'studentsPerSection',
-        'currentSchoolYear',
+        
         'schoolYears',
         'activeSchoolYear',
        'announcements'

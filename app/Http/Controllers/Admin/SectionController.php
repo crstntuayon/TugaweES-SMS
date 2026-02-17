@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\User;
+use App\Models\SchoolYear;
 use Illuminate\Http\Request;
 
 
@@ -20,7 +21,10 @@ public function index()
         ->get()
         ->groupBy(fn($s) => $s->teacher?->full_name ?? 'Unassigned');
 
-    return view('admin.sections.index', compact('sections', 'teachers'));
+        
+     $schoolYears = SchoolYear::orderBy('name', 'desc')->get();
+
+    return view('admin.sections.index', compact('sections', 'teachers', 'schoolYears')); // ✅ PASS TO VIEW
 }
     public function create()
     {
@@ -33,22 +37,24 @@ public function index()
 public function store(Request $request)
 {
     // Validate input
-    $request->validate([
-        'name' => 'required|string|max:50',
-        'teacher_id' => 'nullable|exists:users,id',
-        'year_level' => 'required|string|max:20',
-        'school_year' => 'required|string|max:20',
-        'capacity' => 'nullable|integer|min:1|max:100',
-    ]);
+  $request->validate([
+    'name' => 'required|string|max:50',
+    'teacher_id' => 'nullable|exists:users,id',
+    'year_level' => 'required|string|max:20',
+    'school_year_id' => 'required|exists:school_years,id',
+    'capacity' => 'nullable|integer|min:1|max:100',
+]);
+
 
     // Create Section
-    Section::create([
-        'name' => $request->name,
-        'teacher_id' => $request->teacher_id,
-        'year_level' => $request->year_level,               // gets the selected year level
-        'school_year' => $request->school_year,             // gets the typed school year
-       
-    ]);
+   Section::create([
+    'name' => $request->name,
+    'teacher_id' => $request->teacher_id,
+    'year_level' => $request->year_level,
+    'school_year_id' => $request->school_year_id,
+    'capacity' => $request->capacity ?? 40,
+]);
+
 
     return redirect()->route('admin.sections.index')
                      ->with('success', 'Section added successfully.');
@@ -75,7 +81,8 @@ public function store(Request $request)
            'name' => 'required|string|max:30',
         'teacher_id' => 'nullable|exists:users,id',
         'year_level' => 'required|string|max:20', // form sends string now
-        'school_year' => 'required|string|max:20',
+        'school_year_id' => 'required|exists:school_years,id',
+            'capacity' => 'nullable|integer|min:1|max:100',
        
         ]);
 

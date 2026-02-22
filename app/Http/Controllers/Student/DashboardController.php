@@ -38,4 +38,6 @@ class DashboardController extends Controller
 
         return view('student.grades', compact('student', 'grades'));
     }
+
+    
 }

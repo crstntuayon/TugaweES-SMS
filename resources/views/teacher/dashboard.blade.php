@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-gradient-to-br from-emerald-100 via-sky-100 to-indigo-200 p-4 md:p-6">
+<body class="bg-gray-100 min-h-screen">
+<div class="min-h-screen flex flex-col">
+
 
 <!-- HEADER -->
 <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 shadow-lg rounded-2xl mb-8">
@@ -23,18 +25,6 @@
             </div>
         </div>
 
-        <!-- CENTER: SEARCH BAR -->
-        <div class="flex-1 md:max-w-md w-full relative">
-            <input type="text"
-                   class="w-full pl-12 pr-4 py-3 rounded-3xl border border-gray-300 shadow-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-                   placeholder="Search student..."
-                   onkeyup="globalSearch(this.value)">
-           <span class="absolute left-4 top-3.5 text-gray-400">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
-               </svg>
-           </span>
-        </div>
 
         <!-- USER DROPDOWN -->
         <div class="relative" x-data="{ open: false }">
@@ -90,138 +80,250 @@
 
 
 
-<main class="max-w-7xl mx-auto space-y-10">
+<main class="max-w-7xl mx-auto space-y-12 px-4">
 
     @if($sections->isEmpty())
-        <div class="bg-white rounded-3xl shadow-lg p-8 text-center text-gray-600">
-            You are not assigned to any section yet.
+        <div class="bg-white rounded-3xl shadow-xl p-10 text-center">
+            <div class="text-gray-500 text-lg font-medium">
+                You are not assigned to any section yet.
+            </div>
         </div>
     @endif
 
-    <div class="grid grid-cols-1 gap-12">
+    <div class="space-y-12">
         @foreach($sections as $section)
-            <div class="bg-white rounded-3xl shadow-2xl border border-gray-200 p-6 flex flex-col h-auto">
 
-                <!-- Section Header -->
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-4 rounded-2xl mb-6">
-                    <div class="font-bold text-lg md:text-xl">{{ $section->year_level }} - {{ $section->name }}</div>
-                    <span class="mt-2 md:mt-0 text-sm bg-white/20 px-4 py-1 rounded-full">
-                        SY  {{ $section->schoolYear?->name ?? 'N/A' }}
-                    </span>
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+
+            <!-- SECTION HEADER -->
+            <div class="bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-600 text-white p-6 flex flex-col md:flex-row md:justify-between md:items-center">
+
+                <div>
+                    <h2 class="text-2xl font-bold tracking-wide">
+                        {{ $section->year_level }} - {{ $section->name }}
+                    </h2>
+                    <p class="text-sm opacity-90 mt-1">
+                        School Year: {{ $section->schoolYear?->name ?? 'N/A' }}
+                    </p>
                 </div>
 
-                <!-- Section Actions -->
-<div class="flex flex-wrap gap-2 mb-4">
-    <a href="{{ route('teacher.attendance', $section->id) }}"
-       class="bg-yellow-500 text-white px-4 py-2 rounded-xl hover:bg-yellow-600 transition">
-       📝 Attendance
-    </a>
-    <a href="{{ route('teacher.grades', $section->id) }}"
-       class="bg-indigo-500 text-white px-4 py-2 rounded-xl hover:bg-indigo-600 transition">
-       📊 Grades
-    </a>
+                <div class="flex gap-3 mt-4 md:mt-0">
+                    <a href="{{ route('teacher.attendance', $section->id) }}"
+                       class="bg-white text-emerald-600 font-semibold px-5 py-2 rounded-xl shadow hover:scale-105 transition">
+                        📝 Attendance
+                    </a>
+
+                    <a href="{{ route('teacher.grades', $section->id) }}"
+                       class="bg-white text-indigo-600 font-semibold px-5 py-2 rounded-xl shadow hover:scale-105 transition">
+                        📊 Grades
+                    </a>
+                </div>
+            </div>
+
+            <!-- STATS CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 bg-gray-50">
+
+               <div class="bg-white rounded-2xl shadow-sm p-5 text-center relative">
+    <p class="text-sm text-gray-500">Total Students</p>
+    <p class="text-3xl font-bold text-gray-800">
+        {{ $section->students->count() }}
+    </p>
+
+    <!-- Unenroll All Button -->
+    <form action="{{ route('teacher.sections.unenrollAll', $section->id) }}" method="POST"
+          onsubmit="return confirm('Are you sure you want to unenroll all students in this section?')"
+          class="mt-3">
+        @csrf
+        @method('PUT')
+        <button type="submit"
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm shadow">
+            Unenroll All
+        </button>
+    </form>
+</div>
+
+              
+            </div>
+
+       <!-- STUDENTS (SIDE BY SIDE) -->
+<div class="p-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        {{-- ================= MALE STUDENTS ================= --}}
+        <div class="bg-white rounded-2xl border border-blue-100 shadow-sm flex flex-col">
+
+            <!-- Card Header -->
+            <div class="bg-blue-50 px-6 py-4 border-b border-blue-100 rounded-t-2xl">
+                <h3 class="text-lg font-bold text-blue-700 flex justify-between">
+                    <span>Male Students</span>
+                    <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                        {{ $section->students->where('sex','Male')->count() }}
+                    </span>
+                </h3>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-auto flex-1">
+                <table class="min-w-full text-sm">
+                    <tbody class="divide-y">
+
+                       @php
+    $maleStudents = $section->students
+        ->where('sex', 'Male')
+        ->sortBy(function($student) {
+            return $student->last_name . ' ' . $student->first_name;
+        });
+@endphp
+
+                        @forelse($maleStudents as $index => $student)
+                            <tr class="hover:bg-blue-50 transition">
+
+                                <td class="px-4 py-4 text-gray-500 w-10">
+                                    {{ $index + 1 }}
+                                </td>
+
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-3">
+
+                                        <img
+                                            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                            class="w-10 h-10 rounded-full object-cover border shadow-sm">
+
+                                        <div>
+                                            <p class="font-semibold text-gray-800 text-sm">
+                                                {{ $student->last_name }},
+                                                {{ $student->first_name }}
+                                                {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
+                                                {{ $student->suffix ? ' '.$student->suffix : '' }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">
+                                                {{ $student->school_id }}
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-4 text-right">
+                                    <form action="{{ route('teacher.students.unenroll', $student->id) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Unenroll this student?')">
+                                        @csrf
+                                        @method('PUT')
+                                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs shadow">
+                                            Unenroll
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-6 text-gray-400">
+                                    No male students
+                                </td>
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        {{-- ================= FEMALE STUDENTS ================= --}}
+        <div class="bg-white rounded-2xl border border-pink-100 shadow-sm flex flex-col">
+
+            <!-- Card Header -->
+            <div class="bg-pink-50 px-6 py-4 border-b border-pink-100 rounded-t-2xl">
+                <h3 class="text-lg font-bold text-pink-700 flex justify-between">
+                    <span>Female Students</span>
+                    <span class="text-sm bg-pink-100 text-pink-700 px-3 py-1 rounded-full">
+                        {{ $section->students->where('sex','Female')->count() }}
+                    </span>
+                </h3>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-auto flex-1">
+                <table class="min-w-full text-sm">
+                    <tbody class="divide-y">
+
+                       @php
+    $femaleStudents = $section->students
+        ->where('sex', 'Female')
+        ->sortBy(function($student) {
+            return $student->last_name . ' ' . $student->first_name;
+        });
+@endphp
+                        @forelse($femaleStudents as $index => $student)
+                            <tr class="hover:bg-pink-50 transition">
+
+                                <td class="px-4 py-4 text-gray-500 w-10">
+                                    {{ $index + 1 }}
+                                </td>
+
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-3">
+
+                                        <img
+                                            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                            class="w-10 h-10 rounded-full object-cover border shadow-sm">
+
+                                        <div>
+                                            <p class="font-semibold text-gray-800 text-sm">
+                                                {{ $student->last_name }},
+                                                {{ $student->first_name }}
+                                                {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
+                                                {{ $student->suffix ? ' '.$student->suffix : '' }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">
+                                                {{ $student->school_id }}
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td class="px-4 py-4 text-right">
+                                    <form action="{{ route('teacher.students.unenroll', $student->id) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Unenroll this student?')">
+                                        @csrf
+                                        @method('PUT')
+                                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs shadow">
+                                            Unenroll
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-6 text-gray-400">
+                                    No female students
+                                </td>
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 
-                <!-- Gender Stats -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
-                        <div>
-                            <p class="text-sm text-blue-500 font-medium">Male Students</p>
-                            <p class="text-2xl font-extrabold text-blue-600">{{ $section->students->where('sex','Male')->count() }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 bg-pink-50 border border-pink-200 rounded-xl p-4 shadow-sm">
-                        <div>
-                            <p class="text-sm text-pink-500 font-medium">Female Students</p>
-                            <p class="text-2xl font-extrabold text-pink-600">{{ $section->students->where('sex','Female')->count() }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Students Table -->
-                <div class="overflow-auto rounded-2xl border border-gray-200 shadow-sm">
-                    <table class="min-w-full text-sm table-auto">
-                        <thead class="bg-gray-50 sticky top-0">
-                            <tr class="text-gray-700">
-                                <th class="px-4 py-3">No.</th>
-                                <th class="px-4 py-3">Name</th>
-                                <th class="px-4 py-3">LRN</th>
-                                <th class="px-4 py-3">Birthday</th>
-                                <th class="px-4 py-3">Email</th>
-                                <th class="px-4 py-3">Contact</th>
-                                <th class="px-4 py-3">Address</th>
-                                <th class="px-4 py-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            @forelse($section->students as $index => $student)
-                                <tr class="student-row hover:bg-gray-50 transition">
-                                    <td class="px-4 py-3">{{ $index + 1 }}</td>
-                                    <!-- STUDENT -->
-                            <td class="px-5 py-4">
-                                <div class="flex items-center gap-4">
-                                    <img
-                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                                        class="w-12 h-12 rounded-full object-cover shadow"
-                                        alt="Photo">
-
-                                    <div>
-                                        <p class="font-semibold text-gray-800 leading-tight">
-                                            {{ $student->first_name }}
-                                            {{ $student->middle_name }}
-                                            {{ $student->last_name }}
-                                        </p>
-                                        <p class="text-xs text-gray-500 mt-1">
-                                            S-ID: {{ $student->school_id }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-                                    <td class="px-4 py-3">{{ $student->lrn }}</td>
-                                    <td class="px-4 py-3">{{ $student->birthday ? \Carbon\Carbon::parse($student->birthday)->format('M d, Y') : 'N/A' }}</td>
-                                    <td class="px-4 py-3 text-blue-600">{{ $student->email }}</td>
-                                    <td class="px-4 py-3">{{ $student->contact_number ?? 'N/A' }}</td>
-                                    <td class="px-4 py-3">{{ $student->address ?? 'N/A' }}</td>
-                                    <td class="flex gap-2">
-    {{-- If student is currently enrolled --}}
-    @if($student->section_id === $section->id)
-
-        {{-- UNENROLL --}}
-        <form action="{{ route('teacher.students.unenroll', $student->id) }}"
-              method="POST"
-              onsubmit="return confirm('Unenroll this student?')">
-            @csrf
-            @method('PUT')
-            <button class="bg-red-500 text-white px-3 py-1 rounded text-sm">
-                Unenroll
-            </button>
-        </form>
-
-    @else
-
-        {{-- RE-ENROLL --}}
-        <button
-            onclick="openReEnrollModal({{ $student->id }})"
-            class="bg-green-600 text-white px-3 py-1 rounded text-sm">
-            Re-Enroll
-        </button>
-
-    @endif
-</td>
-
-                                </tr>
-                            @empty
-                                <tr><td colspan="8" class="text-center py-4 text-gray-500">No students enrolled</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
         @endforeach
     </div>
 </main>
+
 
 
 
@@ -232,12 +334,13 @@
 
         <form method="POST" action="{{ route('teacher.students.enroll') }}">
             @csrf
-
-            <label class="block text-gray-700 font-medium mb-2">Select Student</label>
-            <select name="student_id" required class="w-full px-4 py-2 border rounded-lg mb-4">
+<label class="block text-gray-700 font-medium mb-2">Select Student</label>
+<select name="student_id" required class="w-full px-4 py-2 border rounded-lg mb-4">
     <option value="">-- Choose Student --</option>
     @foreach($students as $student)
-        <option value="{{ $student->id }}">{{ $student->first_name }} {{ $student->last_name }}</option>
+        <option value="{{ $student->id }}">
+            {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }} {{ $student->suffix ? ' '.$student->suffix : '' }} ({{ $student->school_id }})    
+        </option>
     @endforeach
 </select>
 
@@ -644,15 +747,7 @@ function closeProfileModal() {
     }
 </script>
 
-<!-- Search Script -->
-<script>
-function globalSearch(value) {
-    const filter = value.toLowerCase();
-    document.querySelectorAll('.student-row').forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
-    });
-}
-</script>
+
 
 <script src="//unpkg.com/alpinejs" defer></script>
 
@@ -671,7 +766,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endif
-
+</div>
 </body>
 
 

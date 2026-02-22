@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Enrollment;
 
 class SchoolYear extends Model
 {
@@ -25,10 +26,22 @@ class SchoolYear extends Model
         self::find($id)->update(['is_active' => true]);
     }
 
+    // Access students THROUGH enrollments
     public function students()
-{
-    return $this->hasMany(Student::class);
-}
+    {
+        return $this->hasManyThrough(
+            Student::class,
+            Enrollment::class,
+            'school_year_id', // Foreign key on enrollments table
+            'id',             // Foreign key on students table
+            'id',             // Local key on school_years
+            'student_id'      // Local key on enrollments
+        );
+    }
 
+public function enrollments()
+{
+    return $this->hasMany(Enrollment::class);
+}
 }
 

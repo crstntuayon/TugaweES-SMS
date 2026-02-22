@@ -69,15 +69,46 @@
 @else
 
     <!-- =================== STUDENT INFO =================== -->
-    <div class="bg-white/60 rounded-3xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row md:items-center gap-6 backdrop-blur-sm">
-        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}" 
-             class="w-28 h-28 rounded-full object-cover border shadow-sm ring-2 ring-gray-300" alt="Profile Photo">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">{{ $student->first_name }} {{ $student->middle_name ?? '' }} {{ $student->last_name }} {{ $student->suffix ?? '' }}</h1>
-            <p class="text-gray-600 mt-1">Student ID: <span class="font-medium">{{ $student->school_id }}</span></p>
-            <p class="text-gray-600 mt-1">Section: <span class="font-medium">{{ $section->year_level }} - {{ $section->name }}</span></p>
-        </div>
+<div class="bg-white/60 rounded-3xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row md:items-center gap-6 backdrop-blur-sm">
+    
+    <!-- Profile Photo -->
+    <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}" 
+         class="w-28 h-28 rounded-full object-cover border shadow-sm ring-2 ring-gray-300" 
+         alt="Profile Photo">
+
+    <div class="flex-1 space-y-1">
+        <!-- Student Name -->
+        <h1 class="text-2xl font-bold text-gray-800">
+            {{ $student->first_name }} {{ $student->middle_name ?? '' }} {{ $student->last_name }} {{ $student->suffix ?? '' }}
+        </h1>
+
+        <!-- Student ID -->
+        <p class="text-gray-600 mt-1">
+            Student ID: <span class="font-medium">{{ $student->school_id }}</span>
+        </p>
+
+        <!-- Section -->
+        <p class="text-gray-600 mt-1">
+            Section: <span class="font-medium">{{ $section->year_level }} - {{ $section->name }}</span>
+        </p>
+
+        <!-- Student Status -->
+        <p class="text-gray-600 mt-1">
+            Status: 
+            <span class="font-medium text-{{ $student->enrollments->last()?->status == 'active' ? 'green' : 'gray' }}-600">
+                {{ ucfirst($student->enrollments->last()?->status ?? 'N/A') }}
+            </span>
+        </p>
+
+        <!-- Active School Year -->
+        <p class="text-gray-600 mt-1">
+            School Year: 
+            <span class="font-medium">
+                {{ $activeSchoolYear->name ?? ($student->enrollments->last()?->schoolYear?->name ?? 'N/A') }}
+            </span>
+        </p>
     </div>
+</div>
 
     <!-- =================== ACTION BUTTONS =================== -->
     <div class="flex flex-wrap gap-4 mt-6">
@@ -88,309 +119,388 @@
         📄 View Report Card
     </button>
 
-    <!-- Grades Modal -->
-    <div x-show="openGrades" x-cloak 
-         class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl shadow-md max-w-6xl w-full p-6 relative overflow-auto max-h-[90vh]">
+  <!-- Grades Modal -->
+<div x-show="openGrades" x-cloak 
+     class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+     
+    <div class="bg-white rounded-2xl shadow-xl max-w-6xl w-full p-6 relative overflow-auto max-h-[90vh]">
 
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2">
-                    📄 Report Card
-                    <span class="text-sm text-gray-500 font-normal ml-2">
-                        Section: {{ $section->year_level }} - {{ $section->name }}
-                    </span>
-                    <span class="text-gray-500 text-base font-normal">
-                        - Active SY: {{ $activeSchoolYear->name ?? 'N/A' }}
-                    </span>
-                </h2>
-                <button @click="openGrades = false" class="text-xl font-bold hover:text-red-500">✕</button>
+        <!-- Header Wrapper -->
+        <div class="relative mb-8">
+            <!-- Close Button -->
+            <button @click="openGrades = false"
+                class="absolute top-0 right-0 text-gray-500 hover:text-red-500 text-xl font-bold">
+                ✕
+            </button>
+
+            <!-- Official Header -->
+            <div class="border-b pb-6">
+                <div class="flex items-center justify-center gap-10">
+                    <img src="{{ asset('images/logo1.png') }}" alt="DepEd Logo" class="w-20 h-20 object-contain">
+                    <div class="text-center">
+                        <p class="text-sm font-medium text-gray-700 uppercase tracking-wide">
+                            Republic of the Philippines
+                        </p>
+                        <p class="text-sm font-medium text-gray-700 uppercase tracking-wide">
+                            Department of Education
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            Division of Negros Oriental
+                        </p>
+                        <h2 class="text-lg font-bold text-gray-900 mt-1 uppercase">
+                            TUGAWE ELEMENTARY SCHOOL
+                        </h2>
+                        <p class="text-sm text-gray-700 mt-2 font-semibold">
+                            Student Report Card
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                            Section: {{ $section->year_level }} - {{ $section->name }} |
+                            School Year: {{ $activeSchoolYear->name ?? 'N/A' }}
+                        </p>
+                    </div>
+                    <img src="{{ asset('images/logo.jpg') }}" alt="School Logo" class="w-20 h-20 object-contain">
+                </div>
             </div>
+        </div>
 
-            @php
-                $quarters = [1,2,3,4];
+        @php
+            $quarters = [1,2,3,4];
 
-                $allSubjectsByGrade = \App\Models\Subject::orderByRaw(
-                    "FIELD(grade_level, 'Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6')"
-                )->get()->groupBy('grade_level');
+            $allSubjectsByGrade = \App\Models\Subject::orderByRaw(
+                "FIELD(grade_level, 'Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6')"
+            )->get()->groupBy('grade_level');
 
-                $currentYear = $section->year_level;
-                if($allSubjectsByGrade->has($currentYear)){
-                    $currentSubjects = $allSubjectsByGrade->pull($currentYear);
-                    $allSubjectsByGrade = collect([$currentYear => $currentSubjects])->merge($allSubjectsByGrade);
-                }
+            $currentYear = $section->year_level;
 
-                $finalQuarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                $finalQuarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                $finalAllSum = 0;
-                $finalAllCount = 0;
-            @endphp
+            if($allSubjectsByGrade->has($currentYear)){
+                $currentSubjects = $allSubjectsByGrade->pull($currentYear);
+                $allSubjectsByGrade = collect([$currentYear => $currentSubjects])->merge($allSubjectsByGrade);
+            }
+        @endphp
 
-            @foreach($allSubjectsByGrade as $grade => $subjects)
-                <h3 class="text-lg font-bold text-indigo-800 mt-6 mb-2">{{ $grade }}</h3>
+        @foreach($allSubjectsByGrade as $grade => $subjects)
+            <h3 class="text-lg font-semibold text-indigo-700 mt-6 mb-3">
+                {{ $grade }}
+            </h3>
 
-                <table class="min-w-full border text-sm rounded-lg overflow-hidden shadow-sm mb-6">
-                    <thead class="bg-indigo-50 text-gray-700 sticky top-0 z-10">
-                        <tr>
-                            <th class="border px-3 py-2 text-left">Subject</th>
-                            @foreach($quarters as $q)
-                                <th class="border px-3 py-2 text-center">Q{{ $q }}</th>
-                            @endforeach
-                            <th class="border px-3 py-2 text-center">Average</th>
-                            <th class="border px-3 py-2 text-center">Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <table class="min-w-full border text-sm rounded-lg overflow-hidden shadow-sm mb-6">
+                <thead class="bg-indigo-100 text-gray-700">
+                    <tr>
+                        <th class="border px-3 py-2 text-left">Subject</th>
+                        @foreach($quarters as $q)
+                            <th class="border px-3 py-2 text-center">Q{{ $q }}</th>
+                        @endforeach
+                        <th class="border px-3 py-2 text-center">Average</th>
+                        <th class="border px-3 py-2 text-center">Remarks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @php
+                        $quarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                        $quarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+                        $gradeSum = 0;
+                        $gradeCount = 0;
+                        $finalGrades = [];
+                    @endphp
+
+                    @foreach($subjects as $subject)
                         @php
-                            $quarterTotals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                            $quarterCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-                            $gradeSum = 0;
-                            $gradeCount = 0;
+                            $grades = $student->grades
+                                ->where('subject_id', $subject->id)
+                                ->keyBy('quarter');
+
+                            $qValues = [];
+
+                            foreach($quarters as $q){
+                                $grade = $grades[$q]->grade ?? '-';
+                                $qValues[$q] = $grade;
+
+                                if($grade !== '-') {
+                                    $quarterTotals[$q] += $grade;
+                                    $quarterCounts[$q]++;
+                                    $gradeSum += $grade;
+                                    $gradeCount++;
+                                }
+                            }
+
+                            $average = $gradeCount ? round($gradeSum/$gradeCount,2) : '-';
+                            $remarks = $average !== '-' 
+                                ? ($average >= 75 ? 'Passed' : 'Failed') 
+                                : '-';
+
+                            if($average !== '-') {
+                                $finalGrades[] = $average;
+                            }
                         @endphp
 
-                        @foreach($subjects as $subject)
-                            @if($subject->components)
-                                @php
-                                    $components = json_decode($subject->components);
-                                @endphp
-                                <tr class="bg-gray-100 font-semibold">
-                                    <td class="border px-4 py-2 text-gray-800">{{ $subject->name }}</td>
-                                    @foreach($quarters as $q)
-                                        <td class="border px-4 py-2 text-center">-</td>
-                                    @endforeach
-                                    <td class="border px-4 py-2 text-center">-</td>
-                                    <td class="border px-4 py-2 text-center">-</td>
-                                </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border px-4 py-2 font-medium text-gray-700">
+                                {{ $subject->name }}
+                            </td>
 
-                                @foreach($components as $comp)
-                                    @php
-                                        $grades = $student->grades
-                                            ->where('subject_id', $subject->id)
-                                            ->where('component', $comp)
-                                            ->keyBy('quarter');
+                            @foreach($quarters as $q)
+                                <td class="border px-4 py-2 text-center text-gray-600">
+                                    {{ $qValues[$q] }}
+                                </td>
+                            @endforeach
 
-                                        $qValues = [];
-                                        $compSum = 0;
-                                        $compCount = 0;
+                            <td class="border px-4 py-2 text-center font-semibold text-gray-800">
+                                {{ $average }}
+                            </td>
 
-                                        foreach($quarters as $q){
-                                            $grade = $grades[$q]->grade ?? '-';
-                                            $qValues[$q] = $grade;
+                            <td class="border px-4 py-2 text-center font-medium
+                                {{ $remarks === 'Passed' ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $remarks }}
+                            </td>
+                        </tr>
 
-                                            if($grade !== '-') {
-                                                $quarterTotals[$q] += $grade;
-                                                $quarterCounts[$q]++;
-                                                $finalQuarterTotals[$q] += $grade;
-                                                $finalQuarterCounts[$q]++;
-                                                $compSum += $grade;
-                                                $compCount++;
-                                                $finalAllSum += $grade;
-                                                $finalAllCount++;
-                                            }
-                                        }
-                                        $average = $compCount ? round($compSum/$compCount,2) : '-';
-                                        $remarks = $average !== '-' ? ($average >= 75 ? 'Passed' : 'Failed') : '-';
-                                    @endphp
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="border px-8 py-2 text-gray-700 font-medium">{{ $comp }}</td>
-                                        @foreach($quarters as $q)
-                                            <td class="border px-4 py-2 text-center text-gray-600">{{ $qValues[$q] }}</td>
-                                        @endforeach
-                                        <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $average }}</td>
-                                        <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $remarks }}</td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                @php
-                                    $grades = $student->grades
-                                        ->where('subject_id', $subject->id)
-                                        ->keyBy('quarter');
+                    @endforeach
 
-                                    $qValues = [];
-                                    foreach($quarters as $q){
-                                        $grade = $grades[$q]->grade ?? '-';
-                                        $qValues[$q] = $grade;
+                    <!-- Quarterly Average Row -->
+                    <tr class="bg-gray-100 font-semibold">
+                        <td class="border px-4 py-2">Quarterly Average</td>
 
-                                        if($grade !== '-') {
-                                            $quarterTotals[$q] += $grade;
-                                            $quarterCounts[$q]++;
-                                            $finalQuarterTotals[$q] += $grade;
-                                            $finalQuarterCounts[$q]++;
-                                            $gradeSum += $grade;
-                                            $gradeCount++;
-                                            $finalAllSum += $grade;
-                                            $finalAllCount++;
-                                        }
-                                    }
-                                    $average = $gradeCount ? round($gradeSum/$gradeCount,2) : '-';
-                                    $remarks = $average !== '-' ? ($average >= 75 ? 'Passed' : 'Failed') : '-';
-                                @endphp
-                                <tr class="hover:bg-gray-50">
-                                    <td class="border px-4 py-2 font-medium text-gray-700">{{ $subject->name }}</td>
-                                    @foreach($quarters as $q)
-                                        <td class="border px-4 py-2 text-center text-gray-600">{{ $qValues[$q] }}</td>
-                                    @endforeach
-                                    <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $average }}</td>
-                                    <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $remarks }}</td>
-                                </tr>
-                            @endif
+                        @foreach($quarters as $q)
+                            @php
+                                $qAvg = $quarterCounts[$q] 
+                                    ? round($quarterTotals[$q]/$quarterCounts[$q],2) 
+                                    : '-';
+                            @endphp
+                            <td class="border px-4 py-2 text-center">{{ $qAvg }}</td>
                         @endforeach
 
-                        <!-- Quarterly Average Row -->
-                        <tr class="bg-gray-100/50 font-semibold text-gray-800">
-                            <td class="border px-4 py-2 text-left">Quarterly Average</td>
-                            @foreach($quarters as $q)
-                                @php
-                                    $qAvg = $quarterCounts[$q] ? round($quarterTotals[$q]/$quarterCounts[$q],2) : '-';
-                                @endphp
-                                <td class="border px-4 py-2 text-center">{{ $qAvg }}</td>
-                            @endforeach
-                            <td class="border px-4 py-2 text-center"></td>
-                            <td class="border px-4 py-2 text-center"></td>
-                        </tr>
+                        <td class="border px-4 py-2 text-center"></td>
+                        <td class="border px-4 py-2 text-center"></td>
+                    </tr>
 
-                        <!-- Final Average Row -->
-                        <tr class="bg-indigo-50/50 font-semibold text-gray-800">
-                            <td class="border px-4 py-2 text-left">Final Average</td>
-                            @foreach($quarters as $q)
-                                <td class="border px-4 py-2 text-center"></td>
-                            @endforeach
-                            @php
-                                $finalAverage = $gradeCount ? round($gradeSum/$gradeCount,2) : '-';
-                                $finalRemarks = $finalAverage !== '-' ? ($finalAverage >= 75 ? 'Passed' : 'Failed') : '-';
-                            @endphp
-                            <td class="border px-4 py-2 text-center font-semibold text-gray-800">{{ $finalAverage }}</td>
-                            <td class="border px-4 py-2 text-center text-gray-700 font-medium">{{ $finalRemarks }}</td>
-                        </tr>
+                    <!-- Final Average Row -->
+                    <tr class="bg-indigo-100 font-bold">
+                        <td class="border px-4 py-2">Final Average</td>
+                        @foreach($quarters as $q)
+                            <td class="border px-4 py-2 text-center">-</td>
+                        @endforeach
+                        <td class="border px-4 py-2 text-center">
+                            {{ count($finalGrades) ? round(array_sum($finalGrades)/count($finalGrades),2) : '-' }}
+                        </td>
+                        <td class="border px-4 py-2 text-center"></td>
+                    </tr>
 
-                    </tbody>
-                </table>
-            @endforeach
+                </tbody>
+            </table>
 
-        </div>
+        @endforeach
+
     </div>
 </div>
-
-
-
+</div>
         <!-- Attendance Button -->
         <div x-data="{ openAttendance: false, month: '{{ now()->format('F Y') }}', view: 'table' }">
             <button @click="openAttendance = true" class="bg-yellow-500/70 text-white px-6 py-2 rounded-xl shadow-sm hover:bg-yellow-600/70 transition transform hover:scale-105">
                 📝 View Attendance
             </button>
 
-            <!-- Attendance Modal -->
-            <div x-show="openAttendance" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div class="bg-white/60 rounded-3xl shadow-sm max-w-6xl w-full p-6 relative overflow-auto max-h-[90vh] backdrop-blur-sm">
+            <!-- ATTENDANCE MODAL -->
+<div x-show="openAttendance"
+     x-cloak
+     class="fixed inset-0 bg-gray-900/60 flex items-center justify-center z-50 p-4">
 
-                    <div class="flex justify-between items-center border-b pb-3 mb-4">
-                        <h2 class="text-2xl font-bold text-gray-800">📝 Attendance Record</h2>
-                        <button @click="openAttendance = false" class="text-xl font-bold hover:text-red-500">✕</button>
-                    </div>
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative">
 
-                    @php
-                        $months = $student->attendances->groupBy(function ($a) {
-                            return \Carbon\Carbon::parse($a->date)->format('F Y');
-                        });
-                    @endphp
+        <!-- CLOSE BUTTON -->
+        <button @click="openAttendance = false"
+                class="absolute top-4 right-6 text-gray-500 hover:text-red-600 text-2xl font-bold z-10">
+            ✕
+        </button>
 
-                    <!-- Month Selector -->
-                    <div class="mb-4 flex items-center gap-3">
-                        <span class="font-semibold text-gray-700">Select Month:</span>
-                        <select x-model="month" class="border px-3 py-1 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                            @foreach ($months as $m => $records)
-                                <option value="{{ $m }}">{{ $m }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+        <!-- OFFICIAL HEADER (SAME AS GRADES MODAL) -->
+        <div class="border-b border-gray-300 py-6 px-8">
 
-                    <!-- Legend -->
-                    <div class="mb-4 flex gap-6 text-sm font-semibold">
-                        <span class="text-green-600">P – Present</span>
-                        <span class="text-yellow-600">L – Late</span>
-                        <span class="text-red-600">A – Absent</span>
-                    </div>
+            <div class="flex items-center justify-center gap-12">
 
-                    <!-- Table View -->
-                    <div x-show="view === 'table'" class="overflow-x-auto">
-                        <table class="w-full border-collapse text-sm shadow-sm rounded-xl overflow-hidden">
-                            <thead class="bg-yellow-100/70 text-gray-800 sticky top-0 z-10">
-                                <tr>
-                                    <th class="border px-4 py-2 text-left w-44">Date</th>
-                                    <th class="border px-4 py-2 text-center w-24">Day</th>
-                                    <th class="border px-4 py-2 text-center w-28">Attendance</th>
-                                </tr>
-                            </thead>
+                <!-- LEFT LOGO -->
+                <img src="{{ asset('images/logo1.png') }}"
+                     alt="DepEd Logo"
+                     class="w-20 h-20 object-contain">
 
-                            <tbody class="bg-white/70">
-                                <template x-for="record in {{ json_encode($months) }}[month]" :key="record.id">
-                                    <tr class="transition hover:bg-gray-50/50"
-                                        :class="['Sat','Sun'].includes(new Date(record.date).toLocaleDateString('en-US',{ weekday:'short' })) ? 'bg-gray-100/50 text-gray-500' : ''">
+                <!-- CENTER TEXT -->
+                <div class="text-center">
 
-                                        <td class="border px-4 py-2 text-left font-medium"
-                                            x-text="new Date(record.date).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })"></td>
+                    <p class="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                        Republic of the Philippines
+                    </p>
 
-                                        <td class="border px-4 py-2 text-center font-medium"
-                                            x-text="new Date(record.date).toLocaleDateString('en-US',{ weekday:'short' })"></td>
+                    <p class="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                        Department of Education
+                    </p>
 
-                                        <td class="border px-4 py-2 text-center font-bold text-lg"
-                                            :class="record.status === 'present' ? 'text-green-600' :
-                                                    record.status === 'late' ? 'text-yellow-600' :
-                                                    record.status === 'absent' ? 'text-red-600' :
-                                                    'text-gray-400'"
-                                            x-text="record.status === 'present' ? 'P' :
-                                                    record.status === 'late' ? 'L' :
-                                                    record.status === 'absent' ? 'A' : ''">
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
+                    <p class="text-sm text-gray-600">
+                        Division of Negros Oriental
+                    </p>
 
-                    <!-- Attendance Summary -->
-                    <div class="mt-6 border-t pt-4">
-                        <template x-for="(records, m) in {{ json_encode($months) }}" :key="m">
-                            <div x-show="month === m" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center font-semibold">
+                    <h2 class="text-xl font-bold text-gray-900 mt-2 uppercase">
+                        TUGAWE ELEMENTARY SCHOOL
+                    </h2>
 
-                                <div class="bg-gray-100/50 rounded-xl p-3 shadow-sm">
-                                    Total Days
-                                    <div class="text-2xl mt-1" x-text="records.length"></div>
-                                </div>
+                    <p class="text-sm font-semibold text-gray-800 mt-3">
+                        Student Attendance Record
+                    </p>
 
-                                <div class="bg-green-100/50 rounded-xl p-3 shadow-sm">
-                                    Present (P)
-                                    <div class="text-2xl mt-1" x-text="records.filter(r => r.status === 'present').length"></div>
-                                </div>
-
-                                <div class="bg-yellow-100/50 rounded-xl p-3 shadow-sm">
-                                    Late (L)
-                                    <div class="text-2xl mt-1" x-text="records.filter(r => r.status === 'late').length"></div>
-                                </div>
-
-                                <div class="bg-red-100/50 rounded-xl p-3 shadow-sm">
-                                    Absent (A)
-                                    <div class="text-2xl mt-1" x-text="records.filter(r => r.status === 'absent').length"></div>
-                                </div>
-
-                                <div class="bg-indigo-100/50 rounded-xl p-3 shadow-sm col-span-2 md:col-span-4">
-                                    Attendance Percentage
-                                    <div class="text-3xl font-bold mt-1"
-                                        :class="((records.filter(r => r.status === 'present' || r.status === 'late').length / records.length) * 100) >= 90 ? 'text-green-700' :
-                                                ((records.filter(r => r.status === 'present' || r.status === 'late').length / records.length) * 100) >= 75 ? 'text-yellow-700' :
-                                                'text-red-700'"
-                                        x-text="records.length ? Math.round((records.filter(r => r.status === 'present' || r.status === 'late').length / records.length) * 100)+'%' : '0%'">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </template>
-                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        {{ $student->last_name }}, {{ $student->first_name }} |
+                        Section: {{ $section->year_level }} - {{ $section->name }} |
+                        School Year: {{ $activeSchoolYear->name ?? 'N/A' }}
+                    </p>
 
                 </div>
+
+                <!-- RIGHT LOGO -->
+                <img src="{{ asset('images/logo.jpg') }}"
+                     alt="School Logo"
+                     class="w-20 h-20 object-contain">
+
             </div>
         </div>
 
+
+        <!-- CONTENT -->
+        <div class="p-8">
+
+            @php
+                $months = $student->attendances->groupBy(function ($a) {
+                    return \Carbon\Carbon::parse($a->date)->format('F Y');
+                });
+            @endphp
+
+            <!-- MONTH SELECTOR -->
+            <div class="mb-6 flex items-center gap-4">
+                <span class="font-semibold text-gray-700">Select Month:</span>
+                <select x-model="month"
+                        class="border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    @foreach ($months as $m => $records)
+                        <option value="{{ $m }}">{{ $m }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- LEGEND -->
+            <div class="mb-6 flex gap-8 text-sm font-semibold">
+                <span class="text-green-600">P – Present</span>
+                <span class="text-yellow-600">L – Late</span>
+                <span class="text-red-600">A – Absent</span>
+            </div>
+
+            <!-- TABLE -->
+            <div class="overflow-x-auto">
+                <table class="w-full border border-gray-300 text-sm rounded-lg shadow-sm">
+
+                    <thead class="bg-indigo-100 text-gray-700">
+                        <tr>
+                            <th class="border px-4 py-2 text-left w-44">Date</th>
+                            <th class="border px-4 py-2 text-center w-24">Day</th>
+                            <th class="border px-4 py-2 text-center w-28">Attendance</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template x-for="record in {{ json_encode($months) }}[month]" :key="record.id">
+                            <tr class="hover:bg-gray-50 transition"
+                                :class="['Sat','Sun'].includes(new Date(record.date)
+                                .toLocaleDateString('en-US',{ weekday:'short' }))
+                                ? 'bg-gray-100 text-gray-500' : ''">
+
+                                <td class="border px-4 py-2 font-medium"
+                                    x-text="new Date(record.date)
+                                    .toLocaleDateString('en-US',
+                                    { month:'long', day:'numeric', year:'numeric' })">
+                                </td>
+
+                                <td class="border px-4 py-2 text-center font-medium"
+                                    x-text="new Date(record.date)
+                                    .toLocaleDateString('en-US',{ weekday:'short' })">
+                                </td>
+
+                                <td class="border px-4 py-2 text-center font-bold text-lg"
+                                    :class="record.status === 'present' ? 'text-green-600' :
+                                            record.status === 'late' ? 'text-yellow-600' :
+                                            record.status === 'absent' ? 'text-red-600' :
+                                            'text-gray-400'"
+                                    x-text="record.status === 'present' ? 'P' :
+                                            record.status === 'late' ? 'L' :
+                                            record.status === 'absent' ? 'A' : ''">
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- SUMMARY -->
+            <div class="mt-8 border-t pt-6">
+
+                <template x-for="(records, m) in {{ json_encode($months) }}" :key="m">
+                    <div x-show="month === m"
+                         class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center font-semibold">
+
+                        <div class="bg-gray-100 rounded-xl p-4 shadow-sm">
+                            Total Days
+                            <div class="text-2xl mt-1" x-text="records.length"></div>
+                        </div>
+
+                        <div class="bg-green-100 rounded-xl p-4 shadow-sm">
+                            Present (P)
+                            <div class="text-2xl mt-1"
+                                 x-text="records.filter(r => r.status === 'present').length">
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-100 rounded-xl p-4 shadow-sm">
+                            Late (L)
+                            <div class="text-2xl mt-1"
+                                 x-text="records.filter(r => r.status === 'late').length">
+                            </div>
+                        </div>
+
+                        <div class="bg-red-100 rounded-xl p-4 shadow-sm">
+                            Absent (A)
+                            <div class="text-2xl mt-1"
+                                 x-text="records.filter(r => r.status === 'absent').length">
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-100 rounded-xl p-4 shadow-sm col-span-2 md:col-span-4">
+                            Attendance Percentage
+                            <div class="text-3xl font-bold mt-2"
+                                :class="((records.filter(r =>
+                                    r.status === 'present' || r.status === 'late').length
+                                    / records.length) * 100) >= 90
+                                    ? 'text-green-700'
+                                    : ((records.filter(r =>
+                                        r.status === 'present' || r.status === 'late').length
+                                        / records.length) * 100) >= 75
+                                        ? 'text-yellow-700'
+                                        : 'text-red-700'"
+                                x-text="records.length
+                                    ? Math.round((records.filter(r =>
+                                        r.status === 'present' || r.status === 'late').length
+                                        / records.length) * 100) + '%'
+                                    : '0%'">
+                            </div>
+                        </div>
+
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+
     </div>
+</div>
+
+
+
 
 @endif
 

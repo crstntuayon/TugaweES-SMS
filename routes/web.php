@@ -450,8 +450,25 @@ Route::get('/admin/sf10/{student}/download',
 
 
 
+    Route::get('/student/adviser-info', [App\Http\Controllers\Student\DashboardController::class, 'adviserInfo'])->name('student.adviser-info');
 
-        
 
-   
+Route::put('/sections/{section}/unenroll-all', [App\Http\Controllers\Teacher\DashboardController::class, 'unenrollAll'])
+    ->name('teacher.sections.unenrollAll')
+    ->middleware('auth');
+
+
+    
+  
+//wala ni gamit
+Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function () {
+
+    // Update student status (dropdown actions)
+    Route::put('/students/{student}/update-status', [App\Http\Controllers\Teacher\DashboardController::class, 'updateStatus'])
+        ->name('students.updateStatus');
+
+});
+//hangtud diri
+
+
 require __DIR__.'/auth.php';

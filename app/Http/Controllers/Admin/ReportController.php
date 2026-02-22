@@ -26,9 +26,9 @@ class ReportController extends Controller
         // -----------------------------
         // Students per Section (filtered by active year)
         // -----------------------------
-        $studentsPerSection = Section::withCount(['students' => function ($query) use ($activeYearId) {
-            $query->where('school_year_id', $activeYearId);
-        }])->get();
+       $studentsPerSection = Section::withCount(['students' => function ($query) use ($activeYearId) {
+    $query->where('enrollments.school_year_id', $activeYearId); // <- add table prefix
+}])->get();
 
         // -----------------------------
         // Total Enrollees for active year

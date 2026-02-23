@@ -15,39 +15,80 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class SchoolFormController extends Controller
 {
-  public function sf9($studentId)
+ public function sf9($studentId)
+    {
+        $student = Student::findOrFail($studentId);
+
+        // Get active school year
+        $activeSchoolYear = SchoolYear::where('is_active', 1)->first();
+
+        // Get student's enrollment for the active school year
+        $enrollment = Enrollment::where('student_id', $student->id)
+            ->where('school_year_id', $activeSchoolYear->id)
+            ->first();
+
+        $section = $enrollment ? $enrollment->section : null;
+
+        // Fetch all subjects for this student (from section or grade level)
+       $subjects = \App\Models\Subject::where('grade_level', $section->year_level)
+    ->orderBy('name')
+    ->get();
+
+        // Fetch all grades for this student, grouped by subject & quarter
+        $gradesRaw = Grade::with('subject')
+            ->where('student_id', $student->id)
+            ->get()
+            ->groupBy('subject_id');
+
+        // Transform grades into a structure: $grades[subject_id][quarter] = grade
+        $grades = [];
+        foreach ($gradesRaw as $subjectId => $subjectGrades) {
+            $grades[$subjectId] = [];
+            foreach ($subjectGrades as $g) {
+                $grades[$subjectId][$g->quarter] = $g->grade;
+            }
+        }
+
+        return view('admin.forms.sf9', compact(
+            'student',
+            'activeSchoolYear',
+            'enrollment',
+            'section',
+            'subjects',
+            'grades'
+        ));
+    }
+
+
+public function downloadSf9($studentId)
 {
     $student = Student::findOrFail($studentId);
 
-    // Get the active school year
     $activeSchoolYear = SchoolYear::where('is_active', 1)->first();
 
-    // Get student's enrollment for the active school year
-    $enrollment = Enrollment::where('student_id', $student->id)
-        ->where('school_year_id', $activeSchoolYear->id) // optional, remove if your enrollments table has no school_year_id
+    $enrollment = Enrollment::with('section.teacher')
+        ->where('student_id', $student->id)
+        ->where('school_year_id', $activeSchoolYear->id)
         ->first();
 
-    $section = $enrollment ? $enrollment->section : null;
+    $section = $enrollment?->section;
 
-    // Fetch grades for this student in this section
-  $grades = Grade::with(['subject' => function($q) {
-        $q->orderBy('name', 'asc');
-    }])
-    ->where('student_id', $student->id)
-    ->get();
+    $grades = Grade::with('subject')
+        ->where('student_id', $student->id)
+        ->where('school_year_id', $activeSchoolYear->id)
+        ->orderBy('subject_id')
+        ->get();
 
-    return view('admin.forms.sf9', compact(
+    $pdf = Pdf::loadView('admin.forms.sf9-pdf', compact(
         'student',
         'activeSchoolYear',
         'enrollment',
         'section',
         'grades'
-    ));
-}    public function downloadSf9(Student $student)
-    {
-        $pdf = Pdf::loadView('admin.forms.sf9-pdf', compact('student'));
-        return $pdf->download('SF9_'.$student->last_name.'.pdf');
-    }
+    ))->setPaper('A4', 'portrait');
+
+    return $pdf->download('SF9_'.$student->last_name.'.pdf');
+}
 
 
   public function sf10(Student $student)

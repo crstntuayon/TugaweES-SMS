@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 15, 2026 at 12:09 PM
+-- Generation Time: Feb 23, 2026 at 03:26 PM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `sms_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `announcements`
+--
+
+CREATE TABLE `announcements` (
+  `id` bigint UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` enum('admin','teacher') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
+  `user_id` bigint UNSIGNED NOT NULL,
+  `section_id` bigint UNSIGNED DEFAULT NULL,
+  `is_pinned` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -42,48 +61,86 @@ CREATE TABLE `attendances` (
 --
 
 INSERT INTO `attendances` (`id`, `student_id`, `section_id`, `date`, `status`, `created_at`, `updated_at`) VALUES
-(119, 61, 40, '2026-02-02', 'present', '2026-02-10 04:36:45', '2026-02-10 04:36:45'),
-(120, 61, 40, '2026-02-03', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(121, 61, 40, '2026-02-04', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(122, 61, 40, '2026-02-05', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(123, 61, 40, '2026-02-06', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(124, 61, 40, '2026-02-09', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(125, 61, 40, '2026-02-10', 'present', '2026-02-10 04:36:46', '2026-02-10 04:36:46'),
-(126, 61, 40, '2026-02-11', 'late', '2026-02-10 04:36:46', '2026-02-10 05:57:02'),
-(127, 61, 40, '2026-02-12', 'absent', '2026-02-10 04:36:46', '2026-02-10 05:57:02'),
-(128, 61, 40, '2026-02-13', 'present', '2026-02-10 04:36:46', '2026-02-10 16:08:47'),
-(129, 61, 40, '2026-02-16', 'late', '2026-02-10 04:36:46', '2026-02-10 16:08:47'),
-(130, 61, 40, '2026-02-17', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(131, 61, 40, '2026-02-18', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(132, 61, 40, '2026-02-19', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(133, 61, 40, '2026-02-20', 'late', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(134, 61, 40, '2026-02-23', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(135, 61, 40, '2026-02-24', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(136, 61, 40, '2026-02-25', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(137, 61, 40, '2026-02-26', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(138, 61, 40, '2026-02-27', 'present', '2026-02-10 04:36:46', '2026-02-10 16:09:38'),
-(139, 61, 40, '2026-01-01', 'present', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(140, 61, 40, '2026-01-02', 'present', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(141, 61, 40, '2026-01-05', 'present', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(142, 61, 40, '2026-01-06', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(143, 61, 40, '2026-01-07', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(144, 61, 40, '2026-01-08', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(145, 61, 40, '2026-01-09', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(146, 61, 40, '2026-01-12', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(147, 61, 40, '2026-01-13', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(148, 61, 40, '2026-01-14', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(149, 61, 40, '2026-01-15', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(150, 61, 40, '2026-01-16', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(151, 61, 40, '2026-01-19', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(152, 61, 40, '2026-01-20', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(153, 61, 40, '2026-01-21', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(154, 61, 40, '2026-01-22', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(155, 61, 40, '2026-01-23', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(156, 61, 40, '2026-01-26', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(157, 61, 40, '2026-01-27', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(158, 61, 40, '2026-01-28', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(159, 61, 40, '2026-01-29', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51'),
-(160, 61, 40, '2026-01-30', 'none', '2026-02-10 06:21:51', '2026-02-10 06:21:51');
+(161, 164, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(162, 164, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(163, 164, 50, '2026-02-04', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(164, 164, 50, '2026-02-05', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(165, 164, 50, '2026-02-06', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(166, 164, 50, '2026-02-09', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(167, 164, 50, '2026-02-10', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(168, 164, 50, '2026-02-11', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(169, 164, 50, '2026-02-12', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(170, 164, 50, '2026-02-13', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(171, 164, 50, '2026-02-16', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(172, 164, 50, '2026-02-17', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(173, 164, 50, '2026-02-18', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(174, 164, 50, '2026-02-19', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(175, 164, 50, '2026-02-20', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(176, 164, 50, '2026-02-23', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(177, 164, 50, '2026-02-24', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(178, 164, 50, '2026-02-25', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(179, 164, 50, '2026-02-26', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(180, 164, 50, '2026-02-27', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(181, 165, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(182, 165, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(183, 165, 50, '2026-02-04', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(184, 165, 50, '2026-02-05', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(185, 165, 50, '2026-02-06', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(186, 165, 50, '2026-02-09', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(187, 165, 50, '2026-02-10', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(188, 165, 50, '2026-02-11', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(189, 165, 50, '2026-02-12', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(190, 165, 50, '2026-02-13', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(191, 165, 50, '2026-02-16', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(192, 165, 50, '2026-02-17', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(193, 165, 50, '2026-02-18', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(194, 165, 50, '2026-02-19', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(195, 165, 50, '2026-02-20', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(196, 165, 50, '2026-02-23', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(197, 165, 50, '2026-02-24', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(198, 165, 50, '2026-02-25', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(199, 165, 50, '2026-02-26', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(200, 165, 50, '2026-02-27', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(201, 163, 50, '2026-02-02', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(202, 163, 50, '2026-02-03', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(203, 163, 50, '2026-02-04', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(204, 163, 50, '2026-02-05', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(205, 163, 50, '2026-02-06', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(206, 163, 50, '2026-02-09', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(207, 163, 50, '2026-02-10', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(208, 163, 50, '2026-02-11', 'late', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(209, 163, 50, '2026-02-12', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(210, 163, 50, '2026-02-13', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(211, 163, 50, '2026-02-16', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(212, 163, 50, '2026-02-17', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(213, 163, 50, '2026-02-18', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(214, 163, 50, '2026-02-19', 'late', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(215, 163, 50, '2026-02-20', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(216, 163, 50, '2026-02-23', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(217, 163, 50, '2026-02-24', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(218, 163, 50, '2026-02-25', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(219, 163, 50, '2026-02-26', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(220, 163, 50, '2026-02-27', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(221, 166, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(222, 166, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
+(223, 166, 50, '2026-02-04', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(224, 166, 50, '2026-02-05', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(225, 166, 50, '2026-02-06', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(226, 166, 50, '2026-02-09', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(227, 166, 50, '2026-02-10', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(228, 166, 50, '2026-02-11', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(229, 166, 50, '2026-02-12', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(230, 166, 50, '2026-02-13', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(231, 166, 50, '2026-02-16', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(232, 166, 50, '2026-02-17', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(233, 166, 50, '2026-02-18', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(234, 166, 50, '2026-02-19', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(235, 166, 50, '2026-02-20', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(236, 166, 50, '2026-02-23', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(237, 166, 50, '2026-02-24', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(238, 166, 50, '2026-02-25', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(239, 166, 50, '2026-02-26', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
+(240, 166, 50, '2026-02-27', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04');
 
 -- --------------------------------------------------------
 
@@ -133,10 +190,22 @@ CREATE TABLE `cache_locks` (
 CREATE TABLE `enrollments` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
+  `school_year_id` bigint UNSIGNED NOT NULL,
   `section_id` bigint UNSIGNED NOT NULL,
+  `status` enum('enrolled','promoted','retained','transferred','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `enrollments`
+--
+
+INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
+(34, 163, 1, 50, 'enrolled', '2026-02-21 20:41:19', '2026-02-21 20:41:19'),
+(35, 164, 1, 50, 'enrolled', '2026-02-23 05:20:24', '2026-02-23 05:20:24'),
+(36, 165, 1, 50, 'enrolled', '2026-02-23 05:20:36', '2026-02-23 05:20:36'),
+(37, 166, 1, 50, 'enrolled', '2026-02-23 05:20:51', '2026-02-23 05:20:51');
 
 -- --------------------------------------------------------
 
@@ -164,8 +233,9 @@ CREATE TABLE `grades` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `subject_id` bigint UNSIGNED NOT NULL,
-  `quarter` tinyint UNSIGNED NOT NULL,
-  `grade` decimal(5,2) DEFAULT NULL,
+  `component` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `quarter` tinyint NOT NULL,
+  `grade` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -174,39 +244,15 @@ CREATE TABLE `grades` (
 -- Dumping data for table `grades`
 --
 
-INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
-(12, 61, 1, 1, 79.00, '2026-02-10 04:37:52', '2026-02-11 17:42:46'),
-(13, 61, 2, 1, 91.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(14, 61, 3, 1, 88.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(15, 61, 4, 1, 84.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(16, 61, 5, 1, 90.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(17, 61, 6, 1, 86.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(18, 61, 7, 1, 93.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(19, 61, 8, 1, 87.00, '2026-02-10 04:37:52', '2026-02-10 04:37:52'),
-(20, 61, 1, 2, 90.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(21, 61, 2, 2, 88.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(22, 61, 3, 2, 87.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(23, 61, 4, 2, 94.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(24, 61, 5, 2, 88.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(25, 61, 6, 2, 82.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(26, 61, 7, 2, 85.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(27, 61, 8, 2, 87.00, '2026-02-10 05:34:09', '2026-02-10 05:34:09'),
-(28, 61, 1, 3, 74.00, '2026-02-10 05:48:59', '2026-02-10 05:48:59'),
-(29, 61, 2, 3, 73.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(30, 61, 3, 3, 77.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(31, 61, 4, 3, 72.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(32, 61, 5, 3, 74.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(33, 61, 6, 3, 70.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(34, 61, 7, 3, 71.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(35, 61, 8, 3, 72.00, '2026-02-10 05:49:00', '2026-02-10 05:49:00'),
-(36, 61, 1, 4, 76.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(37, 61, 2, 4, 75.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(38, 61, 3, 4, 80.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(39, 61, 4, 4, 83.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(40, 61, 5, 4, 81.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(41, 61, 6, 4, 82.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(42, 61, 7, 4, 86.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01'),
-(43, 61, 8, 4, 90.00, '2026-02-10 14:48:01', '2026-02-10 14:48:01');
+INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `component`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
+(1, 163, 131, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(2, 163, 132, NULL, 1, 87, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(3, 163, 133, NULL, 1, 88, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(4, 163, 134, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(5, 163, 135, NULL, 1, 85, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(6, 163, 136, NULL, 1, 86, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(7, 163, 137, NULL, 1, 88, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
+(8, 163, 138, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24');
 
 -- --------------------------------------------------------
 
@@ -319,7 +365,20 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (59, '2026_02_15_011708_add_school_year_id_column_to_students_table', 51),
 (60, '2026_02_15_065652_add_grade_level_to_students_table', 52),
 (61, '2026_02_15_070411_add_grade_level_to_sections_table', 53),
-(62, '2026_02_15_110502_make_birthday_nullable_in_teachers_table', 54);
+(62, '2026_02_15_110502_make_birthday_nullable_in_teachers_table', 54),
+(63, '2026_02_16_052424_create_announcements_table', 55),
+(64, '2026_02_16_114809_add_login_attempts_to_users_table', 56),
+(65, '2026_02_16_121943_create_announcements_table', 57),
+(66, '2026_02_16_155026_add_soft_deletes_to_announcements_table', 58),
+(67, '2026_02_16_164310_add_birthday_to_users_table', 59),
+(68, '2026_02_17_092505_add_components_to_subjects_table', 60),
+(70, '2026_02_18_080052_add_component_to_grades_table', 61),
+(71, '2026_02_18_082828_create_grades_table', 62),
+(72, '2026_02_18_084853_create_grades_table', 63),
+(74, '2026_02_19_053101_add_teacher_id_to_subjects_table', 64),
+(75, '2026_02_21_125747_create_enrollments_table', 64),
+(76, '2026_02_23_121808_drop_lrn_from_users_table', 65),
+(77, '2026_02_23_133912_create_grades_table', 66);
 
 -- --------------------------------------------------------
 
@@ -375,15 +434,15 @@ CREATE TABLE `school_years` (
 --
 
 INSERT INTO `school_years` (`id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15'),
-(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-02-15 01:02:15');
+(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
+(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31');
 
 -- --------------------------------------------------------
 
@@ -395,31 +454,20 @@ CREATE TABLE `sections` (
   `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `year_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N/A',
-  `school_year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2026-2027',
   `teacher_id` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `capacity` int NOT NULL DEFAULT '40',
-  `school_year_id` bigint UNSIGNED NOT NULL,
-  `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `school_year_id` bigint UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `sections`
 --
 
-INSERT INTO `sections` (`id`, `name`, `year_level`, `school_year`, `teacher_id`, `created_at`, `updated_at`, `capacity`, `school_year_id`, `grade_level`) VALUES
-(40, 'ASDILLO - AM', 'Kindergarten', '2025-2026', 43, '2026-02-10 04:28:24', '2026-02-11 22:52:39', 40, 0, NULL),
-(41, 'MANGINSAY', 'Grade 1', '2025-2026', 44, '2026-02-11 22:47:19', '2026-02-11 22:53:03', 40, 0, NULL),
-(42, 'NOCETE', 'Grade 2', '2025-2026', 45, '2026-02-11 22:47:33', '2026-02-11 22:53:11', 40, 0, NULL),
-(43, 'ASDILLO - PM', 'Kindergarten', '2025-2026', 43, '2026-02-11 22:48:20', '2026-02-11 22:53:24', 40, 0, NULL),
-(44, 'RUBIA', 'Grade 3', '2025-2026', 47, '2026-02-11 22:49:05', '2026-02-11 22:53:39', 40, 0, NULL),
-(45, 'SOJOR', 'Grade 3', '2025-2026', 46, '2026-02-11 22:49:24', '2026-02-11 22:53:49', 40, 0, NULL),
-(46, 'ALAMA', 'Grade 4', '2025-2026', 48, '2026-02-11 22:51:06', '2026-02-11 22:54:01', 40, 0, NULL),
-(47, 'RIO', 'Grade 5', '2025-2026', 49, '2026-02-11 22:51:27', '2026-02-11 22:54:10', 40, 0, NULL),
-(48, 'MONOPOLLO', 'Grade 6', '2025-2026', 50, '2026-02-11 22:51:44', '2026-02-11 22:54:19', 40, 0, NULL),
-(49, 'ALCORIZA', 'Grade 6', '2025-2026', 51, '2026-02-11 22:52:19', '2026-02-11 22:54:27', 40, 0, NULL),
-(50, 'SAMPAGUITA', 'Grade 6', '2025-2026', 42, '2026-02-14 01:35:15', '2026-02-15 02:07:30', 40, 0, NULL);
+INSERT INTO `sections` (`id`, `name`, `year_level`, `teacher_id`, `created_at`, `updated_at`, `capacity`, `school_year_id`) VALUES
+(50, 'SAMPAGUITA', 'Grade 6', 42, '2026-02-14 01:35:15', '2026-02-22 18:20:45', 40, 1),
+(54, 'Lily', 'Grade 2', NULL, '2026-02-16 17:42:51', '2026-02-22 18:20:55', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -484,7 +532,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('JQELZKJkq39i8IIir6Y0bHB3xZsvzgsJgDyNLxjv', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiUGV4SGhVaHdmZjN2TjdWdEQ3dnlZMW1qU1oyeGN2VnZiQTlhTmVjZyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9kYXNoYm9hcmQvc3RhdHMiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLmRhc2hib2FyZC5zdGF0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1771157372);
+('ZWSxH2nTcRgoSv6gXMywqV0SSc43WqI0qQybYAi6', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZTBlZXJwY3NiZmJoMVQ5dFoxYmFnTFl3T1V3WkozWVNlenppQVp3eCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9zZWN0aW9ucyI7czo1OiJyb3V0ZSI7czoyMDoiYWRtaW4uc2VjdGlvbnMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1771860329);
 
 -- --------------------------------------------------------
 
@@ -521,88 +569,10 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `average_grade`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `section_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`, `school_year_id`, `grade_level`) VALUES
-(61, '120231090040', 'Cres', 'Bajado', 'Tuayon', NULL, 'Male', 'Jr.', '2004-01-07', 'cresttuayon@gmail.com', '09368726547', 'Tugawe, Dauin, Negros Oriental', 39, 50, '2026-02-10 03:52:06', '2026-02-15 03:55:11', NULL, 'S-120231260001', 'students/IayQOCgaPC5eY4dIUelsyHpAv6WItUkR9t2EuCU9.jpg', 1, NULL),
-(62, '120231260002', 'Kristian', 'Amparado', 'Alsola', NULL, 'Male', NULL, '2026-02-12', 'kristianalsola@gmail.com', NULL, NULL, 52, 40, '2026-02-11 23:00:56', '2026-02-12 20:35:54', NULL, 'S-120231260002', NULL, NULL, NULL),
-(63, '120231260003', 'Rofer John', 'Decon', 'Araneta', NULL, 'Male', NULL, '2026-02-12', 'aranetareferjohn@gmail.com', NULL, NULL, 53, 40, '2026-02-11 23:02:34', '2026-02-12 20:35:54', NULL, 'S-120231260003', NULL, NULL, NULL),
-(64, '120231260004', 'MERALD JAY', 'FLORES', 'DELES', NULL, 'Male', NULL, '2026-02-12', 'delesmeraldjay@gmail.com', NULL, NULL, 54, 40, '2026-02-11 23:06:52', '2026-02-12 20:35:54', NULL, 'S-120231260004', NULL, NULL, NULL),
-(66, '120231260006', 'Geo', 'Rematcho', 'Mondido', NULL, 'Male', NULL, '2026-02-12', 'mondidogeo@gmail.com', NULL, NULL, 56, 40, '2026-02-11 23:12:38', '2026-02-12 20:35:54', NULL, 'S-120231260005', NULL, 1, NULL),
-(67, '120231260005', 'Emman', 'Rematcho', 'Mondido', NULL, 'Male', NULL, '2026-02-12', 'emmanmondido@gmail.com', NULL, NULL, 57, 40, '2026-02-11 23:23:56', '2026-02-12 20:35:54', NULL, 'S-120231260006', NULL, NULL, NULL),
-(68, '120231260007', 'Ivan', 'Rematcho', 'Mondido', NULL, 'Male', NULL, '2026-02-12', 'ivanmondido@gmail.com', NULL, NULL, 58, 40, '2026-02-11 23:25:04', '2026-02-12 20:35:54', NULL, 'S-120231260007', NULL, NULL, NULL),
-(69, '120231260008', 'Christ Angelo', 'Bacud', 'Pelayo', NULL, 'Male', NULL, '2026-02-12', 'christangelopelayo@gmail.com', NULL, NULL, 59, 40, '2026-02-11 23:26:42', '2026-02-12 20:35:54', NULL, 'S-120231260008', NULL, NULL, NULL),
-(70, '120231260009', 'Daryl', 'Solis', 'Sison', NULL, 'Male', NULL, '2026-02-12', 'sisondaryl@gmail.com', NULL, NULL, 60, 40, '2026-02-11 23:28:14', '2026-02-12 20:35:54', NULL, 'S-120231260009', NULL, NULL, NULL),
-(71, '120231260010', 'John Marco', 'Bandian', 'Tinambacan', NULL, 'Male', NULL, '2026-02-12', 'johnmarcotinambacan@gmail.com', NULL, NULL, 61, 40, '2026-02-11 23:29:52', '2026-02-12 20:35:54', NULL, 'S-120231260010', NULL, NULL, NULL),
-(72, '120231260011', 'Shawn Edrian', 'Trumata', 'Tubog', NULL, 'Male', NULL, '2026-02-12', 'shawnedriantubog@gmail.com', NULL, NULL, 62, 40, '2026-02-11 23:31:26', '2026-02-12 20:35:54', NULL, 'S-120231260011', NULL, NULL, NULL),
-(73, '120231260012', 'Jeron', 'Ybañez', 'Viola', NULL, 'Male', NULL, '2026-02-12', 'violajeron@gmail.com', NULL, NULL, 63, 40, '2026-02-11 23:40:57', '2026-02-12 20:35:54', NULL, 'S-120231260012', NULL, NULL, NULL),
-(74, '120231260013', 'Nathalia Zymth', 'Padaong', 'Alama', NULL, 'Female', NULL, '2026-02-12', 'alamanathaliazymth@gmail.com', NULL, NULL, 64, 40, '2026-02-11 23:46:47', '2026-02-12 20:35:54', NULL, 'S-120231260013', NULL, NULL, NULL),
-(75, '120231260014', 'Sofia Nicole', 'Tuble', 'Callora', NULL, 'Female', NULL, '2026-02-12', 'callorasofianicole@gmail.com', NULL, NULL, 65, 40, '2026-02-11 23:48:08', '2026-02-12 20:35:54', NULL, 'S-120231260014', NULL, NULL, NULL),
-(76, '120231260015', 'Miah Ele', 'Perater', 'Cofino', NULL, 'Female', NULL, '2026-02-12', 'cofinomiahele@gmail.com', NULL, NULL, 66, 40, '2026-02-11 23:49:28', '2026-02-12 20:35:54', NULL, 'S-120231260015', NULL, NULL, NULL),
-(77, '120231260016', 'Aaliyah Gabrielle', 'Bantoto', 'Morato', NULL, 'Female', NULL, '2026-02-12', 'moratoaaliyahgabrielle@gmail.com', NULL, NULL, 67, 40, '2026-02-11 23:51:32', '2026-02-12 20:35:54', NULL, 'S-120231260016', NULL, NULL, NULL),
-(78, '120231260017', 'Zoe', 'Tubog', 'Tabangan', NULL, 'Female', NULL, '2026-02-12', 'tabanganzoe@gmail.com', NULL, NULL, 68, 40, '2026-02-11 23:52:52', '2026-02-12 20:35:54', NULL, 'S-120231260017', NULL, NULL, NULL),
-(79, '120231260018', 'Princess Coleen', 'Pontenilla', 'Toro', NULL, 'Female', NULL, '2026-02-12', 'toroprincesscoleen@gmail.com', NULL, NULL, 69, 40, '2026-02-11 23:54:32', '2026-02-12 20:35:54', NULL, 'S-120231260018', NULL, NULL, NULL),
-(80, '120231260019', 'Jane Shannel', 'Bax', 'Tuban', NULL, 'Female', NULL, '2026-02-12', 'tubanjaneshannel@gmail.com', NULL, NULL, 70, 40, '2026-02-11 23:56:30', '2026-02-12 20:35:54', NULL, 'S-120231260019', NULL, NULL, NULL),
-(81, '120231260020', 'Niana Marithe', 'Tubat', 'Tuban', NULL, 'Female', NULL, '2026-02-12', 'tubannianamarithe@gmail.com', NULL, NULL, 71, 40, '2026-02-11 23:58:12', '2026-02-12 20:35:54', NULL, 'S-120231260020', NULL, NULL, NULL),
-(82, '120231260021', 'Jian', 'Requilme', 'Tuble', NULL, 'Female', NULL, '2026-02-12', 'tublejian@gmail.com', NULL, NULL, 72, 40, '2026-02-11 23:59:43', '2026-02-12 20:35:54', NULL, 'S-120231260021', NULL, NULL, NULL),
-(83, '120231260022', 'Alexander', 'Magalso', 'Alas-as', NULL, 'Male', NULL, '2026-02-12', 'alasasalexander@gmail.com', NULL, NULL, 73, 43, '2026-02-12 00:15:01', '2026-02-12 20:38:13', NULL, 'S-120231260022', NULL, NULL, NULL),
-(84, '120231260023', 'Donn Kieffer', 'Gerasol', 'Bantoto', NULL, 'Male', NULL, '2026-02-12', 'bantotodonnkieffer@gmail.com', NULL, NULL, 74, 43, '2026-02-12 00:18:20', '2026-02-12 20:38:13', NULL, 'S-120231260023', NULL, NULL, NULL),
-(85, '120231260024', 'Maxwell Laurent', 'Torres', 'Bantoto', NULL, 'Male', NULL, '2026-02-12', 'bantotomaxwelllaurent@gmail.com', NULL, NULL, 75, 43, '2026-02-12 00:20:22', '2026-02-12 20:38:13', NULL, 'S-120231260024', NULL, NULL, NULL),
-(86, '120231260025', 'Mark Christian', NULL, 'Pajente', NULL, 'Male', NULL, '2026-02-12', 'pajentemarkchristian@gmail.com', NULL, NULL, 76, 43, '2026-02-12 00:22:12', '2026-02-12 20:38:13', NULL, 'S-120231260025', NULL, NULL, NULL),
-(87, '120231260026', 'Noel', NULL, 'Sardan', NULL, 'Male', NULL, '2026-02-12', 'sardannoel@gmail.com', NULL, NULL, 77, 43, '2026-02-12 00:23:22', '2026-02-12 20:38:13', NULL, 'S-120231260026', NULL, NULL, NULL),
-(88, '120231260027', 'Christian', 'Mentawan', 'Veloz', NULL, 'Male', NULL, '2026-02-12', 'velozchristian@gmail.com', NULL, NULL, 78, 43, '2026-02-12 00:26:34', '2026-02-12 20:38:13', NULL, 'S-120231260027', NULL, NULL, NULL),
-(89, '120231260028', 'Dhaine Gerhaine', 'Tubio', 'Aga', NULL, 'Female', NULL, '2026-02-12', 'agadhainegerhaine@gmail.com', NULL, NULL, 79, 43, '2026-02-12 00:28:17', '2026-02-12 20:38:13', NULL, 'S-120231260028', NULL, NULL, NULL),
-(90, '120231260029', 'Carren', 'Barrios', 'Alcoriza', NULL, 'Female', NULL, '2026-02-12', 'alcorizacarren@gmail.com', NULL, NULL, 80, 43, '2026-02-12 00:30:04', '2026-02-12 20:38:13', NULL, 'S-120231260029', NULL, NULL, NULL),
-(91, '120231260030', 'Marchell', 'Carreon', 'Bantoto', NULL, 'Female', NULL, '2026-02-12', 'bantotomarchell@gmail.com', NULL, NULL, 81, 43, '2026-02-12 00:31:50', '2026-02-12 20:38:13', NULL, 'S-120231260030', NULL, NULL, NULL),
-(92, '120231260031', 'Merriam', 'De Jesus', 'Bantoto', NULL, 'Female', NULL, '2026-02-12', 'bantotomerriam@gmail.com', NULL, NULL, 82, 43, '2026-02-12 00:35:00', '2026-02-12 20:38:13', NULL, 'S-120231260031', NULL, NULL, NULL),
-(93, '120231260032', 'Elizabelle Celyn', 'Alagadmo', 'Martinez', NULL, 'Female', NULL, '2026-02-12', 'martinezelizabellecelyn@gmail.com', NULL, NULL, 83, 43, '2026-02-12 00:38:53', '2026-02-12 20:38:13', NULL, 'S-120231260032', NULL, NULL, NULL),
-(94, '120231260033', 'Jaira Jane', 'Cadayona', 'Orellana', NULL, 'Female', NULL, '2026-02-12', 'orellanajairajane@gmail.com', NULL, NULL, 84, 43, '2026-02-12 00:42:07', '2026-02-12 20:38:13', NULL, 'S-120231260033', NULL, NULL, NULL),
-(95, '120231260034', 'Jelliana Gennely', NULL, 'Patilano', NULL, 'Female', NULL, '2026-02-12', 'patilanojellianagennely@gmail.com', NULL, NULL, 85, 43, '2026-02-12 00:43:35', '2026-02-12 20:38:13', NULL, 'S-120231260034', NULL, NULL, NULL),
-(96, '120231260035', 'Mishca', 'Tilos', 'Quitoy', NULL, 'Female', NULL, '2026-02-12', 'quitoymishca@gmail.com', NULL, NULL, 86, 43, '2026-02-12 00:45:22', '2026-02-12 20:38:13', NULL, 'S-120231260035', NULL, NULL, NULL),
-(97, '120231260036', 'Amber Mcquenzie', 'Alar', 'Salatan', NULL, 'Female', NULL, '2026-02-12', 'salatanambermcquenzie@gmail.com', NULL, NULL, 87, 43, '2026-02-12 00:47:08', '2026-02-12 20:38:13', NULL, 'S-120231260036', NULL, NULL, NULL),
-(98, '120231260037', 'Jelah', 'Alama', 'Tose', NULL, 'Female', NULL, '2026-02-12', 'tosejelah@gmail.com', NULL, NULL, 88, 43, '2026-02-12 00:48:13', '2026-02-12 20:38:13', NULL, 'S-120231260037', NULL, NULL, NULL),
-(99, '120231260038', 'Calista Dior', 'Bendijo', 'Trumata', NULL, 'Female', NULL, '2026-02-12', 'trumatacalistadior@gmail.com', NULL, NULL, 89, 43, '2026-02-12 00:49:26', '2026-02-12 20:38:13', NULL, 'S-120231260038', NULL, NULL, NULL),
-(100, '120231260039', 'Zhia Mae', 'Monopollo', 'Tuble', NULL, 'Female', NULL, '2026-02-12', 'tublezhiamae@gmail.com', NULL, NULL, 90, 43, '2026-02-12 00:50:31', '2026-02-12 20:38:13', NULL, 'S-120231260039', NULL, NULL, NULL),
-(101, '120231260040', 'Christine', 'Insid', 'Tubog', NULL, 'Female', NULL, '2026-02-12', 'tubogchristine@gmail.com', NULL, NULL, 91, 43, '2026-02-12 00:51:38', '2026-02-12 20:38:13', NULL, 'S-120231260040', NULL, NULL, NULL),
-(102, '120231260041', 'Draven Ryle', 'Trumata', 'Alegre', NULL, 'Male', NULL, '2026-02-12', 'alegredravenryle@gmail.com', NULL, NULL, 92, 41, '2026-02-12 01:05:28', '2026-02-12 20:38:39', NULL, 'S-120231260041', NULL, NULL, NULL),
-(103, '120231260042', 'Hanz Elbin', 'Redoble', 'Bajado', NULL, 'Male', NULL, '2026-02-12', 'bajadohanzelbin@gmail.com', NULL, NULL, 93, 41, '2026-02-12 01:06:47', '2026-02-12 20:38:39', NULL, 'S-120231260042', NULL, NULL, NULL),
-(104, '120231260043', 'Pablito, Jr', 'Amot', 'Bantilan', NULL, 'Male', NULL, '2026-02-12', 'bantilanpablitojr@gmail.com', NULL, NULL, 94, 41, '2026-02-12 01:09:16', '2026-02-12 20:38:39', NULL, 'S-120231260043', NULL, NULL, NULL),
-(105, '120231260044', 'Dominique Shaun Vincent', 'Ybañez', 'Biyo', NULL, 'Male', NULL, '2026-02-12', 'biyodominique@gmail.com', NULL, NULL, 95, 41, '2026-02-12 01:11:02', '2026-02-12 20:38:39', NULL, 'S-120231260044', NULL, NULL, NULL),
-(106, '120231260045', 'Kurt Reign', 'Callao', 'Carba', NULL, 'Male', NULL, '2026-02-12', 'carbakurtreign@gmail.com', NULL, NULL, 96, 41, '2026-02-12 01:13:00', '2026-02-12 20:38:39', NULL, 'S-120231260045', NULL, NULL, NULL),
-(107, '120231260046', 'Stethan', 'Bolo', 'Dacotdacot', NULL, 'Male', NULL, '2026-02-12', 'dacotdacotstethan@gmail.com', NULL, NULL, 97, 41, '2026-02-12 01:14:38', '2026-02-12 20:38:39', NULL, 'S-120231260046', NULL, NULL, NULL),
-(108, '120231260047', 'Zayn', 'Tinambacan', 'Daymil', NULL, 'Male', NULL, '2026-02-12', 'daymilzayn@gmail.com', NULL, NULL, 98, 41, '2026-02-12 01:18:57', '2026-02-12 20:38:39', NULL, 'S-120231260047', NULL, NULL, NULL),
-(109, '120231260048', 'Uzumaki', 'Ramirez', 'Fernando', NULL, 'Male', NULL, '2026-02-12', 'fernandouzumaki@gmail.com', NULL, NULL, 99, 41, '2026-02-12 01:20:34', '2026-02-12 20:38:39', NULL, 'S-120231260048', NULL, NULL, NULL),
-(110, '120231260049', 'Noah Matteo', 'Tubog', 'Gestupa', NULL, 'Male', NULL, '2026-02-12', 'gestupanoahmatteo@gmail.com', NULL, NULL, 100, 41, '2026-02-12 01:22:57', '2026-02-12 20:38:39', NULL, 'S-120231260049', NULL, NULL, NULL),
-(111, '120231260050', 'Giean', 'Patrocinio', 'Oteda', NULL, 'Male', NULL, '2026-02-12', 'otedagiean@gmail.com', NULL, NULL, 101, 41, '2026-02-12 01:24:39', '2026-02-12 20:38:39', NULL, 'S-120231260050', NULL, NULL, NULL),
-(112, '120231260051', 'Jonas', 'Bariga', 'Partosa', NULL, 'Male', NULL, '2026-02-12', 'partosajonas@gmail.com', NULL, NULL, 102, 41, '2026-02-12 01:29:19', '2026-02-12 20:38:39', NULL, 'S-120231260051', NULL, NULL, NULL),
-(113, '120231260052', 'Prince Andy', 'Balansag', 'Sarao', NULL, 'Male', NULL, '2026-02-12', 'saraoprinceandy@gmail.com', NULL, NULL, 103, 41, '2026-02-12 01:30:49', '2026-02-12 20:38:39', NULL, 'S-120231260052', NULL, NULL, NULL),
-(114, '120231260053', 'Charlie, Jr', 'Gabuya', 'Serojano', NULL, 'Male', NULL, '2026-02-12', 'serojanocharliejr@gmail.com', NULL, NULL, 104, 41, '2026-02-12 01:33:19', '2026-02-12 20:38:39', NULL, 'S-120231260053', NULL, NULL, NULL),
-(115, '120231260054', 'Prince John', 'Cabando', 'Sonlit', NULL, 'Male', NULL, '2026-02-12', 'sonlitprincejohn@gmail.com', NULL, NULL, 105, 41, '2026-02-12 01:40:07', '2026-02-12 20:38:39', NULL, 'S-120231260054', NULL, NULL, NULL),
-(116, '120231260055', 'Christoff', 'Alar', 'Tolomia', NULL, 'Male', NULL, '2026-02-12', 'tolomiachristoff@gmail.com', NULL, NULL, 106, 41, '2026-02-12 01:41:47', '2026-02-12 20:38:39', NULL, 'S-120231260055', NULL, NULL, NULL),
-(117, '120231260056', 'Rejay', 'Cual', 'Toro', NULL, 'Male', NULL, '2026-02-12', 'totorejay@gmail.com', NULL, NULL, 107, 41, '2026-02-12 01:44:32', '2026-02-12 20:38:39', NULL, 'S-120231260056', NULL, NULL, NULL),
-(118, '120231260057', 'Prince Jullian', 'Palalon', 'Ubay', NULL, 'Male', NULL, '2026-02-12', 'ubayprincejullian@gmail.com', NULL, NULL, 108, 41, '2026-02-12 01:45:56', '2026-02-12 20:38:39', NULL, 'S-120231260057', NULL, NULL, NULL),
-(119, '120231260058', 'France Aethan', 'Alas-as', 'Usman', NULL, 'Male', NULL, '2026-02-12', 'usmanfranceaethan@gmail.com', NULL, NULL, 109, 41, '2026-02-12 01:47:09', '2026-02-12 20:38:39', NULL, 'S-120231260058', NULL, NULL, NULL),
-(120, '120231260059', 'John Martin', 'Ventolero', 'Verzano', NULL, 'Male', NULL, '2026-02-12', 'verzanohohnmartin@gmail.com', NULL, NULL, 110, 41, '2026-02-12 01:48:44', '2026-02-12 20:38:39', NULL, 'S-120231260059', NULL, NULL, NULL),
-(121, '120231260060', 'Kurt Ernest', 'Quiamson', 'Villarosa', NULL, 'Male', NULL, '2026-02-12', 'villarosakurternest@gmail.com', NULL, NULL, 111, 41, '2026-02-12 01:50:13', '2026-02-12 20:38:39', NULL, 'S-120231260060', NULL, NULL, NULL),
-(122, '120231260061', 'Chike', 'Nama', 'Badrina', NULL, 'Female', NULL, '2026-02-12', 'badrinachike@gmail.com', NULL, NULL, 112, 41, '2026-02-12 03:02:10', '2026-02-12 20:38:40', NULL, 'S-120231260061', NULL, NULL, NULL),
-(123, '120231260062', 'Clarissa Niña', 'Palo-Palo', 'Bantoto', NULL, 'Female', NULL, '2026-02-12', 'bantotoclarissa@gmail.com', NULL, NULL, 113, 41, '2026-02-12 03:04:21', '2026-02-12 20:38:40', NULL, 'S-120231260062', NULL, NULL, NULL),
-(124, '120231260063', 'Cris Keira', 'Briones', 'Cabanilla', NULL, 'Female', NULL, '2026-02-12', 'cabanillacriskeira@gmail.com', NULL, NULL, 114, 41, '2026-02-12 03:05:44', '2026-02-12 20:38:40', NULL, 'S-120231260063', NULL, NULL, NULL),
-(125, '120231260064', 'Brianna Zia', 'Buñi', 'Camacho', NULL, 'Female', NULL, '2026-02-12', 'camachobriannazia@gmail.com', NULL, NULL, 115, 41, '2026-02-12 03:08:18', '2026-02-12 20:38:40', NULL, 'S-120231260064', NULL, NULL, NULL),
-(126, '120231260065', 'Prim Rose', 'Calimba', 'Carvellida', NULL, 'Female', NULL, '2026-02-12', 'carvellidaprimrose@gmail.com', NULL, NULL, 116, 41, '2026-02-12 03:09:40', '2026-02-12 20:38:40', NULL, 'S-120231260065', NULL, NULL, NULL),
-(127, '120231260066', 'Kynleigh', 'Pilongo', 'Chu', NULL, 'Female', NULL, '2026-02-12', 'chukynleigh@gmail.com', NULL, NULL, 117, 41, '2026-02-12 03:11:08', '2026-02-12 20:38:40', NULL, 'S-120231260066', NULL, NULL, NULL),
-(128, '120231260067', 'Jhella Mae', 'Cadimas', 'Divina', NULL, 'Female', NULL, '2026-02-12', 'divinajhellamae@gmail.com', NULL, NULL, 118, 41, '2026-02-12 03:12:34', '2026-02-12 20:38:40', NULL, 'S-120231260067', NULL, NULL, NULL),
-(129, '120231260068', 'Jewel Scarlet', 'Bayer', 'Gargar', NULL, 'Female', NULL, '2026-02-12', 'gargarjewelscarlet@gmail.com', NULL, NULL, 119, 41, '2026-02-12 03:14:00', '2026-02-12 20:38:40', NULL, 'S-120231260068', NULL, NULL, NULL),
-(130, '120231260069', 'Asherah Elsie', 'Montemayor', 'Icaonapo', NULL, 'Female', NULL, '2026-02-12', 'icaonapoasherahelsie@gmail.com', NULL, NULL, 120, 41, '2026-02-12 03:15:32', '2026-02-12 20:38:40', NULL, 'S-120231260069', NULL, NULL, NULL),
-(131, '120231260070', 'Jairil Monette', 'Abequibel', 'Lampaso', NULL, 'Female', NULL, '2026-02-12', 'lampasojairilmonette@gmail.com', NULL, NULL, 121, 41, '2026-02-12 03:17:06', '2026-02-12 20:38:40', NULL, 'S-120231260070', NULL, NULL, NULL),
-(132, '120231260071', 'Francine', NULL, 'Lozada', NULL, 'Female', NULL, '2026-02-12', 'lozadafrancine@gmail.com', NULL, NULL, 122, 41, '2026-02-12 03:18:14', '2026-02-12 20:38:40', NULL, 'S-120231260071', NULL, 1, NULL),
-(133, '120231260072', 'Crissmalyn Faye', NULL, 'Mohammad', NULL, 'Female', NULL, '2026-02-12', 'mohammadcrissmalyn@gmail.com', NULL, NULL, 123, 41, '2026-02-12 03:19:50', '2026-02-12 20:38:40', NULL, 'S-120231260072', NULL, NULL, NULL),
-(134, '120231260073', 'Lianah', NULL, 'Mohello', NULL, 'Female', NULL, '2026-02-12', 'mohellolianah@gmail.com', NULL, NULL, 124, 41, '2026-02-12 03:21:28', '2026-02-12 20:38:40', NULL, 'S-120231260073', NULL, NULL, NULL),
-(135, '120231260074', 'Arianne', 'Serrano', 'Pao', NULL, 'Female', NULL, '2026-02-12', 'paoarianne@gmail.com', NULL, NULL, 125, 41, '2026-02-12 03:22:40', '2026-02-12 20:38:40', NULL, 'S-120231260074', NULL, NULL, NULL),
-(136, '120231260075', 'Avril Kate', NULL, 'Paquinol', NULL, 'Female', NULL, '2026-02-12', 'paquinolavrilkate@gmail.com', NULL, NULL, 126, 41, '2026-02-12 03:24:11', '2026-02-12 20:38:40', NULL, 'S-120231260075', NULL, NULL, NULL),
-(137, '120231260076', 'Maria Celestine', 'Anza', 'Salatan', NULL, 'Female', NULL, '2026-02-12', 'salatanmariacelestine@gmail.com', NULL, NULL, 127, 41, '2026-02-12 03:47:51', '2026-02-12 20:38:40', NULL, 'S-120231260076', NULL, NULL, NULL),
-(138, '120231260077', 'DJ Anne', 'Tubog', 'Senahon', NULL, 'Female', NULL, '2026-02-12', 'senahondjanne@gmail.com', NULL, NULL, 128, 41, '2026-02-12 03:49:36', '2026-02-12 20:38:40', NULL, 'S-120231260077', NULL, NULL, NULL),
-(139, '120231260078', 'Elaine Joy', 'Sastrillo', 'Tenedo', NULL, 'Female', NULL, '2026-02-12', 'tenedoelainejoy@gmail.com', NULL, NULL, 129, 41, '2026-02-12 03:51:07', '2026-02-12 20:38:40', NULL, 'S-120231260078', NULL, NULL, NULL),
-(140, '120231260079', 'Ellyza Mae', 'Ballovar', 'Tuble', NULL, 'Female', NULL, '2026-02-12', 'tubleellyzamae@gmail.com', NULL, NULL, 130, 41, '2026-02-12 03:52:46', '2026-02-12 20:38:40', NULL, 'S-120231260079', NULL, NULL, NULL),
-(142, '120231260080', 'Jillianne Shane', 'Tubio', 'Villamil', NULL, 'Female', NULL, '2026-02-13', 'villamiljillianneshan@gmail.com', NULL, NULL, 132, 41, '2026-02-12 18:02:40', '2026-02-12 20:38:40', NULL, 'S-120231260080', NULL, NULL, NULL),
-(155, '120231090041', 'Crestian', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2026-02-15', 'cresttuayon7@gmail.com', NULL, 'Tugawe, Dauin, Negros Oriental', 153, 45, '2026-02-15 00:12:46', '2026-02-15 00:16:46', NULL, NULL, NULL, 3, NULL),
-(156, '120231260082', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2026-02-15', 'troituayon@gmail.com', NULL, 'Tugawe, Dauin, Negros Oriental', 154, 50, '2026-02-15 01:11:47', '2026-02-15 01:13:18', NULL, NULL, 'photos/0WRKM7POVwIgw18nQCFFP8hP62eCTT8tdfsT2Aa1.jpg', 1, NULL);
+(163, '120231090040', 'Crestian', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2004-01-07', 'cresttuayon@gmail.com', '09368726547', 'Tugawe, Dauin, Negros Oriental', 163, 50, '2026-02-21 17:36:01', '2026-02-23 05:10:27', NULL, 'S-120231260001', 'students/0tGMCaY8Z5vFTJGDTreJgGwbzaK0uTv8XVn7NHod.jpg', NULL, NULL),
+(164, '120231260081', 'Noime', 'Tolerete', 'Baldomar', NULL, 'Female', NULL, '2003-11-06', 'noimetaloretebaldomar@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 164, 50, '2026-02-22 18:19:28', '2026-02-23 05:12:19', NULL, 'S-120231260002', 'students/gudSCGjijD1Nn4CkjusQy9KxrsNd4ycFLSD5OEnd.jpg', NULL, NULL),
+(165, '120231260083', 'Ejie Mae', 'Santos', 'Tradio', NULL, 'Female', NULL, '2003-10-31', 'tradioejiee@gmail.com', '09368726540', 'Tugawe, Dauin, Negros Oriental', 165, 50, '2026-02-23 04:21:36', '2026-02-23 05:12:19', NULL, 'S-120231260003', 'photos/aPrFgEImpA3rfYOlwtSXe1ej47jsImOgkpAQ0NhA.jpg', 1, NULL),
+(166, '120231260005', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2005-05-02', 'troituayon@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 166, 50, '2026-02-23 04:25:08', '2026-02-23 05:12:19', NULL, 'S-120231260004', 'photos/UXBwhA00hs8kQ7GeHSB479b6PHuqL79FvMcVTJmO.jpg', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -629,24 +599,66 @@ CREATE TABLE `student_subjects` (
 
 CREATE TABLE `subjects` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `grade_level` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `components` json DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `teacher_id` bigint UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'English', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(2, 'Filipino', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(3, 'Mathematics', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(4, 'Science', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(5, 'Araling Panlipunan', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(6, 'Edukasyong Pantahanan at Pangkabuhayan (EPP)', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(7, 'Music, Arts, PE, and Health (MAPEH)', '2026-02-09 05:46:38', '2026-02-09 05:46:38'),
-(8, 'Values Education', '2026-02-09 05:46:38', '2026-02-09 05:46:38');
+INSERT INTO `subjects` (`id`, `code`, `name`, `grade_level`, `components`, `created_at`, `updated_at`, `teacher_id`) VALUES
+(93, 'K_LIT', 'Language Literacy', 'Kindergarten', NULL, NULL, NULL, NULL),
+(94, 'K_NUM', 'Number Readiness', 'Kindergarten', NULL, NULL, NULL, NULL),
+(95, 'K_HEALTH', 'Health & Safety', 'Kindergarten', NULL, NULL, NULL, NULL),
+(96, 'K_PE', 'Physical Education', 'Kindergarten', NULL, NULL, NULL, NULL),
+(97, 'FIL1', 'Filipino', 'Grade 1', NULL, NULL, NULL, NULL),
+(98, 'ENG1', 'English', 'Grade 1', NULL, NULL, NULL, NULL),
+(99, 'MATH1', 'Mathematics', 'Grade 1', NULL, NULL, NULL, NULL),
+(100, 'ESP1', 'Edukasyon sa Pagpapakatao', 'Grade 1', NULL, NULL, NULL, NULL),
+(101, 'MAPEH1', 'MAPEH', 'Grade 1', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(102, 'FIL2', 'Filipino', 'Grade 2', NULL, NULL, NULL, NULL),
+(103, 'ENG2', 'English', 'Grade 2', NULL, NULL, NULL, NULL),
+(104, 'MATH2', 'Mathematics', 'Grade 2', NULL, NULL, NULL, NULL),
+(105, 'ESP2', 'Edukasyon sa Pagpapakatao', 'Grade 2', NULL, NULL, NULL, NULL),
+(106, 'MAPEH2', 'MAPEH', 'Grade 2', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(107, 'AP2', 'Araling Panlipunan', 'Grade 2', NULL, NULL, NULL, NULL),
+(108, 'FIL3', 'Filipino', 'Grade 3', NULL, NULL, NULL, NULL),
+(109, 'ENG3', 'English', 'Grade 3', NULL, NULL, NULL, NULL),
+(110, 'MATH3', 'Mathematics', 'Grade 3', NULL, NULL, NULL, NULL),
+(111, 'SCI3', 'Science', 'Grade 3', NULL, NULL, NULL, NULL),
+(112, 'ESP3', 'Edukasyon sa Pagpapakatao', 'Grade 3', NULL, NULL, NULL, NULL),
+(113, 'MAPEH3', 'MAPEH', 'Grade 3', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(114, 'AP3', 'Araling Panlipunan', 'Grade 3', NULL, NULL, NULL, NULL),
+(115, 'FIL4', 'Filipino', 'Grade 4', NULL, NULL, NULL, NULL),
+(116, 'ENG4', 'English', 'Grade 4', NULL, NULL, NULL, NULL),
+(117, 'MATH4', 'Mathematics', 'Grade 4', NULL, NULL, NULL, NULL),
+(118, 'SCI4', 'Science', 'Grade 4', NULL, NULL, NULL, NULL),
+(119, 'ESP4', 'Edukasyon sa Pagpapakatao', 'Grade 4', NULL, NULL, NULL, NULL),
+(120, 'MAPEH4', 'MAPEH', 'Grade 4', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(121, 'AP4', 'Araling Panlipunan', 'Grade 4', NULL, NULL, NULL, NULL),
+(122, 'EPP4', 'Edukasyong Pantahanan at Pangkabuhayan', 'Grade 4', NULL, NULL, NULL, NULL),
+(123, 'FIL5', 'Filipino', 'Grade 5', NULL, NULL, NULL, NULL),
+(124, 'ENG5', 'English', 'Grade 5', NULL, NULL, NULL, NULL),
+(125, 'MATH5', 'Mathematics', 'Grade 5', NULL, NULL, NULL, NULL),
+(126, 'SCI5', 'Science', 'Grade 5', NULL, NULL, NULL, NULL),
+(127, 'ESP5', 'Edukasyon sa Pagpapakatao', 'Grade 5', NULL, NULL, NULL, NULL),
+(128, 'MAPEH5', 'MAPEH', 'Grade 5', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(129, 'AP5', 'Araling Panlipunan', 'Grade 5', NULL, NULL, NULL, NULL),
+(130, 'EPP5', 'Edukasyong Pantahanan at Pangkabuhayan', 'Grade 5', NULL, NULL, NULL, NULL),
+(131, 'FIL6', 'Filipino', 'Grade 6', NULL, NULL, NULL, NULL),
+(132, 'ENG6', 'English', 'Grade 6', NULL, NULL, NULL, NULL),
+(133, 'MATH6', 'Mathematics', 'Grade 6', NULL, NULL, NULL, NULL),
+(134, 'SCI6', 'Science', 'Grade 6', NULL, NULL, NULL, NULL),
+(135, 'ESP6', 'Edukasyon sa Pagpapakatao', 'Grade 6', NULL, NULL, NULL, NULL),
+(136, 'MAPEH6', 'MAPEH', 'Grade 6', '[\"Music\", \"Arts\", \"Physical Education\", \"Health\"]', NULL, NULL, NULL),
+(137, 'AP6', 'Araling Panlipunan', 'Grade 6', NULL, NULL, NULL, NULL),
+(138, 'EPP6', 'Edukasyong Pantahanan at Pangkabuhayan', 'Grade 6', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -685,17 +697,8 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `email`, `contact_number`, `employee_id`, `date_hired`, `photo`, `advisory_section_id`, `created_at`, `updated_at`, `position`, `years_experience`, `grade_experience`, `male_enrollment`, `female_enrollment`, `prepared_by`, `conforme`, `approved_by`) VALUES
-(3, 42, 'Juan', 'De La', 'Cruz', 'Jr.', '1995-01-02', 'juandelacruz@gmail.com', '09759264665', NULL, NULL, 'teachers/AA9eOlMh5rsiZ6u1VXW65kIoRnb22v6Np4HqZjPC.jpg', NULL, '2026-02-10 23:50:01', '2026-02-15 04:03:33', 'Teacher 1', 4, '1', 14, 13, 'Mae Harriet M. De la Pena, EdD', 'Alelyn D. Nocete', 'Beda Jovenciana D. Agor, EdD'),
-(4, 43, 'Leeneth', NULL, 'Asdillo', NULL, '2026-02-12', 'asdilloleeneth@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:28:20', '2026-02-11 22:28:20', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(5, 44, 'Antonieta', NULL, 'Manginsay', NULL, '2026-02-12', 'manginsayantonieta@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:30:44', '2026-02-11 22:30:44', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(6, 45, 'Alelyn', 'D.', 'Nocete', NULL, '2026-02-12', 'nocetealelyn@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:32:28', '2026-02-11 22:32:28', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(7, 46, 'Victoria', 'A.', 'Sojor', NULL, '2026-02-12', 'sojorvictoria@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:33:47', '2026-02-11 22:33:47', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(8, 47, 'Reneegen', NULL, 'Rubia', NULL, '2026-02-12', 'rubiareneegen@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:35:27', '2026-02-11 22:35:27', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(9, 48, 'Eva', 'A.', 'Alama', NULL, '2026-02-12', 'alamaeva@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:36:30', '2026-02-11 22:36:30', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(10, 49, 'Wilz', NULL, 'Rio', NULL, '2026-02-12', 'riowilz@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:37:48', '2026-02-11 22:37:48', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(11, 50, 'Carmel', NULL, 'Monopollo', NULL, '2026-02-12', 'monopollocarmel@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:44:47', '2026-02-11 22:44:47', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(12, 51, 'Victor', NULL, 'Alcoriza', NULL, '2026-02-12', 'alcorizavictor@gmail.com', NULL, NULL, NULL, NULL, NULL, '2026-02-11 22:45:28', '2026-02-11 22:45:28', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(13, 150, 'System', NULL, 'Administrator', NULL, '2026-02-14', 'tugaweESadmin@gmail.com', NULL, NULL, NULL, 'teachers/dYFj9QimrODFzX6D4n9cVQaKHG8o18T5OJbse1U7.jpg', NULL, '2026-02-13 18:04:41', '2026-02-13 18:05:37', 'System Admin', 0, NULL, 0, 0, 'System Administrator', 'Adviser', 'Public School District Supervisor');
+(3, 42, 'Juan', 'De La', 'Cruz', 'Jr.', '1995-01-02', 'juandelacruz@gmail.com', '09759264665', NULL, NULL, 'teachers/AA9eOlMh5rsiZ6u1VXW65kIoRnb22v6Np4HqZjPC.jpg', NULL, '2026-02-10 23:50:01', '2026-02-15 21:00:20', 'Principal I', 4, '1', 14, 13, 'Mae Harriet M. De la Pena, EdD', 'Alelyn D. Nocete', 'Beda Jovenciana D. Agor, EdD'),
+(14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -719,12 +722,12 @@ CREATE TABLE `teaching_loads` (
 --
 
 INSERT INTO `teaching_loads` (`id`, `teacher_id`, `session`, `time`, `minutes`, `subject`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Morning', '8:00-9:00 AM', 60, 'ENGLISH 2', '2026-02-11 02:44:10', '2026-02-11 17:46:41'),
-(2, 3, 'Morning', '10:00-11:00 AM', 60, 'FILIPINO 2', '2026-02-11 02:56:25', '2026-02-11 17:46:41'),
-(3, 3, 'Morning', '11:00-12:00 PM', 60, 'MATHEMATICS 2', '2026-02-11 03:18:22', '2026-02-11 17:46:41'),
-(4, 3, 'Morning', '1:00-2:00 PM', 60, 'SCIENCE 2', '2026-02-11 15:41:33', '2026-02-11 17:46:41'),
-(5, 3, 'Morning', '2:00-3:00 PM', 60, 'MAPEH 2', '2026-02-11 15:41:33', '2026-02-11 17:46:41'),
-(6, 3, 'Morning', '3:00-4:00 pm', 60, 'ESP 2', '2026-02-11 17:46:41', '2026-02-11 17:46:41');
+(1, 3, 'Morning', '8:00-9:00 AM', 60, 'ENGLISH 2', '2026-02-11 02:44:10', '2026-02-15 21:00:20'),
+(2, 3, 'Morning', '10:00-11:00 AM', 60, 'FILIPINO 2', '2026-02-11 02:56:25', '2026-02-15 21:00:20'),
+(3, 3, 'Morning', '11:00-12:00 PM', 60, 'MATHEMATICS 2', '2026-02-11 03:18:22', '2026-02-15 21:00:20'),
+(4, 3, 'Morning', '1:00-2:00 PM', 60, 'SCIENCE 2', '2026-02-11 15:41:33', '2026-02-15 21:00:20'),
+(5, 3, 'Morning', '2:00-3:00 PM', 60, 'MAPEH 2', '2026-02-11 15:41:33', '2026-02-15 21:00:20'),
+(6, 3, 'Morning', '3:00-4:00 pm', 60, 'ESP 2', '2026-02-11 17:46:41', '2026-02-15 21:00:20');
 
 -- --------------------------------------------------------
 
@@ -745,109 +748,25 @@ CREATE TABLE `users` (
   `middle_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `suffix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `birthday` date DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `login_attempts` int NOT NULL DEFAULT '0',
+  `lock_until` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `username`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', '9bqNxSRVnpYNnHaI1vPu5qnhCS3JHyxt6mR4SnVhfsdeFmS0XADPkIq3YoMQ', '2026-01-27 05:37:20', '2026-01-27 05:37:20', '', NULL, '', NULL, ''),
-(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, ''),
-(39, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$6hxW91UwOUdbxrUxrP7QxucAWPs5ylptuX30Dk0qCQcZpIb7HGt7u', NULL, '2026-02-10 03:52:06', '2026-02-15 03:53:10', 'Crestian', NULL, 'Tuayon', NULL, 'ctuayon620'),
-(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-15 04:01:52', 'Juan', NULL, 'Cruz', NULL, 'juandelacruz290'),
-(43, 2, 'asdilloleeneth@gmail.com', NULL, '$2y$12$msUYN.TKY3W85BIabLfFIuCydYrZblJYSksVDaeCl7.f7KE9ue.Gu', NULL, '2026-02-11 22:28:20', '2026-02-11 22:28:20', 'Leeneth', NULL, 'Asdillo', NULL, 'leenethasdillo'),
-(44, 2, 'manginsayantonieta@gmail.com', NULL, '$2y$12$p8q2BH/cn9Q8jh4F4pB6DOeNaZnuLl8pq/BpBJhv4fy2Rhe0iBU1y', NULL, '2026-02-11 22:30:44', '2026-02-11 22:30:44', 'Antonieta', NULL, 'Manginsay', NULL, 'antonietamanginsay'),
-(45, 2, 'nocetealelyn@gmail.com', NULL, '$2y$12$QTg/Cq5XqxnbdNedFLgaUub10LFBrlFNnidbQqOAxC6HIofJjIKpu', NULL, '2026-02-11 22:32:28', '2026-02-11 22:32:28', 'Alelyn', 'D.', 'Nocete', NULL, 'alelynnocete@gmail.com'),
-(46, 2, 'sojorvictoria@gmail.com', NULL, '$2y$12$DNufZwV0xkGSkKKD/myAOOfokXT27UtrfjAWGhSAr52aiS2wx51lq', NULL, '2026-02-11 22:33:47', '2026-02-11 22:33:47', 'Victoria', 'A.', 'Sojor', NULL, 'victoriasojor'),
-(47, 2, 'rubiareneegen@gmail.com', NULL, '$2y$12$TCMiMoDlqWoNnSlm13Zl6empLYX4HIXHGurmzQQ/P/jKlX6JKA5Cu', NULL, '2026-02-11 22:35:27', '2026-02-11 22:35:27', 'Reneegen', NULL, 'Rubia', NULL, 'reneegenrubia'),
-(48, 2, 'alamaeva@gmail.com', NULL, '$2y$12$IKVdqoJQ25uWdgZHvDqX/ehu2EEemzMDLMZ.bSrPXoPDuFVT2v4wO', NULL, '2026-02-11 22:36:30', '2026-02-11 22:36:30', 'Eva', 'A.', 'Alama', NULL, 'evaalama'),
-(49, 2, 'riowilz@gmail.com', NULL, '$2y$12$dywGTgY0H48pirQ2ZbRPK./7CMcKtHPJZ/ZcrtiosC9NTxLdagKlq', NULL, '2026-02-11 22:37:48', '2026-02-11 22:37:48', 'Wilz', NULL, 'Rio', NULL, 'wilzrio'),
-(50, 2, 'monopollocarmel@gmail.com', NULL, '$2y$12$D6J3kp69GRItD2v8vIAuyuh/0buQx5KjCFK6Nqc/9QD1H115hT/Iu', NULL, '2026-02-11 22:44:47', '2026-02-11 22:44:47', 'Carmel', NULL, 'Monopollo', NULL, 'carmelmonopollo'),
-(51, 2, 'alcorizavictor@gmail.com', NULL, '$2y$12$Ot2hzYu5hc4X0oVOvmcW3es0m9mptBCXCUbSM0PILaV7p42mlLDym', NULL, '2026-02-11 22:45:28', '2026-02-11 22:45:28', 'Victor', NULL, 'Alcoriza', NULL, 'victoralcoriza'),
-(52, 4, 'kristianalsola@gmail.com', NULL, '$2y$12$E9Z4IF9EZ1N68i2zTnY2P.MU58iEODEpN2LofGf3yBODOOOXFSiZC', NULL, '2026-02-11 23:00:56', '2026-02-11 23:00:56', 'Kristian', NULL, 'Alsola', NULL, 'kalsola703'),
-(53, 4, 'aranetareferjohn@gmail.com', NULL, '$2y$12$ruVIhy6LiCij4XMDkMMaLeC2LTwEt/wDPM9Z0NdNwzVDThZX6N606', NULL, '2026-02-11 23:02:34', '2026-02-11 23:02:34', 'Rofer John', NULL, 'Araneta', NULL, 'raraneta101'),
-(54, 4, 'delesmeraldjay@gmail.com', NULL, '$2y$12$WfPu0EeMmo92fLICmLvImuA4vTBOODSSbujFs8.M603TA.1aLtV2C', NULL, '2026-02-11 23:06:52', '2026-02-11 23:06:52', 'MERALD JAY', NULL, 'DELES', NULL, 'mdeles911'),
-(56, 4, 'mondidogeo@gmail.com', NULL, '$2y$12$8cgI03dTLcihpLMb23Gw8OpashieJ9drHm0G3MzMMEIfClpRaoH02', NULL, '2026-02-11 23:12:38', '2026-02-11 23:12:38', 'Geo', NULL, 'Mondido', NULL, 'gmondido308'),
-(57, 4, 'emmanmondido@gmail.com', NULL, '$2y$12$9nBOPT8pdjDZT2RzclRqHebg.QH0U77kegBfDgqhWf6u6kxfuFEeO', NULL, '2026-02-11 23:23:56', '2026-02-11 23:23:56', 'Emman', NULL, 'Mondido', NULL, 'emondido203'),
-(58, 4, 'ivanmondido@gmail.com', NULL, '$2y$12$kDos1ve615xmPlYCjlxjaelP0/..0UZ/vNwbfEuEvSTLUs6veqDIa', NULL, '2026-02-11 23:25:04', '2026-02-11 23:25:04', 'Ivan', NULL, 'Mondido', NULL, 'imondido318'),
-(59, 4, 'christangelopelayo@gmail.com', NULL, '$2y$12$/Fqok1ZTYRzhSxQDNsvDPOM17tm8tMYk3SmDeWLMLYTZbxdLo8YHC', NULL, '2026-02-11 23:26:42', '2026-02-11 23:26:42', 'Christ Angelo', NULL, 'Pelayo', NULL, 'cpelayo388'),
-(60, 4, 'sisondaryl@gmail.com', NULL, '$2y$12$oc2i6DLflznzv4Quwoj5Vec1GX0w4WKpLaVg12lzC0L8WQb6KnKOu', NULL, '2026-02-11 23:28:14', '2026-02-11 23:28:14', 'Daryl', NULL, 'Sison', NULL, 'dsison531'),
-(61, 4, 'johnmarcotinambacan@gmail.com', NULL, '$2y$12$RGpMfxDyTFKXab8EbKfjtuNWFliFbgRgHQOkk26A/5ksSZVb6Fqpm', NULL, '2026-02-11 23:29:52', '2026-02-11 23:29:52', 'John Marco', NULL, 'Tinambacan', NULL, 'jtinambacan917'),
-(62, 4, 'shawnedriantubog@gmail.com', NULL, '$2y$12$l1F0IBX7g.TSgn6A1M6VHO5UoRQYlMf1G839flF3lP8CfFq5ouSVu', NULL, '2026-02-11 23:31:26', '2026-02-11 23:31:26', 'Shawn Edrian', NULL, 'Tubog', NULL, 'stubog314'),
-(63, 4, 'violajeron@gmail.com', NULL, '$2y$12$pHUe2CndPMpewDh56YXCr.lYhpcy7Ljvk4o7GtgUotOgcYawFQLoO', NULL, '2026-02-11 23:40:57', '2026-02-11 23:40:57', 'Jeron', NULL, 'Viola', NULL, 'jviola986'),
-(64, 4, 'alamanathaliazymth@gmail.com', NULL, '$2y$12$0lBQZFiMh8YG8HJ2FGlGney42s9u3TshTkHBnrharYWsixqk6zF.G', NULL, '2026-02-11 23:46:47', '2026-02-11 23:46:47', 'Nathalia Zymth', NULL, 'Alama', NULL, 'nalama814'),
-(65, 4, 'callorasofianicole@gmail.com', NULL, '$2y$12$NXeIJaTs/95hppdV./LDsucYpJdt7sq.KeOLOjVg4UP45btxFVe3K', NULL, '2026-02-11 23:48:08', '2026-02-11 23:48:08', 'Sofia Nicole', NULL, 'Callora', NULL, 'scallora807'),
-(66, 4, 'cofinomiahele@gmail.com', NULL, '$2y$12$r1GOG2WoAAKHc5MZRRR44.EQOn1j84Bf1CQlwh3/WBcHLk0abKtNK', NULL, '2026-02-11 23:49:28', '2026-02-11 23:49:28', 'Miah Ele', NULL, 'Cofino', NULL, 'mcofino400'),
-(67, 4, 'moratoaaliyahgabrielle@gmail.com', NULL, '$2y$12$XqkZwCYiijZmDYiwoDDdWuunaBk1V/CnMrg4RgWe7Y53Gk6rm3gLW', NULL, '2026-02-11 23:51:32', '2026-02-11 23:51:32', 'Aaliyah Gabrielle', NULL, 'Morato', NULL, 'amorato474'),
-(68, 4, 'tabanganzoe@gmail.com', NULL, '$2y$12$PgvkzjBFh56Q.anAWQ2o5OBi2WkpMt7nCSlws03rcibpVDoGkhl9q', NULL, '2026-02-11 23:52:52', '2026-02-11 23:52:52', 'Zoe', NULL, 'Tabangan', NULL, 'ztabangan729'),
-(69, 4, 'toroprincesscoleen@gmail.com', NULL, '$2y$12$2EAyzKUuxDB2mDIvbjBmEecZSS7fJDxLNFVRpp7BaP/GcwTbSQgxe', NULL, '2026-02-11 23:54:32', '2026-02-11 23:54:32', 'Princess Coleen', NULL, 'Toro', NULL, 'ptoro381'),
-(70, 4, 'tubanjaneshannel@gmail.com', NULL, '$2y$12$LtFchyoFGPNGjVRosGrB8uM3mGCEDrbvUmQDPbM8cpEQZIehxYe6G', NULL, '2026-02-11 23:56:30', '2026-02-11 23:56:30', 'Jane Shannel', NULL, 'Tuban', NULL, 'jtuban320'),
-(71, 4, 'tubannianamarithe@gmail.com', NULL, '$2y$12$Q74/.NDPhP9UmUwUNITqx.glE0zhMAAJjnnAg.tFwUsjwoyauRqGm', NULL, '2026-02-11 23:58:12', '2026-02-11 23:58:12', 'Niana Marithe', NULL, 'Tuban', NULL, 'ntuban551'),
-(72, 4, 'tublejian@gmail.com', NULL, '$2y$12$Wfsu13M9yJQAMLFQGYNLMe2seCsGZ9ctFk.a4Tm3K.c6b8ah1pP5C', NULL, '2026-02-11 23:59:43', '2026-02-11 23:59:43', 'Jian', NULL, 'Tuble', NULL, 'jtuble103'),
-(73, 4, 'alasasalexander@gmail.com', NULL, '$2y$12$nDfucyFGU2qfttoldtLgXOJ8Kz1YuFu2KFg5QTVhYqKLuK77czAn2', NULL, '2026-02-12 00:15:01', '2026-02-12 00:15:01', 'Alexander', NULL, 'Alas-as', NULL, 'aalas-as346'),
-(74, 4, 'bantotodonnkieffer@gmail.com', NULL, '$2y$12$tmBNPiBIqh1ppdSORWaCmOgnDBYL7jy.Ja6UJv.ptPiPKJhBvbOVe', NULL, '2026-02-12 00:18:20', '2026-02-12 00:18:20', 'Donn Kieffer', NULL, 'Bantoto', NULL, 'dbantoto563'),
-(75, 4, 'bantotomaxwelllaurent@gmail.com', NULL, '$2y$12$cRjt21RiUFxp9KVyKpMKru/7kB4N9y5fAjWCA9YzpKA6Zb2vBM7aW', NULL, '2026-02-12 00:20:22', '2026-02-12 00:20:22', 'Maxwell Laurent', NULL, 'Bantoto', NULL, 'mbantoto819'),
-(76, 4, 'pajentemarkchristian@gmail.com', NULL, '$2y$12$m6/zyuDblNsB3pXL.jzHbOLy1FgXQn9nIfvnfFbi1yPF02JCztDM6', NULL, '2026-02-12 00:22:12', '2026-02-12 00:22:12', 'Mark Christian', NULL, 'Pajente', NULL, 'mpajente534'),
-(77, 4, 'sardannoel@gmail.com', NULL, '$2y$12$G/zjE8.aqzZjptnotthi3uIpHQLkdps38RjXs1rePNyLkG51u8N8C', NULL, '2026-02-12 00:23:22', '2026-02-12 00:23:22', 'Noel', NULL, 'Sardan', NULL, 'nsardan951'),
-(78, 4, 'velozchristian@gmail.com', NULL, '$2y$12$HoHngjOXYumt6S.qL4D2Lei2sKGGnF/JenaBQefcaEhfCSPEQJ4GO', NULL, '2026-02-12 00:26:34', '2026-02-12 00:26:34', 'Christian', NULL, 'Veloz', NULL, 'cveloz905'),
-(79, 4, 'agadhainegerhaine@gmail.com', NULL, '$2y$12$F8K6S1naqfdrxBHBIY3A3.K4CTxyenk1bPoRxxyYucOZU4n2t/CTm', NULL, '2026-02-12 00:28:17', '2026-02-12 00:28:17', 'Dhaine Gerhaine', NULL, 'Aga', NULL, 'daga722'),
-(80, 4, 'alcorizacarren@gmail.com', NULL, '$2y$12$VjfwhT7OxeMv2aDmMGc/qe8DLoQBqxssd3S/B6WzQnu.THTZ5S5yS', NULL, '2026-02-12 00:30:04', '2026-02-12 00:30:04', 'Carren', NULL, 'Alcoriza', NULL, 'calcoriza759'),
-(81, 4, 'bantotomarchell@gmail.com', NULL, '$2y$12$0NJcJMohtkB1c7szLs0FHuYmFfZHjzhlh4/8064y3NyrLJ4w9RTom', NULL, '2026-02-12 00:31:50', '2026-02-12 00:31:50', 'Marchell', NULL, 'Bantoto', NULL, 'mbantoto332'),
-(82, 4, 'bantotomerriam@gmail.com', NULL, '$2y$12$pptFjizLd0LwtktyUWBnguTJKceVTPiwIUcHjQI6S4Ol.K93xl57G', NULL, '2026-02-12 00:35:00', '2026-02-12 00:35:00', 'Merriam', NULL, 'Bantoto', NULL, 'mbantoto588'),
-(83, 4, 'martinezelizabellecelyn@gmail.com', NULL, '$2y$12$anhcHq.OJKbfkPkkOufVluKO13lGafapEso7EW63yorJSikP3/soq', NULL, '2026-02-12 00:38:53', '2026-02-12 00:38:53', 'Elizabelle Celyn', NULL, 'Martinez', NULL, 'emartinez933'),
-(84, 4, 'orellanajairajane@gmail.com', NULL, '$2y$12$KgILoWaJYbLwhbc4M2MO6u7OOZb7CRPrS9myGcQ3dDPabwYGlgcXG', NULL, '2026-02-12 00:42:07', '2026-02-12 00:42:07', 'Jaira Jane', NULL, 'Orellana', NULL, 'jorellana753'),
-(85, 4, 'patilanojellianagennely@gmail.com', NULL, '$2y$12$esv3fodGdbhR1FAMJFqmiO4hya3oTVNubmUqHDybkzPOR11LgWDPG', NULL, '2026-02-12 00:43:35', '2026-02-12 00:43:35', 'Jelliana Gennely', NULL, 'Patilano', NULL, 'jpatilano613'),
-(86, 4, 'quitoymishca@gmail.com', NULL, '$2y$12$Ct7I.VkJEhvCmrRioVuL7..dvHPYeiPFc1r6mH4x919674z1tjr82', NULL, '2026-02-12 00:45:22', '2026-02-12 00:45:22', 'Mishca', NULL, 'Quitoy', NULL, 'mquitoy729'),
-(87, 4, 'salatanambermcquenzie@gmail.com', NULL, '$2y$12$1JDVJbIIkWEQ6Be0Zme9vuRHw4bPgmtKJFV13WwLQEW8aGTlo/d92', NULL, '2026-02-12 00:47:08', '2026-02-12 00:47:08', 'Amber Mcquenzie', NULL, 'Salatan', NULL, 'asalatan786'),
-(88, 4, 'tosejelah@gmail.com', NULL, '$2y$12$TEPYh.R95jOTrkzSz0EY3.O1cqLWQI5wNIltTgnSB9xTKSeJQyEoi', NULL, '2026-02-12 00:48:13', '2026-02-12 00:48:13', 'Jelah', NULL, 'Tose', NULL, 'jtose441'),
-(89, 4, 'trumatacalistadior@gmail.com', NULL, '$2y$12$rY56KPSTSHzAKLdGlOYOU.Nl8LhrNWmkyDXzEjv8QOlDayW4Ega86', NULL, '2026-02-12 00:49:26', '2026-02-12 00:49:26', 'Calista Dior', NULL, 'Trumata', NULL, 'ctrumata444'),
-(90, 4, 'tublezhiamae@gmail.com', NULL, '$2y$12$8OdU96T8HKyJbDo9YveJd.T4ANk6YxlAgQd1xMu.A7U55uNkW7vVq', NULL, '2026-02-12 00:50:31', '2026-02-12 00:50:31', 'Zhia Mae', NULL, 'Tuble', NULL, 'ztuble413'),
-(91, 4, 'tubogchristine@gmail.com', NULL, '$2y$12$s/dLSLwQkQ2zsnqIf8tx8Ou2D6cg41xei/nAP/KgIkixN28OGppF2', NULL, '2026-02-12 00:51:38', '2026-02-12 00:51:38', 'Christine', NULL, 'Tubog', NULL, 'ctubog123'),
-(92, 4, 'alegredravenryle@gmail.com', NULL, '$2y$12$ajZZMqHQhsk5zoa21pJ8eOnk1o1aOu03SxFrFz4y9oBxTvMs/VLOO', NULL, '2026-02-12 01:05:28', '2026-02-12 01:05:28', 'Draven Ryle', NULL, 'Alegre', NULL, 'dalegre534'),
-(93, 4, 'bajadohanzelbin@gmail.com', NULL, '$2y$12$qvOzusX9QqH4uodjzCJDMOw.f1nzaQzyEewN3C2ABi5TvG4hvLL5W', NULL, '2026-02-12 01:06:47', '2026-02-12 01:06:47', 'Hanz Elbin', NULL, 'Bajado', NULL, 'hbajado429'),
-(94, 4, 'bantilanpablitojr@gmail.com', NULL, '$2y$12$dBPFY8uR/x.8OiSpdhlxnOsWK66aLVpcYzoLaMkFmGVW3l9P.MUm.', NULL, '2026-02-12 01:09:16', '2026-02-12 01:09:16', 'Pablito, Jr', NULL, 'Bantilan', NULL, 'pbantilan719'),
-(95, 4, 'biyodominique@gmail.com', NULL, '$2y$12$Cmu3u0dsiRSda203xWUI8ONWSR6j.WMzo7EaJ5VKj6IwtEGZryT2O', NULL, '2026-02-12 01:11:02', '2026-02-12 01:11:02', 'Dominique Shaun Vincent', NULL, 'Biyo', NULL, 'dbiyo803'),
-(96, 4, 'carbakurtreign@gmail.com', NULL, '$2y$12$pTIphsY/zxt8jtq5XKthS.UqVMfsbkVLGSdGQpBKx9ulGCYLCiTyO', NULL, '2026-02-12 01:13:00', '2026-02-12 01:13:00', 'Kurt Reign', NULL, 'Carba', NULL, 'kcarba932'),
-(97, 4, 'dacotdacotstethan@gmail.com', NULL, '$2y$12$D.EoAt7lpVoPe37ohY64hOaGIVB1PZgXW9ehoRgJIoOzq5vZxboOW', NULL, '2026-02-12 01:14:38', '2026-02-12 01:14:38', 'Stethan', NULL, 'Dacotdacot', NULL, 'sdacotdacot810'),
-(98, 4, 'daymilzayn@gmail.com', NULL, '$2y$12$2wONubMrE8hitdgkWfsqd.XNCbnzMuVfCK.PpkPmh1arTNq648Lx.', NULL, '2026-02-12 01:18:57', '2026-02-12 01:18:57', 'Zayn', NULL, 'Daymil', NULL, 'zdaymil265'),
-(99, 4, 'fernandouzumaki@gmail.com', NULL, '$2y$12$6LHhvD4iYMUarkZfXcTTuuGkHdjTNvArXiMS5REyPsDk0v058mRFe', NULL, '2026-02-12 01:20:34', '2026-02-12 01:20:34', 'Uzumaki', NULL, 'Fernando', NULL, 'ufernando842'),
-(100, 4, 'gestupanoahmatteo@gmail.com', NULL, '$2y$12$9nrfLD0aV31hWFOlzBOhBOfrUTtGVUKYz2rOjbq9QNoRto93ZS1E6', NULL, '2026-02-12 01:22:57', '2026-02-12 01:22:57', 'Noah Matteo', NULL, 'Gestupa', NULL, 'ngestupa817'),
-(101, 4, 'otedagiean@gmail.com', NULL, '$2y$12$EiCLWwdDAJxwNVXzulMtMOIbkzPtC6afXE2x84v5M3QIURe7Giixe', NULL, '2026-02-12 01:24:39', '2026-02-12 01:24:39', 'Giean', NULL, 'Oteda', NULL, 'goteda238'),
-(102, 4, 'partosajonas@gmail.com', NULL, '$2y$12$3kSoB.XMCSxUhrDT18mgkeFK.c00EU2hxqvKQjmjL5Esqat2rdRjO', NULL, '2026-02-12 01:29:19', '2026-02-12 01:29:19', 'Jonas', NULL, 'Partosa', NULL, 'jpartosa727'),
-(103, 4, 'saraoprinceandy@gmail.com', NULL, '$2y$12$3A5APAXhrC4.3i68DT0BpO9HO1q717ylux8O27pqqYyjZTUZyyv22', NULL, '2026-02-12 01:30:49', '2026-02-12 01:30:49', 'Prince Andy', NULL, 'Sarao', NULL, 'psarao773'),
-(104, 4, 'serojanocharliejr@gmail.com', NULL, '$2y$12$RQokFsPmi9kOK2SVNMPfG.Np5CDxTfMLoDsM0gmWBAqipIED9.DRG', NULL, '2026-02-12 01:33:19', '2026-02-12 01:33:19', 'Charlie, Jr', NULL, 'Serojano', NULL, 'cserojano554'),
-(105, 4, 'sonlitprincejohn@gmail.com', NULL, '$2y$12$A70OWh0S3d4MBthC4zwRIusSQFP1FTZAJ71xYGFDCySIAMAx3OGAm', NULL, '2026-02-12 01:40:07', '2026-02-12 01:40:07', 'Prince John', NULL, 'Sonlit', NULL, 'psonlit443'),
-(106, 4, 'tolomiachristoff@gmail.com', NULL, '$2y$12$oYmeD6qUiytCLk7q1x.FtOL56kbCHVeeb70yUKuesRriASwYCokkG', NULL, '2026-02-12 01:41:47', '2026-02-12 01:41:47', 'Christoff', NULL, 'Tolomia', NULL, 'ctolomia904'),
-(107, 4, 'totorejay@gmail.com', NULL, '$2y$12$wJFo9zpauQmxUQ7MgtNIb.j8pjimLWoPtK9e22DU5pnJD.DjyPJw6', NULL, '2026-02-12 01:44:32', '2026-02-12 01:44:32', 'Rejay', NULL, 'Toro', NULL, 'rtoro755'),
-(108, 4, 'ubayprincejullian@gmail.com', NULL, '$2y$12$XqT42jc7luEXThY1XSwTjOlEHMTAmRllekDgmJlkvSu8y9xHlrlM6', NULL, '2026-02-12 01:45:56', '2026-02-12 01:45:56', 'Prince Jullian', NULL, 'Ubay', NULL, 'pubay454'),
-(109, 4, 'usmanfranceaethan@gmail.com', NULL, '$2y$12$32rRs2wcBf..i4DnN1CCleq1AzXRc0FGddxsWmDXDpDFvIUyPUjLu', NULL, '2026-02-12 01:47:09', '2026-02-12 01:47:09', 'France Aethan', NULL, 'Usman', NULL, 'fusman372'),
-(110, 4, 'verzanohohnmartin@gmail.com', NULL, '$2y$12$KIIBtBSTjzdLA5FrYKunLexT6KowB9A6pX6T71hA15kgCyl.ccwnq', NULL, '2026-02-12 01:48:44', '2026-02-12 01:48:44', 'John Martin', NULL, 'Verzano', NULL, 'jverzano239'),
-(111, 4, 'villarosakurternest@gmail.com', NULL, '$2y$12$iZLw2xrZTFgTnt95QCLjBOy11xRRRxbPiAhUFbNn1jbUIYAdlIkf6', NULL, '2026-02-12 01:50:13', '2026-02-12 01:50:13', 'Kurt Ernest', NULL, 'Villarosa', NULL, 'kvillarosa277'),
-(112, 4, 'badrinachike@gmail.com', NULL, '$2y$12$Dmb4l8Y7qMCf5T2qCe6ICupPe.zAnB9M6zXI8YGgOF8AOmvt9e9Ey', NULL, '2026-02-12 03:02:10', '2026-02-12 03:02:10', 'Chike', NULL, 'Badrina', NULL, 'cbadrina944'),
-(113, 4, 'bantotoclarissa@gmail.com', NULL, '$2y$12$16GYTqOB.va0a.RouGDlRuF9.3t.StXmf3becXWJzrRnI1/URb832', NULL, '2026-02-12 03:04:21', '2026-02-12 03:04:21', 'Clarissa Niña', NULL, 'Bantoto', NULL, 'cbantoto845'),
-(114, 4, 'cabanillacriskeira@gmail.com', NULL, '$2y$12$hF4pNHk355KxgjtDG3GP9e6wx96smgU9BcHK/TgcBzY34lQIPFDBK', NULL, '2026-02-12 03:05:44', '2026-02-12 03:05:44', 'Cris Keira', NULL, 'Cabanilla', NULL, 'ccabanilla400'),
-(115, 4, 'camachobriannazia@gmail.com', NULL, '$2y$12$KK7AyzqNTfF4dvNJ443BTuf4ndFmi24eiglx0SxIOPaV2XpesIPYu', NULL, '2026-02-12 03:08:18', '2026-02-12 03:08:18', 'Brianna Zia', NULL, 'Camacho', NULL, 'bcamacho756'),
-(116, 4, 'carvellidaprimrose@gmail.com', NULL, '$2y$12$Mfwq/zMaSb42.8XDfpVoA..jMwFvVoN8JY4.2ywnC9IpYKUIbbHzG', NULL, '2026-02-12 03:09:40', '2026-02-12 03:09:40', 'Prim Rose', NULL, 'Carvellida', NULL, 'pcarvellida701'),
-(117, 4, 'chukynleigh@gmail.com', NULL, '$2y$12$PW1cnAS4gHkj05We03VewO65sOoB0Yb3ljl2ZiLn75CiWPYR6gU1.', NULL, '2026-02-12 03:11:08', '2026-02-12 03:11:08', 'Kynleigh', NULL, 'Chu', NULL, 'kchu755'),
-(118, 4, 'divinajhellamae@gmail.com', NULL, '$2y$12$CFKr29Iq3A312uHwt6sCOu5Xe09E/fezPG0TVD2lNwy2zBrkiStp6', NULL, '2026-02-12 03:12:34', '2026-02-12 03:12:34', 'Jhella Mae', NULL, 'Divina', NULL, 'jdivina246'),
-(119, 4, 'gargarjewelscarlet@gmail.com', NULL, '$2y$12$kWCeBSuzkljX5JxnEL3WiOsjqpiNErtSI1MMc8PvSGeSs2h2YB3F.', NULL, '2026-02-12 03:14:00', '2026-02-12 03:14:00', 'Jewel Scarlet', NULL, 'Gargar', NULL, 'jgargar863'),
-(120, 4, 'icaonapoasherahelsie@gmail.com', NULL, '$2y$12$ABEdoyuBrvC1mdui.Cb8sO3M1L2zbeY31gBqvAlkEsyvM5SJMxbge', NULL, '2026-02-12 03:15:32', '2026-02-12 03:15:32', 'Asherah Elsie', NULL, 'Icaonapo', NULL, 'aicaonapo374'),
-(121, 4, 'lampasojairilmonette@gmail.com', NULL, '$2y$12$uTcTGB8klfSit3qKMrGYPuvKEpEDMB/VVgFWG5Y4tT.Cqu2fOnJkK', NULL, '2026-02-12 03:17:06', '2026-02-12 03:17:06', 'Jairil Monette', NULL, 'Lampaso', NULL, 'jlampaso786'),
-(122, 4, 'lozadafrancine@gmail.com', NULL, '$2y$12$qXHsdBxt/A2TVjwOBwy3L.jrUKNWgx3J6d3LCtpDJMM0r5nlfiiFy', NULL, '2026-02-12 03:18:14', '2026-02-12 03:18:14', 'Francine', NULL, 'Lozada', NULL, 'flozada386'),
-(123, 4, 'mohammadcrissmalyn@gmail.com', NULL, '$2y$12$qUHgAbys1/KCP4suaJbEN.Ym4DRDQ0fg1OLSZX6lmy8Ykxc.UUESS', NULL, '2026-02-12 03:19:50', '2026-02-12 03:19:50', 'Crissmalyn Faye', NULL, 'Mohammad', NULL, 'cmohammad253'),
-(124, 4, 'mohellolianah@gmail.com', NULL, '$2y$12$O9s9MfGcF67c6SlWFfCJHOgq7jEbd3ZvZfAM80.jIMiGJy0CVvqLq', NULL, '2026-02-12 03:21:28', '2026-02-12 03:21:28', 'Lianah', NULL, 'Mohello', NULL, 'lmohello339'),
-(125, 4, 'paoarianne@gmail.com', NULL, '$2y$12$aCjxozpilp29mmbe18QqROIUkyYboO.EYgZYWT4eQ4b20/EbNeX0e', NULL, '2026-02-12 03:22:40', '2026-02-12 03:22:40', 'Arianne', NULL, 'Pao', NULL, 'apao617'),
-(126, 4, 'paquinolavrilkate@gmail.com', NULL, '$2y$12$KNJlt2OtaTp4mRzuecgFoONC18nPdvZJfTs0VdvWbWzZgyoocPDYC', NULL, '2026-02-12 03:24:11', '2026-02-12 03:24:11', 'Avril Kate', NULL, 'Paquinol', NULL, 'apaquinol664'),
-(127, 4, 'salatanmariacelestine@gmail.com', NULL, '$2y$12$MKgZdSdtAe7qsuOELF8oXO4FSVWrgAwGGVMbffRQrSQRyHjZNCyY2', NULL, '2026-02-12 03:47:51', '2026-02-12 18:53:01', 'Maria Celestine', NULL, 'Salatan', NULL, 'mssalatan111'),
-(128, 4, 'senahondjanne@gmail.com', NULL, '$2y$12$1j9wT96qPtyJ3Swzf7/v0OB1JUt.OZEnHtq/D0whXhqkWr6sATEcm', NULL, '2026-02-12 03:49:36', '2026-02-12 19:24:20', 'DJ Anne', NULL, 'Senahon', NULL, 'dsenahon72'),
-(129, 4, 'tenedoelainejoy@gmail.com', NULL, '$2y$12$fsbO4rOx1NHH1/AHczKWdOlpz7okmydKxhKIiFrFHO31aoVcweczW', NULL, '2026-02-12 03:51:07', '2026-02-12 03:51:07', 'Elaine Joy', NULL, 'Tenedo', NULL, 'etenedo678'),
-(130, 4, 'tubleellyzamae@gmail.com', NULL, '$2y$12$XVHDIfwgZXr9eOcBHnnUzO.SxMAXYiqvYT2n0yM2ujkwErnv59joa', NULL, '2026-02-12 03:52:46', '2026-02-12 18:44:31', 'Ellyza Mae', NULL, 'Tuble', NULL, 'etuble321'),
-(132, 4, 'villamiljillianneshan@gmail.com', NULL, '$2y$12$VvPgmBYL02dhct8T07TXd.AvreRHTae3OD7TvYo36MBHxO39sFgvG', NULL, '2026-02-12 18:02:40', '2026-02-12 18:02:40', 'Jillianne Shane', NULL, 'Villamil', NULL, 'jvillamil438'),
-(150, 2, 'tugaweESadmin@gmail.com', NULL, '$2y$12$XJxk7PBRdGhBSAeb/kfQ4.oe.QiGClDMC9/F2MBr99..DxBFDWv92', NULL, '2026-02-13 18:04:40', '2026-02-13 18:04:40', 'System', NULL, 'Administrator', NULL, 'admin123'),
-(153, 4, 'cresttuayon7@gmail.com', NULL, '$2y$12$BvuxxgYVKMCbiksYw4fCpOKyEgxrPiFWgfyj1plZfqzIpOHP7BOa6', NULL, '2026-02-15 00:12:46', '2026-02-15 00:12:46', 'Crestian', NULL, 'Tuayon', NULL, 'ctuayon282'),
-(154, 4, 'troituayon@gmail.com', NULL, '$2y$12$VIz.r7oGtGx106kigWzdFug7dISIT6rP5slDfFZVzbBXgWPRc5Omy', NULL, '2026-02-15 01:11:47', '2026-02-15 01:11:47', 'Troilan', NULL, 'Tuayon', NULL, 'ttuayon698');
+INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
+(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'IMvSkqMUjkQpgMm6okbBI5YIZ46CEWe2FaXtrUxvW9wu0yDB5UbF5amAzwID', '2026-01-27 05:37:20', '2026-02-23 07:19:05', '', NULL, '', NULL, NULL, '', 3, NULL),
+(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
+(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-23 07:19:27', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 4, NULL),
+(163, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$qYxrwngqjSJTO7M8s0JqdeETmL9W42Fmn/PGnLCTGUTqqJ1/DpekO', NULL, '2026-02-21 17:36:01', '2026-02-21 17:36:01', 'Crestian', 'Bajado', 'Tuayon', 'III', '2004-01-07', 'crstn', 0, NULL),
+(164, 4, 'noimetaloretebaldomar@gmail.com', NULL, '$2y$12$dbbdviC0AZJDDG50DIqalu/6B9W3ysL0hb7PZmnBmQJR0yxywoxT2', NULL, '2026-02-22 18:19:28', '2026-02-22 18:19:28', 'Noime', 'Tolerete', 'Baldomar', NULL, '2003-11-06', 'evarocksredhell', 0, NULL),
+(165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, '2026-02-23 04:21:36', '2026-02-23 04:21:36', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 0, NULL),
+(166, 4, 'troituayon@gmail.com', NULL, '$2y$12$vFuEjOrlaVArsfniQZnyKOwR0mt2tGnozPTobE2bVx8h/F2AfZx02', NULL, '2026-02-23 04:25:08', '2026-02-23 04:25:08', 'Troilan', NULL, 'Tuayon', NULL, NULL, 'ttuayon512', 0, NULL),
+(167, 2, 'teacher@tugaweES.edu.ph', NULL, '$2y$12$/uktMVzTTEt14BN9KUOQG.MSlzfnAQktr7eDOdv36EB6hUWI5DiEq', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', 'Teacher', NULL, 'Cruz', NULL, NULL, 'cruz112', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -878,6 +797,14 @@ INSERT INTO `year_levels` (`id`, `name`, `created_at`, `updated_at`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `announcements`
+--
+ALTER TABLE `announcements`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `announcements_user_id_foreign` (`user_id`),
+  ADD KEY `announcements_section_id_foreign` (`section_id`);
 
 --
 -- Indexes for table `attendances`
@@ -914,7 +841,8 @@ ALTER TABLE `cache_locks`
 --
 ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `enrollments_student_id_foreign` (`student_id`),
+  ADD UNIQUE KEY `enrollments_student_id_school_year_id_unique` (`student_id`,`school_year_id`),
+  ADD KEY `enrollments_school_year_id_foreign` (`school_year_id`),
   ADD KEY `enrollments_section_id_foreign` (`section_id`);
 
 --
@@ -929,7 +857,7 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `grades_student_id_subject_id_quarter_unique` (`student_id`,`subject_id`,`quarter`),
+  ADD UNIQUE KEY `grades_student_id_subject_id_component_quarter_unique` (`student_id`,`subject_id`,`component`,`quarter`),
   ADD KEY `grades_subject_id_foreign` (`subject_id`);
 
 --
@@ -1036,7 +964,9 @@ ALTER TABLE `student_subjects`
 -- Indexes for table `subjects`
 --
 ALTER TABLE `subjects`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `subjects_teacher_id_foreign` (`teacher_id`);
 
 --
 -- Indexes for table `teachers`
@@ -1073,10 +1003,16 @@ ALTER TABLE `year_levels`
 --
 
 --
+-- AUTO_INCREMENT for table `announcements`
+--
+ALTER TABLE `announcements`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 
 --
 -- AUTO_INCREMENT for table `attendance_records`
@@ -1088,7 +1024,7 @@ ALTER TABLE `attendance_records`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1100,7 +1036,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1112,7 +1048,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1130,7 +1066,7 @@ ALTER TABLE `school_years`
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `section_student`
@@ -1154,7 +1090,7 @@ ALTER TABLE `section_teacher`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
 
 --
 -- AUTO_INCREMENT for table `student_subjects`
@@ -1166,13 +1102,13 @@ ALTER TABLE `student_subjects`
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `teaching_loads`
@@ -1184,7 +1120,7 @@ ALTER TABLE `teaching_loads`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
 
 --
 -- AUTO_INCREMENT for table `year_levels`
@@ -1195,6 +1131,13 @@ ALTER TABLE `year_levels`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `announcements`
+--
+ALTER TABLE `announcements`
+  ADD CONSTRAINT `announcements_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `announcements_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `attendances`
@@ -1214,6 +1157,7 @@ ALTER TABLE `attendance_records`
 -- Constraints for table `enrollments`
 --
 ALTER TABLE `enrollments`
+  ADD CONSTRAINT `enrollments_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `enrollments_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `enrollments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
@@ -1264,6 +1208,12 @@ ALTER TABLE `student_subjects`
   ADD CONSTRAINT `student_subjects_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `student_subjects_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `student_subjects_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `subjects`
+--
+ALTER TABLE `subjects`
+  ADD CONSTRAINT `subjects_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `teachers`

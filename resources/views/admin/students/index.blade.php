@@ -37,48 +37,12 @@
 
             <!-- RIGHT: SEARCH + ADD BUTTON -->
             <div class="flex items-center gap-3 w-full md:w-auto">
-            
-
-    <!-- SEARCH INPUT -->
-    <input type="text"
-           id="studentSearch"
-           placeholder="Search student..."
-           class="px-4 py-2 rounded-xl border border-gray-300 
-                  focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400
-                  shadow-sm w-full md:w-64">
-<script>
-document.getElementById('studentSearch').addEventListener('keyup', function() {
-
-    let searchValue = this.value.toLowerCase();
-    let rows = document.querySelectorAll('.student-row');
-
-    rows.forEach(row => {
-        let data = row.getAttribute('data-search');
-
-        if (data.includes(searchValue)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-
-    // Hide empty sections automatically
-    document.querySelectorAll('tbody').forEach(tbody => {
-        let visibleRows = tbody.querySelectorAll('.student-row:not([style*="display: none"])');
-        let sectionContainer = tbody.closest('.mb-10');
-
-        if (visibleRows.length === 0) {
-            sectionContainer.style.display = 'none';
-        } else {
-            sectionContainer.style.display = '';
-        }
-    });
-
-});
-</script>
-
-
-                <!-- ADD STUDENT BUTTON -->
+                <input type="text"
+                       id="studentSearch"
+                       placeholder="Search student..."
+                       class="px-4 py-2 rounded-xl border border-gray-300 
+                              focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400
+                              shadow-sm w-full md:w-64">
                 <button onclick="openAddStudentModal()"
                         class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
                                px-5 py-2.5 rounded-xl shadow-lg hover:scale-105 transition
@@ -89,153 +53,82 @@ document.getElementById('studentSearch').addEventListener('keyup', function() {
         </div>
     </header>
 
-    @if(session('success'))
-<div id="successAlert"
-     class="flex items-center justify-between gap-4
-            bg-green-100 border border-green-300 text-green-800
-            px-6 py-4 rounded-xl shadow-lg transition-all duration-500">
-
-    <div class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="h-6 w-6 text-green-600"
-             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7"/>
-        </svg>
-        <span class="font-semibold">
-            {{ session('success') }}
-        </span>
-    </div>
-
-    <button onclick="closeSuccessAlert()"
-            class="text-green-700 hover:text-red-500 text-xl font-bold">
-        ✕
-    </button>
-</div>
-@endif
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
 <script>
-
-function closeSuccessAlert(){
-    const alert = document.getElementById('successAlert');
-    if(alert){
-        alert.classList.add('opacity-0');
-        setTimeout(() => alert.remove(), 500);
-    }
-}
-
-// auto-hide after 5 seconds
-setTimeout(() => {
-    closeSuccessAlert();
-}, 5000);
-
-
-</script>
-
- <!-- STUDENTS TABLE GROUPED BY SECTION + YEAR -->
-@php
-    $groupedStudents = $students->groupBy(function($student) {
-        return ($student->section->year_level ?? 'N/A') . ' - ' . ($student->section->name ?? 'Not Assigned');
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
     });
-@endphp
+});
+</script>
+@endif
 
-@forelse($groupedStudents as $groupName => $groupStudents)
-
-    <!-- GROUP HEADER -->
-    <div class="mb-10">
-        <h2 class="bg-indigo-100 text-indigo-800 font-bold px-5 py-3 rounded-xl shadow mb-4">
-            Section: {{ $groupName }}
-        </h2>
-
-        <!-- TABLE -->
-        <div class="overflow-x-auto bg-white rounded-2xl shadow border">
-            <table class="min-w-full text-sm">
-                <thead class="bg-gray-100 uppercase text-xs text-gray-600">
-                    <tr>
-                        <th class="px-5 py-3 text-left">No.</th>
-                        <th class="px-5 py-3 text-left">Student</th>
-                        
-                        <th class="px-5 py-3 text-center">Actions</th>
-                    </tr>
-                </thead>
-
-               
-
-
-
-                <tbody class="divide-y">
-                    @foreach($groupStudents as $student)
-                       <tr class="hover:bg-indigo-50 transition student-row"
-    data-search="{{ strtolower($student->first_name . ' ' . $student->middle_name . ' ' . $student->last_name . ' ' . $student->school_id . ' ' . $student->lrn) }}">
-
-
-
-                            <!-- NUMBER -->
-                            <td class="px-5 py-4">
-                                {{ $loop->iteration }}
-                            </td>
-
-                            <!-- STUDENT -->
-                            <td class="px-5 py-4">
-                                <div class="flex items-center gap-4">
-                                    <img
-                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                                        class="w-12 h-12 rounded-full object-cover shadow"
-                                        alt="Photo">
-
-                                    <div>
-                                        <p class="font-semibold text-gray-800 leading-tight">
-                                            {{ $student->first_name }}
-                                            {{ $student->middle_name }}
-                                            {{ $student->last_name }}
-                                        </p>
-                                        <p class="text-xs text-gray-500 mt-1">
-                                            S-ID: {{ $student->school_id }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-
-                            
-                           <td class="px-5 py-4 text-center">
-    <div class="flex justify-center gap-3 relative">
-
-        <!-- SCHOOL FORMS BUTTON -->
-<div class="relative inline-block text-left">
-    <button onclick="toggleFormDropdown({{ $student->id }})"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs">
-        School Forms
-    </button>
-
-    <!-- DROPDOWN -->
-    <div id="formDropdown{{ $student->id }}"
-        class="hidden absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-50">
-
-        <a href="{{ route('admin.sf9.show', $student->id) }}"
-           class="block px-4 py-2 text-sm hover:bg-indigo-100">
-           SF9
-        </a>
-
-        <a href="{{ route('admin.sf10.show', $student->id) }}"
-           class="block px-4 py-2 text-sm hover:bg-indigo-100">
-           SF10
-        </a>
-
-        <button
-            onclick="openEditStudentModal(this)"
-            data-id="{{ $student->id }}"
-            data-first="{{ $student->first_name }}"
-            data-middle="{{ $student->middle_name ?? '' }}"
-            data-last="{{ $student->last_name }}"
-            data-birthday="{{ $student->birthday }}"
-            data-email="{{ $student->email }}"
-            data-contact="{{ $student->contact_number ?? '' }}"
-            data-sex="{{ $student->sex }}"
-            data-section_id="{{ $student->section_id ?? '' }}"
-            class="block px-4 py-2 text-sm hover:bg-indigo-100">
-            Update Student
-        </button>
-
-    </div>
+<!-- STUDENTS TABLE -->
+<div class="overflow-x-auto bg-white rounded-2xl shadow border">
+    <table class="min-w-full text-sm">
+        <thead class="bg-gray-100 uppercase text-xs text-gray-600">
+            <tr>
+                <th class="px-5 py-3 text-left">No.</th>
+                <th class="px-5 py-3 text-left">Student</th>
+                <th class="px-5 py-3 text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y">
+            @foreach($students->sortBy('last_name') as $student)
+            <tr class="hover:bg-indigo-50 transition student-row"
+                data-search="{{ strtolower($student->first_name.' '.$student->middle_name.' '.$student->last_name.' '.$student->school_id) }}">
+                <td class="px-5 py-4">{{ $loop->iteration }}</td>
+                <td class="px-5 py-4">
+                    <div class="flex items-center gap-4">
+                        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                             class="w-12 h-12 rounded-full object-cover shadow" alt="Photo">
+                        <div>
+                            <p class="font-semibold text-gray-800 leading-tight">
+                                {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }} {{ $student->suffix }}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">S-ID: {{ $student->school_id }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-5 py-4 text-center">
+                    <div class="flex justify-center gap-3 relative">
+                        <div class="relative inline-block text-left">
+                            <button onclick="toggleFormDropdown({{ $student->id }})"
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs">
+                                School Forms
+                            </button>
+                            <div id="formDropdown{{ $student->id }}"
+                                 class="hidden absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-50">
+                                <a href="{{ route('admin.sf9.show', $student->id) }}" class="block px-4 py-2 text-sm hover:bg-indigo-100">SF9</a>
+                                <a href="{{ route('admin.sf10.show', $student->id) }}" class="block px-4 py-2 text-sm hover:bg-indigo-100">SF10</a>
+                                <button onclick="openEditStudentModal(this)"
+                                        data-id="{{ $student->id }}"
+                                        data-first="{{ $student->first_name }}"
+                                        data-middle="{{ $student->middle_name ?? '' }}"
+                                        data-last="{{ $student->last_name }}"
+                                        data-suffix="{{ $student->suffix ?? '' }}"
+                                        data-birthday="{{ $student->birthday }}"
+                                        data-email="{{ $student->email }}"
+                                        data-contact="{{ $student->contact_number ?? '' }}"
+                                        data-sex="{{ $student->sex ?? '' }}"
+                                        data-address="{{ $student->address ?? '' }}"
+                                        data-photo="{{ $student->photo ?? '' }}"
+                                        class="block px-4 py-2 text-sm hover:bg-indigo-100">
+                                    Update Student
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 
 <script>
@@ -244,9 +137,7 @@ function toggleFormDropdown(studentId) {
     dropdown.classList.toggle('hidden');
 }
 
-// Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
-    // Loop through all dropdowns
     document.querySelectorAll('[id^="formDropdown"]').forEach(dropdown => {
         if (!dropdown.contains(event.target) &&
             !dropdown.previousElementSibling.contains(event.target)) {
@@ -256,187 +147,67 @@ document.addEventListener('click', function(event) {
 });
 </script>
 
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-@empty
-    <p class="text-center text-gray-500 py-10">
-        No students found.
-    </p>
-@endforelse
-
-
-<!-- DELETE MODAL 
-<div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl text-center">
-        <h3 class="text-lg font-bold mb-4">Confirm Deletion</h3>
-        <p class="mb-6 text-gray-700">
-            Are you sure you want to delete this student? This action will happen in 
-            <span id="deleteCountdown">5</span> seconds.
-        </p>
-
-        <div class="flex justify-center gap-4">
-            <button onclick="cancelDelete()" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg">Cancel</button>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-                    Delete Now
-                </button>
-            </form>
-        </div>
-    </div>
-</div> -->
-
-
 <!-- ================= ADD STUDENT MODAL ================= -->
-<div id="addStudentModal"
-     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+<div id="addStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 relative overflow-y-auto max-h-[90vh]">
-
-        <!-- MODAL HEADER -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Add New Student</h2>
-            <button type="button" onclick="closeAddStudentModal()"
-                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeAddStudentModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
         </div>
-
-        <!-- STUDENT FORM -->
-        <form method="POST" 
-              action="{{ route('admin.students.store') }}" 
-              enctype="multipart/form-data"
-              class="space-y-4">
-
+        <form method="POST" action="{{ route('admin.students.store') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
-
-            <!-- NAME FIELDS -->
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <input type="text" name="first_name" placeholder="First Name" required
-                       value="{{ old('first_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="middle_name" placeholder="Middle Name"
-                       value="{{ old('middle_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="last_name" placeholder="Last Name" required
-                       value="{{ old('last_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)"
-                       value="{{ old('suffix') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="lrn" placeholder="LRN" required
-                       value="{{ old('lrn') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="text" name="first_name" placeholder="First Name" required value="{{ old('first_name') }}" class="px-4 py-2 rounded-lg border">
+                <input type="text" name="middle_name" placeholder="Middle Name" value="{{ old('middle_name') }}" class="px-4 py-2 rounded-lg border">
+                <input type="text" name="last_name" placeholder="Last Name" required value="{{ old('last_name') }}" class="px-4 py-2 rounded-lg border">
+                <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)" value="{{ old('suffix') }}" class="px-4 py-2 rounded-lg border">
+                <input type="text" name="lrn" placeholder="LRN" required value="{{ old('lrn') }}" class="px-4 py-2 rounded-lg border">
             </div>
-
-            <!-- SEX SELECT -->
-            <select name="sex" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300">
+            <select name="sex" required class="w-full px-4 py-2 rounded-lg border">
                 <option value="">-- Select Sex --</option>
                 <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
                 <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
             </select>
-
-            <!-- BIRTHDAY -->
-            <div>
-                <label class="block text-sm text-gray-600 mb-1">Birthday</label>
-                <input type="date" name="birthday" required
-                       value="{{ old('birthday') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
-            </div>
-
-            <!-- EMAIL -->
-            <div>
-                <input type="email" name="email" placeholder="Email Address" required
-                       value="{{ old('email') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-            </div>
-
-            <!-- CONTACT NUMBER -->
-            <div>
-                <input type="text" name="contact_number" placeholder="Contact Number"
-                       value="{{ old('contact_number') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
-            </div>
-
-            <!-- SCHOOL YEAR -->
-<div>
-    <label class="block text-sm text-gray-600 mb-1">School Year</label>
-    <select name="school_year_id" required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300">
-        <option value="">-- Select School Year --</option>
-        @foreach($schoolYears as $year)
-            <option value="{{ $year->id }}"
-                {{ old('school_year_id') == $year->id ? 'selected' : '' }}>
-                {{ $year->name }}
-            </option>
-        @endforeach
-    </select>
-</div>
-
-            <!-- HOME ADDRESS -->
-            <div>
-                <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
-                <input list="addresses" 
-                       id="address" 
-                       name="address" 
-                       placeholder="Enter your address"
-                       value="{{ old('address') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
-                <datalist id="addresses">
-                    <option value="Bulak, Dauin, Negros Oriental">
-                    <option value="Libjo, Dauin, Negros Oriental">
-                    <option value="Lipayo, Dauin, Negros Oriental">
-                    <option value="Mag-aso, Dauin, Negros Oriental">
-                    <option value="Tugawe, Dauin, Negros Oriental">
-                </datalist>
-            </div>
-
-            <!-- PASSWORD -->
+            <input type="date" name="birthday" required value="{{ old('birthday') }}" class="w-full px-4 py-2 rounded-lg border">
+            <input type="email" name="email" placeholder="Email Address" required value="{{ old('email') }}" class="w-full px-4 py-2 rounded-lg border">
+            <input type="text" name="contact_number" placeholder="Contact Number" value="{{ old('contact_number') }}" class="w-full px-4 py-2 rounded-lg border">
+            <select name="school_year_id" required class="w-full px-4 py-2 rounded-lg border">
+                <option value="">-- Select School Year --</option>
+                @foreach($schoolYears as $year)
+                    <option value="{{ $year->id }}" {{ old('school_year_id') == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
+                @endforeach
+            </select>
+            <input list="addresses" id="address" name="address" placeholder="Enter your address" value="{{ old('address') }}" class="w-full px-4 py-2 rounded-lg border">
+            <datalist id="addresses">
+                <option value="Bulak, Dauin, Negros Oriental">
+                <option value="Libjo, Dauin, Negros Oriental">
+                <option value="Lipayo, Dauin, Negros Oriental">
+                <option value="Mag-aso, Dauin, Negros Oriental">
+                <option value="Tugawe, Dauin, Negros Oriental">
+            </datalist>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="password" name="password" placeholder="Password" required
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="password" name="password_confirmation" placeholder="Confirm Password" required
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="password" name="password" placeholder="Password" required class="px-4 py-2 rounded-lg border">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required class="px-4 py-2 rounded-lg border">
             </div>
-
-            <!-- PHOTO UPLOAD -->
             <div class="mb-3 mt-3">
-                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
-                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
+                <label for="addPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+                <input type="file" name="photo" id="addPhoto" accept="image/*" class="mt-1 block w-full">
                 <div class="mt-2">
-                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+                    <img id="addPhotoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
                 </div>
             </div>
-
-            <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
-                <button type="button" onclick="closeAddStudentModal()"
-                        class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg font-medium">
-                    Cancel
-                </button>
-                <button type="submit"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-md font-medium">
-                    Save Student
-                </button>
+                <button type="button" onclick="closeAddStudentModal()" class="bg-gray-300 px-4 py-2 rounded-lg font-medium">Cancel</button>
+                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md font-medium">Save Student</button>
             </div>
-
         </form>
     </div>
 </div>
 
-
-<!-- EDIT STUDENT MODAL -->
+<!-- ================= EDIT STUDENT MODAL ================= -->
 <div id="editStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-
         <h2 class="text-xl font-bold mb-4">Edit Student</h2>
-
-        <!-- FORM -->
         <form id="editStudentForm" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -449,56 +220,64 @@ document.addEventListener('click', function(event) {
                 <input type="text" name="suffix" id="edit_student_suffix" placeholder="Suffix" class="px-4 py-2 border rounded-lg">
             </div>
 
-            <!-- BIRTHDAY -->
+            <!-- BIRTHDAY FIELD -->
             <input type="date" name="birthday" id="edit_student_birthday" class="w-full mt-3 px-4 py-2 border rounded-lg" required>
+           
+           <!-- EMAIL FIELD (READONLY) -->
+           <div class="relative mt-3">
+    <label for="edit_student_email" class="block text-gray-700 text-sm font-medium mb-1">
+        Email Address
+    </label>
+    <input type="email"
+           name="email"
+           id="edit_student_email"
+           placeholder="Email Address"
+           value="{{ old('email', $student->email) }}"
+           readonly
+           class="w-full mt-1 px-4 py-2 border rounded-lg bg-gray-100 cursor-not-allowed"
+           onfocus="showEmailTooltip()">
 
-            <!-- EMAIL -->
-            <input type="email" name="email" id="edit_student_email" placeholder="Email Address" class="w-full mt-3 px-4 py-2 border rounded-lg" required>
+    <!-- Tooltip -->
+    <span id="emailTooltip"
+          class="absolute left-2 top-full mt-1 text-xs text-white bg-gray-800 px-2 py-1 rounded opacity-0 transition-opacity duration-300 pointer-events-none">
+        This field is uneditable
+    </span>
+</div>
 
-            <!-- CONTACT NUMBER -->
+<script>
+function showEmailTooltip() {
+    const tooltip = document.getElementById('emailTooltip');
+    tooltip.classList.add('opacity-100'); // Show tooltip
+    setTimeout(() => {
+        tooltip.classList.remove('opacity-100'); // Hide after 2 seconds
+    }, 2000);
+}
+</script>
+
+       <!-- CONTACT NUMBER -->
             <input type="text" name="contact_number" id="edit_student_contact" placeholder="Contact Number" class="w-full mt-3 px-4 py-2 border rounded-lg">
 
-            <!-- SEX -->
+       <!--SEX SELECTION-->
             <select name="sex" id="edit_student_sex" class="w-full mt-3 px-4 py-2 border rounded-lg" required>
                 <option value="">Select Sex</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
             </select>
 
-            <!-- SECTION -->
-            <select name="section_id" id="edit_student_section" class="w-full mt-3 px-4 py-2 border rounded-lg" required>
-                <option value="">-- Select Section --</option>
-                @foreach($sections as $section)
-                    <option value="{{ $section->id }}">
-                        {{ $section->year_level }} - {{ $section->name }} ({{ $section->school_year }})
-                    </option>
-                @endforeach
-            </select>
+        <!-- ADDRESS FIELD WITH SUGGESTIONS -->
+            <div class="mt-3">
+                <label for="edit_student_address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
+                <input list="addresses_list" id="edit_student_address" name="address" placeholder="Enter your address" class="w-full px-4 py-2 rounded-lg border">
+                <datalist id="addresses_list">
+                    <option value="Bulak, Dauin, Negros Oriental">
+                    <option value="Libjo, Dauin, Negros Oriental">
+                    <option value="Lipayo, Dauin, Negros Oriental">
+                    <option value="Mag-aso, Dauin, Negros Oriental">
+                    <option value="Tugawe, Dauin, Negros Oriental">
+                </datalist>
+            </div>
 
-            <!-- ADDRESS -->
-<div class="mt-3">
-    <label for="edit_student_address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
-    
-    <input list="addresses_list" 
-           id="edit_student_address" 
-           name="address" 
-           placeholder="Enter your address"
-           value="{{ old('address') }}" 
-           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-    required>
-
-    <!-- Predefined address suggestions -->
-    <datalist id="addresses_list" required>
-        <option value="Bulak, Dauin, Negros Oriental">
-        <option value="Libjo, Dauin, Negros Oriental">
-        <option value="Lipayo, Dauin, Negros Oriental">
-        <option value="Mag-aso, Dauin, Negros Oriental">
-        <option value="Tugawe, Dauin, Negros Oriental">
-    </datalist>
-</div>
-
-
-            <!-- PHOTO UPLOAD -->
+            <!--EDIT PHOTO-->
             <div class="mb-3 mt-3">
                 <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
                 <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
@@ -507,179 +286,81 @@ document.addEventListener('click', function(event) {
                 </div>
             </div>
 
-            <!-- ACTION BUTTONS -->
+
             <div class="flex justify-end gap-3 mt-4">
                 <button type="button" onclick="closeEditStudentModal()" class="bg-gray-300 px-4 py-2 rounded-lg">Cancel</button>
                 <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg">Update</button>
             </div>
         </form>
-
         <button onclick="closeEditStudentModal()" class="absolute top-3 right-3 text-xl">✕</button>
     </div>
 </div>
 
-<!-- JS: Populate modal + Live preview -->
 <script>
+/* ------------------ MODAL FUNCTIONS ------------------ */
+function openAddStudentModal() {
+    document.getElementById('addStudentModal').classList.remove('hidden');
+    document.getElementById('addStudentModal').classList.add('flex');
+}
+function closeAddStudentModal() {
+    document.getElementById('addStudentModal').classList.add('hidden');
+    document.getElementById('addStudentModal').classList.remove('flex');
+}
 function openEditStudentModal(button) {
-    const studentId = button.dataset.id;
-    const first = button.dataset.first;
-    const middle = button.dataset.middle ?? '';
-    const last = button.dataset.last;
-    const suffix = button.dataset.suffix ?? '';
-    const birthday = button.dataset.birthday;
-    const email = button.dataset.email;
-    const contact = button.dataset.contact ?? '';
-    const sex = button.dataset.sex ?? '';
-    const sectionId = button.dataset.section_id ?? '';
-    const photo = button.dataset.photo ?? null;
-
-    // Fill form
-    document.getElementById('editStudentForm').action = `/students/${studentId}`;
-    document.getElementById('edit_student_first').value = first;
-    document.getElementById('edit_student_middle').value = middle;
-    document.getElementById('edit_student_last').value = last;
-    document.getElementById('edit_student_suffix').value = suffix;
-    document.getElementById('edit_student_birthday').value = birthday;
-    document.getElementById('edit_student_email').value = email;
-    document.getElementById('edit_student_contact').value = contact;
-    document.getElementById('edit_student_sex').value = sex;
-    document.getElementById('edit_student_section').value = sectionId;
-
-    // Show existing photo or placeholder
-    document.getElementById('photoPreview').src = photo 
-        ? `{{ asset('storage') }}/${photo}`
-        : '{{ asset("images/photo-placeholder.png") }}';
-
-    // Show modal
-    document.getElementById('editStudentModal').classList.remove('hidden');
-}
-
-function closeEditStudentModal() {
-    document.getElementById('editStudentModal').classList.add('hidden');
-}
-
-// Live preview for newly selected photo
-document.getElementById('editPhoto').addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('photoPreview').src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-    }
-});
-</script>
-
-
-<script>
-    let deleteTimeout;
-
-    function showDeleteModal(studentId) {
-        const modal = document.getElementById('deleteModal');
-        const form = document.getElementById('deleteForm');
-        const countdownEl = document.getElementById('deleteCountdown');
-
-        form.action = `/admin/students/${studentId}`;
-        let counter = 5;
-        countdownEl.textContent = counter;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        deleteTimeout = setInterval(() => {
-            counter--;
-            countdownEl.textContent = counter;
-            if(counter <= 0){
-                clearInterval(deleteTimeout);
-                form.submit();
-            }
-        }, 1000);
-    }
-
-    function cancelDelete() {
-        clearInterval(deleteTimeout);
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
-
- 
-
-    // ADD STUDENT MODAL
-    function openAddStudentModal() {
-        document.getElementById('addStudentModal').classList.remove('hidden');
-        document.getElementById('addStudentModal').classList.add('flex');
-    }
-    function closeAddStudentModal() {
-        document.getElementById('addStudentModal').classList.add('hidden');
-    }
-
-
-    // EDIT STUDENT MODAL function
-  function openEditStudentModal(el) {
     const modal = document.getElementById('editStudentModal');
     const form = document.getElementById('editStudentForm');
-
-    // Set correct PUT route for the student
-    form.action = `{{ url('admin/students') }}/${el.dataset.id}`;
-
-    // Populate fields
-    document.getElementById('edit_student_first').value = el.dataset.first;
-    document.getElementById('edit_student_middle').value = el.dataset.middle || '';
-    document.getElementById('edit_student_last').value = el.dataset.last;
-    document.getElementById('edit_student_suffix').value = el.dataset.suffix || '';
-    document.getElementById('edit_student_birthday').value = el.dataset.birthday || '';
-    document.getElementById('edit_student_email').value = el.dataset.email;
-    document.getElementById('edit_student_contact').value = el.dataset.contact || '';
-    document.getElementById('edit_student_sex').value = el.dataset.sex || '';
-    document.getElementById('edit_student_section').value = el.dataset.section_id || '';
-
-    // Show modal
+    form.action = `{{ url('admin/students') }}/${button.dataset.id}`;
+    document.getElementById('edit_student_first').value = button.dataset.first;
+    document.getElementById('edit_student_middle').value = button.dataset.middle || '';
+    document.getElementById('edit_student_last').value = button.dataset.last;
+    document.getElementById('edit_student_suffix').value = button.dataset.suffix || '';
+    document.getElementById('edit_student_birthday').value = button.dataset.birthday || '';
+    document.getElementById('edit_student_email').value = button.dataset.email || '';
+    document.getElementById('edit_student_contact').value = button.dataset.contact || '';
+    document.getElementById('edit_student_sex').value = button.dataset.sex || '';
+    document.getElementById('edit_student_address').value = button.dataset.address || '';
+    document.getElementById('photoPreview').src = button.dataset.photo ? `{{ asset('storage') }}/${button.dataset.photo}` : '{{ asset("images/photo-placeholder.png") }}';
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
-
 function closeEditStudentModal() {
     const modal = document.getElementById('editStudentModal');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
 }
 
-
-const editPhotoInput = document.getElementById('editPhoto');
-const photoPreview = document.getElementById('photoPreview');
-
-editPhotoInput.addEventListener('change', function() {
+/* ------------------ PHOTO PREVIEW ------------------ */
+document.getElementById('editPhoto').addEventListener('change', function(){
     const file = this.files[0];
-    if (file) {
+    if(file){
         const reader = new FileReader();
-        reader.onload = function(e) {
-            photoPreview.src = e.target.result;
-        }
+        reader.onload = e => document.getElementById('photoPreview').src = e.target.result;
         reader.readAsDataURL(file);
     } else {
-        photoPreview.src = '{{ asset("images/photo-placeholder.png") }}';
+        document.getElementById('photoPreview').src = '{{ asset("images/photo-placeholder.png") }}';
     }
+});
+document.getElementById('addPhoto').addEventListener('change', function(){
+    const file = this.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('addPhotoPreview').src = e.target.result;
+        reader.readAsDataURL(file);
+    } else {
+        document.getElementById('addPhotoPreview').src = '{{ asset("images/photo-placeholder.png") }}';
+    }
+});
+
+/* ------------------ SEARCH FILTER ------------------ */
+document.getElementById('studentSearch').addEventListener('input', function(){
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.student-row').forEach(row => {
+        const text = row.dataset.search;
+        row.style.display = text.includes(query) ? '' : 'none';
+    });
 });
 </script>
 
-
-<script>
-const editPhotoInput = document.getElementById('editPhoto');
-const photoPreview = document.getElementById('photoPreview');
-
-editPhotoInput.addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            photoPreview.src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-    } else {
-        photoPreview.src = '{{ asset("images/photo-placeholder.png") }}';
-    }
-});
-</script>
-
-
+</div>
 </body>
 </html>

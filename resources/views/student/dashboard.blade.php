@@ -43,6 +43,7 @@
    👤 My Profile
 </a>
 
+
                 <div class="border-t"></div>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
                    class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
@@ -92,14 +93,6 @@
             Section: <span class="font-medium">{{ $section->year_level }} - {{ $section->name }}</span>
         </p>
 
-        <!-- Student Status -->
-        <p class="text-gray-600 mt-1">
-            Status: 
-            <span class="font-medium text-{{ $student->enrollments->last()?->status == 'active' ? 'green' : 'gray' }}-600">
-                {{ ucfirst($student->enrollments->last()?->status ?? 'N/A') }}
-            </span>
-        </p>
-
         <!-- Active School Year -->
         <p class="text-gray-600 mt-1">
             School Year: 
@@ -107,8 +100,27 @@
                 {{ $activeSchoolYear->name ?? ($student->enrollments->last()?->schoolYear?->name ?? 'N/A') }}
             </span>
         </p>
+
+         <!-- Student Status -->
+        <p class="text-gray-600 mt-1">
+            Status: 
+            <span class="font-medium text-{{ $student->enrollments->last()?->status == 'active' ? 'green' : 'gray' }}-600">
+                {{ ucfirst($student->enrollments->last()?->status ?? 'N/A') }}
+            </span>
+        </p>
+
     </div>
 </div>
+
+ <!-- TEACHER INFO -->
+        @if($section->teacher)
+        <div class="mt-3 p-3 bg-indigo-50 rounded-xl shadow-sm">
+            <p class="text-gray-700 font-semibold">Class Adviser</p>
+            <p class="text-gray-800 font-medium mt-1">{{ $section->teacher->name }}</p>
+            <p class="text-sm text-gray-600 mt-0.5">Email: {{ $section->teacher->email ?? 'N/A' }}</p>
+            <p class="text-sm text-gray-600 mt-0.5">Contact: {{ $section->teacher->contact_number ?? 'N/A' }}</p>
+        </div>
+        @endif
 
     <!-- =================== ACTION BUTTONS =================== -->
     <div class="flex flex-wrap gap-4 mt-6">

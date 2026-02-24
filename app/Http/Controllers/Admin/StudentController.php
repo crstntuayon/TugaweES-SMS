@@ -22,7 +22,9 @@ class StudentController extends Controller
      // Show all students
   public function index()
 {
-    $students = Student::with('section')->get();
+    $students = Student::orderBy('last_name', 'asc') // sort by last name
+                   ->orderBy('first_name', 'asc') // optional secondary sort
+                   ->get();
     $sections = Section::all(); // <- fetch all sections
  // ✅ Get all school years for the dropdown
     $schoolYears = SchoolYear::orderByDesc('name')->get();
@@ -123,7 +125,7 @@ public function update(Request $request, Student $student)
         'email' => 'required|email',
         'contact_number' => 'nullable|string|max:20',
         'sex' => 'required|string',
-        'section_id' => 'required|exists:sections,id',
+     
         'lrn' => 'nullable|string|max:20',
         'address' => 'required|string|max:255',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -134,7 +136,7 @@ public function update(Request $request, Student $student)
     $student->update($request->only([
         'first_name', 'middle_name', 'last_name', 'suffix',
         'birthday', 'email', 'contact_number', 'sex',
-        'section_id', 'lrn', 'address'
+         'lrn', 'address'
     ]));
 
     // Handle photo upload if present

@@ -51,47 +51,21 @@
 </header>
 
 
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @if(session('success'))
-<div id="successAlert"
-     class="flex items-center justify-between gap-4
-            bg-green-100 border border-green-300 text-green-800
-            px-6 py-4 rounded-xl shadow-lg transition-all duration-500">
-
-    <div class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="h-6 w-6 text-green-600"
-             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7"/>
-        </svg>
-        <span class="font-semibold">
-            {{ session('success') }}
-        </span>
-    </div>
-
-    <button onclick="closeSuccessAlert()"
-            class="text-green-700 hover:text-red-500 text-xl font-bold">
-        ✕
-    </button>
-</div>
-@endif
 <script>
-
-function closeSuccessAlert(){
-    const alert = document.getElementById('successAlert');
-    if(alert){
-        alert.classList.add('opacity-0');
-        setTimeout(() => alert.remove(), 500);
-    }
-}
-
-// auto-hide after 5 seconds
-setTimeout(() => {
-    closeSuccessAlert();
-}, 5000);
-
-
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#6366f1'
+    });
+});
 </script>
+@endif
 
 
 <!-- ================= SECTIONS ================= -->

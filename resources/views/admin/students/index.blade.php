@@ -83,18 +83,35 @@ document.addEventListener('DOMContentLoaded', function () {
             <tr class="hover:bg-indigo-50 transition student-row"
                 data-search="{{ strtolower($student->first_name.' '.$student->middle_name.' '.$student->last_name.' '.$student->school_id) }}">
                 <td class="px-5 py-4">{{ $loop->iteration }}</td>
-                <td class="px-5 py-4">
-                    <div class="flex items-center gap-4">
-                        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                             class="w-12 h-12 rounded-full object-cover shadow" alt="Photo">
-                        <div>
-                            <p class="font-semibold text-gray-800 leading-tight">
-                                {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }} {{ $student->suffix }}
-                            </p>
-                            <p class="text-xs text-gray-500 mt-1">S-ID: {{ $student->school_id }}</p>
-                        </div>
-                    </div>
-                </td>
+               <td class="px-5 py-4">
+    <div class="flex items-center gap-4">
+        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+             class="w-12 h-12 rounded-full object-cover shadow" alt="Photo">
+        <div>
+            <p class="font-semibold text-gray-800 leading-tight">
+                {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }} {{ $student->suffix }}
+            </p>
+            <p class="text-xs text-gray-500 mt-1">S-ID: {{ $student->school_id }}</p>
+            
+            <!-- STATUS BADGE -->
+            @php
+                $enrollment = $student->enrollments()->where('school_year_id', $activeYear->id)->first();
+                $status = $enrollment->status ?? 'N/A';
+                $statusColor = match($status) {
+                    'enrolled' => 'bg-green-100 text-green-800',
+                    'unenrolled' => 'bg-red-100 text-red-800',
+                    'promoted' => 'bg-blue-100 text-blue-800',
+                    'retained' => 'bg-yellow-100 text-yellow-800',
+                    'transferred' => 'bg-purple-100 text-purple-800',
+                    default => 'bg-gray-100 text-gray-800',
+                };
+            @endphp
+            <span class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full {{ $statusColor }}">
+                {{ ucfirst($status) }}
+            </span>
+        </div>
+    </div>
+</td>
                 <td class="px-5 py-4 text-center">
                     <div class="flex justify-center gap-3 relative">
                         <div class="relative inline-block text-left">

@@ -28,7 +28,8 @@ class StudentController extends Controller
     $sections = Section::all(); // <- fetch all sections
  // ✅ Get all school years for the dropdown
     $schoolYears = SchoolYear::orderByDesc('name')->get();
-    return view('admin.students.index', compact('students', 'sections', 'schoolYears'));
+     $activeYear = SchoolYear::active()->first(); // ✅ define active school year
+    return view('admin.students.index', compact('activeYear', 'students', 'sections', 'schoolYears'));
 }
     // Show form to create new student
     public function create()

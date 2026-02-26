@@ -63,181 +63,125 @@ class DashboardController extends Controller
     ));
 }
 
-    // Enroll student into a section
- public function enroll(Request $request)
-{
-    $request->validate([
-        'student_id' => 'required|exists:students,id',
-        'section_id' => 'required|exists:sections,id',
-    ]);
+  // Enroll student into a section
+public function enroll(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'section_id' => 'required|exists:sections,id',
+        ]);
 
-    $activeSchoolYear = SchoolYear::active()->first();
-    $section = Section::findOrFail($request->section_id);
+        $activeSchoolYear = SchoolYear::active()->firstOrFail();
+        $section = Section::findOrFail($request->section_id);
 
-    // Security: teacher ownership
-    if ($section->teacher_id !== auth()->id()) {
-        return back()->with('error', 'You are not allowed to enroll in this section.');
-    }
+        // Security: ensure teacher owns section
+        if ($section->teacher_id !== Auth::id()) {
+            return back()->with('error', 'You are not allowed to enroll in this section.');
+        }
 
-     // ✅ SECTION CAPACITY CHECK (PUT IT HERE)
-   if ($section->isFull($activeSchoolYear->id)) {
-    return back()->with('error', 'Section is already full.');
-}
+        // Section capacity check
+        if ($section->isFull($activeSchoolYear->id)) {
+            return back()->with('error', 'Section is already full.');
+        }
 
-    // Prevent duplicate enrollment
-    $alreadyEnrolled = Enrollment::where('student_id', $request->student_id)
-        ->where('school_year_id', $activeSchoolYear->id)
-        ->exists();
+        // Check existing enrollment for this school year
+        $existingEnrollment = Enrollment::where('student_id', $request->student_id)
+            ->where('school_year_id', $activeSchoolYear->id)
+            ->first();
 
-    if ($alreadyEnrolled) {
-        return back()->with('error', 'Student is already enrolled this school year.');
-    }
+        if ($existingEnrollment) {
+            if ($existingEnrollment->status === 'unenrolled') {
+                // Re-enroll student
+                $existingEnrollment->status = 'enrolled';
+                $existingEnrollment->section_id = $request->section_id;
+                $existingEnrollment->save();
 
-    Enrollment::create([
-        'student_id' => $request->student_id,
-        'section_id' => $request->section_id,
-        'school_year_id' => $activeSchoolYear->id,
-        'status' => 'enrolled'
-    ]);
-
-    return back()->with('success', 'Student enrolled successfully.');
-}
-
-    // Unenroll (already covered)
-    public function unenroll($studentId)
-{
-    $activeSchoolYear = SchoolYear::active()->first();
-
-    $enrollment = Enrollment::where('student_id', $studentId)
-        ->where('school_year_id', $activeSchoolYear->id)
-        ->first();
-
-    if (!$enrollment) {
-        return back()->with('error', 'Student not enrolled this school year.');
-    }
-
-    // Security check
-    if ($enrollment->section->teacher_id !== auth()->id()) {
-        return back()->with('error', 'You cannot unenroll a student from another teacher’s section.');
-    }
-
-    $enrollment->delete();
-
-    return back()->with('success', 'Student unenrolled successfully.');
-}
-
-public function unenrollAll($sectionId)
-{
-    $section = \App\Models\Section::findOrFail($sectionId);
-
-    // Ensure the logged-in teacher owns the section
-    if ($section->teacher_id !== auth()->id()) {
-        return back()->with('error', 'You cannot unenroll students from this section.');
-    }
-
-    $activeYear = \App\Models\SchoolYear::active()->first();
-
-    // Delete all enrollments for this section in the active school year
-    \App\Models\Enrollment::where('section_id', $section->id)
-        ->where('school_year_id', $activeYear->id)
-        ->delete();
-
-    return back()->with('success', 'All students have been unenrolled successfully.');
-}
- 
-// wala pa ni gamit 
-public function updateStatus(Request $request, $studentId)
-{
-    $request->validate([
-        'action' => 'required|string|in:unenroll,promote,retain,transfer,completed',
-        'section_id' => 'nullable|exists:sections,id', // only required for transfer
-    ]);
-
-    $action = $request->action;
-    $activeYear = \App\Models\SchoolYear::active()->first();
-
-    $enrollment = \App\Models\Enrollment::where('student_id', $studentId)
-        ->where('school_year_id', $activeYear->id)
-        ->firstOrFail();
-
-    switch ($action) {
-        case 'unenroll':
-            $enrollment->delete();
-            return back()->with('success', 'Student unenrolled successfully.');
-
-        case 'promote':
-            // Example promote logic: create new enrollment in next grade
-            $this->promoteStudent($enrollment);
-            return back()->with('success', 'Student promoted successfully.');
-
-        case 'retain':
-            $this->retainStudent($enrollment);
-            return back()->with('success', 'Student retained successfully.');
-
-        case 'transfer':
-            $newSectionId = $request->section_id;
-            if (!$newSectionId) {
-                return back()->with('error', 'Please select a section to transfer.');
+                return back()->with('success', 'Student re-enrolled successfully.');
             }
-            $this->transferStudent($enrollment, $newSectionId);
-            return back()->with('success', 'Student transferred successfully.');
 
-        case 'completed':
-            $enrollment->update(['status' => 'completed']);
-            return back()->with('success', 'Student marked as completed.');
+            return back()->with('error', 'Student is already enrolled this school year.');
+        }
+
+        // Create new enrollment
+        Enrollment::create([
+            'student_id' => $request->student_id,
+            'section_id' => $request->section_id,
+            'school_year_id' => $activeSchoolYear->id,
+            'status' => 'enrolled',
+        ]);
+
+        return back()->with('success', 'Student enrolled successfully.');
     }
-}
 
-protected function promoteStudent($enrollment)
-{
-    $currentYear = \App\Models\SchoolYear::find($enrollment->school_year_id);
+    /**
+     * Unenroll a single student (mark as unenrolled)
+     */
+    public function unenroll($studentId)
+    {
+        $activeSchoolYear = SchoolYear::active()->firstOrFail();
 
-    // Get next school year
-    $nextYear = \App\Models\SchoolYear::where('id', '>', $currentYear->id)
-        ->orderBy('id', 'asc')
-        ->first();
+        $enrollment = Enrollment::where('student_id', $studentId)
+            ->where('school_year_id', $activeSchoolYear->id)
+            ->first();
 
-    if (!$nextYear) return; // no next school year
+        if (!$enrollment) {
+            return back()->with('error', 'Student not enrolled this school year.');
+        }
 
-    // Make sure year_level is integer
-    $currentYearLevel = (int) $enrollment->section->year_level;
+        // Security: only teacher of section can unenroll
+        if ($enrollment->section && $enrollment->section->teacher_id !== Auth::id()) {
+            return back()->with('error', 'You cannot unenroll a student from another teacher’s section.');
+        }
 
-    $nextSection = \App\Models\Section::where('year_level', $currentYearLevel + 1)
-        ->where('school_year_id', $nextYear->id)
-        ->first();
+        // Mark as unenrolled instead of deleting
+        $enrollment->status = 'unenrolled';
+        $enrollment->section_id = null;
+        $enrollment->save();
 
-    if (!$nextSection) return; // no section for next grade
+        return back()->with('success', 'Student unenrolled successfully.');
+    }
 
-    // Create new enrollment
-    \App\Models\Enrollment::create([
-        'student_id' => $enrollment->student_id,
-        'section_id' => $nextSection->id,
-        'school_year_id' => $nextYear->id,
-        'status' => 'promoted'
-    ]);
-}
-protected function retainStudent($enrollment)
-{
-    $nextYear = \App\Models\SchoolYear::find($enrollment->school_year_id + 1); // example
-    \App\Models\Enrollment::create([
-        'student_id' => $enrollment->student_id,
-        'section_id' => $enrollment->section_id,
-        'school_year_id' => $nextYear->id,
-        'status' => 'retained'
-    ]);
-}
+    /**
+     * Unenroll all students in a section (mark as unenrolled)
+     */
+    public function unenrollAll($sectionId)
+    {
+        $section = Section::findOrFail($sectionId);
 
-protected function transferStudent($enrollment, $newSectionId)
-{
-    $enrollment->update([
-        'section_id' => $newSectionId,
-        'status' => 'transferred'
-    ]);
-}
-//hangtud diri 
+        if ($section->teacher_id !== Auth::id()) {
+            return back()->with('error', 'You cannot unenroll students from this section.');
+        }
+
+        $activeYear = SchoolYear::active()->firstOrFail();
+
+        Enrollment::where('section_id', $section->id)
+            ->where('school_year_id', $activeYear->id)
+            ->update([
+                'status' => 'unenrolled',
+                'section_id' => null
+            ]);
+
+        return back()->with('success', 'All students have been unenrolled successfully.');
+    }
+
+    /**
+     * Display student enrollment status for admin dashboard
+     */
+    public function studentStatus(Student $student, $schoolYearId = null)
+    {
+        $schoolYear = $schoolYearId
+            ? SchoolYear::findOrFail($schoolYearId)
+            : SchoolYear::active()->first();
+
+        $enrollment = $student->enrollments()
+            ->where('school_year_id', $schoolYear->id)
+            ->first();
+
+        return $enrollment ? $enrollment->status : 'N/A';
+    }
 
 
-
+    
 
 
 }

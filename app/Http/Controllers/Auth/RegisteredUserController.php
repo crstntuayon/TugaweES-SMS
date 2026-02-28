@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
 {
     // Validate the request
     $validated = $request->validate([
-        'lrn'             => 'required|unique:users,lrn',
+        'lrn' => 'required|digits:12|unique:students,lrn',
         'first_name'      => 'required|string|max:255',
         'middle_name'     => 'nullable|string|max:255',
         'last_name'       => 'required|string|max:255',

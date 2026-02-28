@@ -47,12 +47,21 @@
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="space-y-5">
         @csrf
 
-        <!-- LRN -->
-        <div>
-            <x-input-label for="lrn" value="LRN" />
-            <x-text-input id="lrn" name="lrn" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required />
-            <x-input-error :messages="$errors->get('lrn')" class="mt-1" />
-        </div>
+       <!-- LRN -->
+<div>
+    <x-input-label for="lrn" value="LRN" />
+    <x-text-input 
+        id="lrn" 
+        name="lrn" 
+        type="text"
+        maxlength="12"
+        pattern="\d{12}"
+        inputmode="numeric"
+        class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+        required 
+    />
+    <x-input-error :messages="$errors->get('lrn')" class="mt-1" />
+</div>
 
         <!-- Name Fields -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -84,10 +93,14 @@
             </div>
 
             <div>
-                <x-input-label for="birthday" value="Birthday" />
-                <x-text-input id="birthday" type="date" name="birthday" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required />
-                <x-input-error :messages="$errors->get('birthday')" class="mt-1" />
-            </div>
+    <label class="block text-sm text-gray-600 mb-1">Birthday</label>
+    <input type="date" name="birthday" required
+           value="{{ old('birthday') }}"
+           min="1900-01-01"
+           max="{{ date('Y') }}-12-31"
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+</div>
+
         </div>
 
         <!-- Sex -->
@@ -108,18 +121,61 @@
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
 
-        <!-- Contact & Address -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <x-input-label for="contact_number" value="Contact Number (optional)" />
-                <x-text-input id="contact_number" name="contact_number" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+       <!-- Contact & Address -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Contact Number -->
+    <div>
+        <x-input-label for="contact_number" value="Contact Number (optional)" />
+
+        <div class="mt-1 flex items-center gap-2">
+            
+            <!-- +63 -->
+            <div class="px-3 py-2 bg-gray-100 rounded-xl border text-gray-700 text-sm">
+                +63
             </div>
 
-            <div>
-                <x-input-label for="address" value="Address (optional)" />
-                <x-text-input id="address" name="address" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
+            <!-- Single Input -->
+            <input type="text"
+                id="contact_number"
+                name="contact_number"
+                maxlength="13"
+                inputmode="numeric"
+                placeholder="917 123 4567"
+                oninput="formatPhone(this)"
+                class="flex-1 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-center" />
         </div>
+    </div>
+
+    <!-- Address -->
+    <div>
+        <x-input-label for="address" value="Address (optional)" />
+        <x-text-input
+            id="address"
+            name="address"
+            class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
+    </div>
+
+</div>
+
+<script>
+function formatPhone(input) {
+    let numbers = input.value.replace(/\D/g, '').substring(0,10);
+
+    let formatted = numbers;
+
+    if (numbers.length > 3 && numbers.length <= 6) {
+        formatted = numbers.slice(0,3) + ' ' + numbers.slice(3);
+    } 
+    else if (numbers.length > 6) {
+        formatted = numbers.slice(0,3) + ' ' +
+                    numbers.slice(3,6) + ' ' +
+                    numbers.slice(6);
+    }
+
+    input.value = formatted;
+}
+</script>
 
         <!-- Photo -->
         <div>
@@ -158,7 +214,7 @@
         <a href="{{ route('login') }}" class="text-indigo-600 font-semibold hover:underline">Log in here</a>
     </p>
 
-    <p class="mt-6 text-center text-xs text-gray-400">© {{ date('Y') }} Tugawe Elementary School</p>
+    <p class="mt-6 text-center text-xs text-gray-400">© {{ date('Y') }} Tugawe Elementary School - 120231</p>
 </div>
 
 <style>

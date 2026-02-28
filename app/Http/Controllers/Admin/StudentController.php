@@ -46,7 +46,8 @@ class StudentController extends Controller
         'first_name'      => 'required|string',
         'middle_name'     => 'nullable|string|max:255',
         'last_name'       => 'required|string',
-        'lrn'             => 'required|unique:students,lrn',
+        'suffix' => 'nullable|string|max:50',
+       'lrn'             => 'required|digits:12|unique:students,lrn',
         'birthday'        => 'required|date',
         'email'           => 'nullable|email|unique:users,email',
         'contact_number'  => 'nullable|string',
@@ -60,6 +61,18 @@ class StudentController extends Controller
 
     DB::transaction(function () use ($request, &$validated) {
 
+
+   
+    
+       $contactNumber = null;
+
+if ($request->contact_number) {
+    $cleanNumber = str_replace(' ', '', $request->contact_number);
+
+    if (strlen($cleanNumber) === 10) {
+        $contactNumber = '+63' . $cleanNumber;
+    }
+}
        // 🔥 GET ACTIVE SCHOOL YEAR
         $activeSchoolYearId = SchoolYear::where('is_active', 1)->value('id');
 
@@ -84,9 +97,11 @@ class StudentController extends Controller
 
 $user = User::create([
     'first_name' => $validated['first_name'],
+    'middle_name' => $validated['middle_name'],
     'last_name'  => $validated['last_name'],
+    'suffix' => $validated['suffix'],
     'username'   => $username,
-    'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
+   // 'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
     'email'      => $email,
     'password' => Hash::make($request->password), // hash password!
     'role_id'    => 4,
@@ -98,6 +113,7 @@ $user = User::create([
             'user_id' => $user->id,
             'email'   => $email,
             'school_year_id' => $activeSchoolYearId,
+             'contact_number' => $contactNumber,
         ]));
     });
 

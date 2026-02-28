@@ -8,23 +8,29 @@ use App\Models\Student;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        // Logged-in student
-        $student = Student::with(['section', 'grades.subject', 'attendances'])->where('user_id', auth()->id())->first();
+   public function index()
+{
+    $student = Student::where('user_id', auth()->id())->first();
 
-        if (!$student) {
-            abort(404, 'Student record not found.');
-        }
+    if (!$student) {
+        abort(404, 'Student record not found.');
+    }
 
-        // Just get the section of this student
-        $section = $student->section;
-
-          // Get the active school year
     $activeSchoolYear = \App\Models\SchoolYear::where('is_active', true)->first();
 
-        return view('student.dashboard', compact('student', 'section'   , 'activeSchoolYear'));
-    }
+    $enrollment = \App\Models\Enrollment::with('section')
+        ->where('student_id', $student->id)
+        ->where('school_year_id', $activeSchoolYear?->id)
+        ->first();
+
+    $section = $enrollment?->section;
+
+    return view('student.dashboard', compact(
+        'student',
+        'section',
+        'activeSchoolYear'
+    ));
+}
 
     public function grades()
     {

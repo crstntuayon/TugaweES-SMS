@@ -136,10 +136,12 @@ public function store(Request $request)
 
         $teacher->update([
             'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
             'last_name'  => $validated['last_name'],
+            'suffix'     => $validated['suffix'],
             'username'   => $validated['username'],
             'email'      => $validated['email'],
-            'name'       => $validated['first_name'].' '.$validated['last_name'],
+            //'name'       => $validated['first_name'].' '.$validated['last_name'],
         ]);
 
         if ($request->filled('password')) {

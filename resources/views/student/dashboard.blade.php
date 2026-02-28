@@ -113,14 +113,143 @@
 </div>
 
  <!-- TEACHER INFO -->
-        @if($section->teacher)
-        <div class="mt-3 p-3 bg-indigo-50 rounded-xl shadow-sm">
-            <p class="text-gray-700 font-semibold">Class Adviser</p>
-            <p class="text-gray-800 font-medium mt-1">{{ $section->teacher->name }}</p>
-            <p class="text-sm text-gray-600 mt-0.5">Email: {{ $section->teacher->email ?? 'N/A' }}</p>
-            <p class="text-sm text-gray-600 mt-0.5">Contact: {{ $section->teacher->contact_number ?? 'N/A' }}</p>
+@if($section && $section->teacher)
+
+<div x-data="{ openTeacher: false }">
+
+    <div class="mt-3 p-3 bg-indigo-50 rounded-xl shadow-sm">
+        <p class="text-gray-700 font-semibold">Class Adviser</p>
+        <p class="text-gray-800 font-medium mt-1">{{ $section->teacher->name }}</p>
+        <p class="text-sm text-gray-600 mt-0.5">Email: {{ $section->teacher->email ?? 'N/A' }}</p>
+        <p class="text-sm text-gray-600 mt-0.5">Contact: {{ $section->teacher->contact_number ?? 'N/A' }}</p>
+
+        <!-- View More Button -->
+        <div class="mt-3 text-left">
+            <button @click="openTeacher = true"
+                class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition">
+                View More →
+            </button>
+        </div>
+    </div>
+
+   <!-- Modal -->
+<div x-show="openTeacher"
+     x-transition
+     class="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+
+    <div @click.away="openTeacher = false"
+         class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-8 relative overflow-y-auto max-h-[90vh]">
+
+        <!-- Close -->
+        <button @click="openTeacher = false"
+            class="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-xl">
+            ✕
+        </button>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">
+            Class Adviser Details
+        </h2>
+
+        <!-- HEADER -->
+        <div class="relative mb-6">
+
+            <div class="flex items-center justify-center gap-4">
+                <img src="{{ asset('images/logo1.png') }}" class="h-14 w-auto">
+                
+                <div class="text-center leading-tight">
+                    <p class="font-bold uppercase text-xs">Republic of the Philippines</p>
+                    <p class="font-bold uppercase text-sm">Department of Education</p>
+                    <p class="text-xs">Division of Negros Oriental</p>
+                </div>
+
+                <img src="{{ asset('images/logo.jpg') }}" class="h-14 w-auto">
+            </div>
+
+            <!-- Teacher Photo -->
+            <div class="absolute top-0 right-0">
+                <div class="w-28 h-40 border-2 border-gray-400 shadow-md bg-white overflow-hidden">
+                    <img src="{{ $section->teacher->photo 
+                                ? asset('storage/'.$section->teacher->photo) 
+                                : asset('images/photo-placeholder.png') }}"
+                         class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-6 border-gray-300">
+
+        <!-- DETAILS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-gray-700">
+
+            <div class="space-y-3">
+                <p><strong>Full Name:</strong><br>
+                    {{ $section->teacher->first_name }} {{ $section->teacher->middle_name ?? '' }} {{ $section->teacher->last_name }} {{ $section->teacher->suffix ?? '' }}
+                </p>
+
+                <p><strong>Email:</strong><br>
+                    {{ $section->teacher->email ?? 'N/A' }}
+                </p>
+
+                <p><strong>Contact Number:</strong><br>
+                    {{ $section->teacher->contact_number ?? 'N/A' }}
+                </p>
+
+                <p><strong>Position:</strong><br>
+                    {{ $section->teacher->position ?? 'Teacher' }}
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <p><strong>Grade Level Assigned:</strong><br>
+                    {{ $section->year_level }}
+                </p>
+
+                <p><strong>Section:</strong><br>
+                    {{ $section->name }}
+                </p>
+
+                <p><strong>School Year:</strong><br>
+                    {{ $section->schoolYear->name ?? 'N/A' }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- OPTIONAL: Teaching Load -->
+        @if(isset($section->teacher->teachingLoad) && $section->teacher->teachingLoad->count())
+        <div class="mt-8">
+            <h3 class="text-center font-semibold text-sm mb-3">
+                TEACHER'S PROGRAM / TEACHING LOAD
+            </h3>
+
+            <div class="overflow-auto">
+                <table class="w-full border text-xs">
+                    <thead>
+                        <tr class="bg-gray-200 text-center">
+                            <th class="border px-2 py-1">Time</th>
+                            <th class="border px-2 py-1">Minutes</th>
+                            <th class="border px-2 py-1">Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($section->teacher->teachingLoad as $load)
+                            <tr>
+                                <td class="border px-2 py-1">{{ $load->time }}</td>
+                                <td class="border px-2 py-1 text-center">{{ $load->minutes }}</td>
+                                <td class="border px-2 py-1">{{ $load->subject }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         @endif
+
+    </div>
+</div>
+</div>
+@endif
 
     <!-- =================== ACTION BUTTONS =================== -->
     <div class="flex flex-wrap gap-4 mt-6">

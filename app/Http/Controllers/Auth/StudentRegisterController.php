@@ -30,10 +30,11 @@ public function store(Request $request)
         'first_name'      => 'required|string',
         'middle_name'     => 'nullable|string|max:255',
         'last_name'       => 'required|string',
-        'lrn'             => 'required|unique:students,lrn',
+         'lrn' => 'required|digits:12|unique:students,lrn',
         'birthday'        => 'required|date',
         'email'           => 'nullable|email|unique:users,email',
-        'contact_number'  => 'nullable|string',
+        'contact_number' => 'nullable|string',
+
         'address'         => 'nullable|string',
         'sex'             => 'required|in:Male,Female',
         'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -70,6 +71,16 @@ public function store(Request $request)
             Log::error('Email verification failed: ' . $e->getMessage());
         }
 
+       $contactNumber = null;
+
+if ($request->contact_number) {
+    $cleanNumber = str_replace(' ', '', $request->contact_number);
+
+    if (strlen($cleanNumber) === 10) {
+        $contactNumber = '+63' . $cleanNumber;
+    }
+}
+
         // ✅ Create student record
         Student::create([
             'user_id'        => $user->id,
@@ -81,7 +92,7 @@ public function store(Request $request)
             'birthday'       => $validated['birthday'],
             'sex'            => $validated['sex'],
             'email'          => $email,
-            'contact_number' => $validated['contact_number'] ?? null,
+           'contact_number' => $contactNumber,
             'address'        => $validated['address'] ?? null,
             'photo'          => $validated['photo'] ?? null,
             'average_grade'  => 0,

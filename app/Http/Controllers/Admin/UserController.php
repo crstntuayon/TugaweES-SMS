@@ -12,7 +12,9 @@ class UserController extends Controller
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
             'last_name'  => 'required|string|max:255',
+            'suffix'     => 'nullable|string|max:255',
             'email'      => 'required|email|unique:users,email,'.$user->id,
             'username'   => 'required|string|unique:users,username,'.$user->id,
             'role_id'    => 'required|exists:roles,id',
@@ -20,7 +22,9 @@ class UserController extends Controller
 
         $user->update([
             'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
             'last_name'  => $request->last_name,
+            'suffix'     => $request->suffix,
             'email'      => $request->email,
             'username'   => $request->username,
             'role_id'    => $request->role_id,

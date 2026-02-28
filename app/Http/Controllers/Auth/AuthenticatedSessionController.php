@@ -46,20 +46,20 @@ protected function authenticated(Request $request, $user)
   public function store(Request $request)
 {
     $request->validate([
-        'email' => 'required|email',
+        'username' => 'required|string',
         'password' => 'required',
     ]);
 
-    $user = \App\Models\User::where('email', $request->email)->first();
+    $user = \App\Models\User::where('username', $request->username)->first();
 
     // Check if locked
     if ($user && $user->lock_until && now()->lessThan($user->lock_until)) {
         return back()->withErrors([
-            'email' => 'Account locked. Try again later.',
+            'username' => 'Account locked. Try again later.',
         ]);
     }
 
-    if (Auth::attempt($request->only('email', 'password'))) {
+    if (Auth::attempt($request->only('username', 'password'))) {
 
         $request->session()->regenerate();
 
@@ -105,13 +105,13 @@ protected function authenticated(Request $request, $user)
             ]);
 
             return back()->withErrors([
-                'email' => 'Too many attempts. Account locked for 5 minutes.',
+                'username' => 'Too many attempts. Account locked for 5 minutes.',
             ]);
         }
     }
 
     return back()->withErrors([
-        'email' => 'Invalid credentials.',
+        'username' => 'Invalid credentials.',
     ]);
 }
 

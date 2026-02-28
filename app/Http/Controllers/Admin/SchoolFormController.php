@@ -27,7 +27,14 @@ class SchoolFormController extends Controller
             ->where('school_year_id', $activeSchoolYear->id)
             ->first();
 
-        $section = $enrollment ? $enrollment->section : null;
+
+if (!$enrollment || !$enrollment->section) {
+    return back()->with('error', 'Student has no section assigned.');
+}
+
+$section = $enrollment->section;
+
+
 
         // Fetch all subjects for this student (from section or grade level)
        $subjects = \App\Models\Subject::where('grade_level', $section->year_level)

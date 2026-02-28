@@ -88,17 +88,18 @@ $announcements = Announcement::latest()->get();
         <form method="POST" action="{{ route('login') }}" id="loginForm" class="space-y-4">
             @csrf
 
-          <!-- Email Input -->
+        <!-- Username Input -->
 <div class="relative mb-4">
-    <input type="email" name="email" required
-           placeholder="Email Address"
+    <input type="text" name="username" required
+           placeholder="Username"
            class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm bg-white/80 backdrop-blur-sm text-sm hover:shadow-md">
-@error('email')
-    <div class="text-red-500 text-xs mt-1">
-        {{ $message }}
-    </div>
-@enderror
+
+    @error('username')
+        <div class="text-red-500 text-xs mt-1">
+            {{ $message }}
         </div>
+    @enderror
+</div>
 
 
 <!-- Password Input -->
@@ -205,7 +206,7 @@ $modalClass = "hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-cent
 
         <!-- Description -->
         <p class="text-gray-600 mb-6">
-            This Student Management System was developed by <strong>TriniTech</strong>, a team of 4th-year Information Technology students (Batch 2022-2026). - Negros Oriental State University
+            This Student Management System was developed by <strong>TriniTech</strong>, a team of 4th-year BS in Information Technology students of Negros Oriental State University (Batch 2022-2026).
         </p>
 
         <!-- Developer List -->
@@ -215,7 +216,7 @@ $modalClass = "hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-cent
                 <div class="bg-indigo-100 text-indigo-700 w-10 h-10 flex items-center justify-center rounded-full font-semibold">E</div>
                 <div>
                     <p class="font-semibold text-indigo-900">Elfseria</p>
-                    <p class="text-gray-500 text-sm">Developer/Programmer</p>
+                    <p class="text-gray-500 text-sm">System Developer/Programmer</p>
                 </div>
             </li>
             <li class="flex items-center gap-3">
@@ -265,10 +266,7 @@ $modalClass = "hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-cent
             <h2 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
                 <span>📢</span> Announcements
             </h2>
-            <button onclick="closeModal('announceModal')" 
-                    class="text-gray-400 hover:text-red-500 text-xl transition transform hover:scale-110">
-                ✕
-            </button>
+           
         </div>
 
         <!-- Announcement List -->
@@ -306,16 +304,33 @@ $modalClass = "hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-cent
 <div id="facultyModal" class="{{ $modalClass }} fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50 px-4" onclick="outsideClose(event,'facultyModal')">
     <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 w-full max-w-6xl shadow-2xl modal-enter max-h-[80vh] overflow-y-auto">
 
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
-                👩‍🏫 Faculty Organizational Structure
-            </h2>
-            <button onclick="closeModal('facultyModal')" 
-                    class="text-gray-400 hover:text-red-500 text-xl transition transform hover:scale-110">
-                ✕
-            </button>
-        </div>
+  <!-- Header -->
+<div class="flex items-center justify-center mb-6 relative gap-4">
+
+    <!-- Left Logo (Circular) -->
+    <div class="h-20 w-20 rounded-full overflow-hidden border border-gray-200 shadow-sm">
+        <img src="{{ asset('images/logo1.png') }}" alt="Left Logo" class="h-full w-full object-cover">
+    </div>
+
+    <!-- Center Text -->
+    <div class="text-center">
+        <p class="font-bold uppercase text-xs">Republic of the Philippines</p>
+        <p class="font-bold uppercase text-sm">Department of Education</p>
+        <p class="text-xs">Division of Negros Oriental</p>
+        <h2 class="text-2xl font-bold text-indigo-700 mt-1">
+            Faculty Organizational Structure
+        </h2>
+
+        <p class="text-xs">Tugawe Elementary School | 120231</p>
+    </div>
+
+    <!-- Right Logo (Circular) -->
+    <div class="h-20 w-20 rounded-full overflow-hidden border border-gray-200 shadow-sm">
+        <img src="{{ asset('images/logo.jpg') }}" alt="Right Logo" class="h-full w-full object-cover">
+    </div>
+
+</div>
+
 
         <!-- Organizational Chart -->
         @if(isset($teachers) && $teachers->count())

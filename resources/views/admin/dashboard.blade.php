@@ -386,8 +386,11 @@
             </div>
 
             <!-- BIRTHDAY -->
-            <input type="date" name="birthday" required
-                   class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
+           
+<input type="date" name="birthday" required
+       min="1000-01-01"   
+       max="9999-12-31"   
+       class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-400">
 
             <!-- EMAIL -->
             <input type="email" name="email" placeholder="Email Address" required
@@ -508,47 +511,41 @@ function previewTeacherPhoto(event) {
 </div>
 
 <!-- ================= ADD STUDENT MODAL ================= -->
-<div id="addStudentModal"
-     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+<div id="addStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl p-6 relative overflow-y-auto max-h-[90vh]">
 
         <!-- MODAL HEADER -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Add New Student</h2>
-            <button type="button" onclick="closeAddStudentModal()"
-                    class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeAddStudentModal()" class="text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
         </div>
 
         <!-- STUDENT FORM -->
-        <form method="POST" 
-              action="{{ route('admin.students.store') }}" 
-              enctype="multipart/form-data"
-              class="space-y-4">
-
+        <form method="POST" action="{{ route('admin.students.store') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
 
-            <!-- NAME FIELDS -->
+            <!-- NAMES + LRN -->
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <input type="text" name="first_name" placeholder="First Name" required
-                       value="{{ old('first_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="middle_name" placeholder="Middle Name"
-                       value="{{ old('middle_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="last_name" placeholder="Last Name" required
-                       value="{{ old('last_name') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)"
-                       value="{{ old('suffix') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="text" name="lrn" placeholder="LRN" required
-                       value="{{ old('lrn') }}"
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="text" name="first_name" placeholder="First Name" required value="{{ old('first_name') }}" class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="text" name="middle_name" placeholder="Middle Name" value="{{ old('middle_name') }}" class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="text" name="last_name" placeholder="Last Name" required value="{{ old('last_name') }}" class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="text" name="suffix" placeholder="Suffix (Jr., Sr.)" value="{{ old('suffix') }}" class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+
+                <input type="text"
+                       name="lrn"
+                       id="lrn"
+                       placeholder="120231xxxxxx"
+                       required
+                       maxlength="12"
+                       inputmode="numeric"
+                       value="120231"
+                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+                       oninput="handleLRNInput(this)"
+                       onkeydown="preventPrefixDeletion(event)" />
             </div>
 
-            <!-- SEX SELECT -->
-            <select name="sex" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300">
+            <!-- SEX -->
+            <select name="sex" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
                 <option value="">-- Select Sex --</option>
                 <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
                 <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
@@ -557,92 +554,124 @@ function previewTeacherPhoto(event) {
             <!-- BIRTHDAY -->
             <div>
                 <label class="block text-sm text-gray-600 mb-1">Birthday</label>
-                <input type="date" name="birthday" required
-                       value="{{ old('birthday') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+                <input type="date" name="birthday" required value="{{ old('birthday') }}" min="1900-01-01" max="{{ date('Y') }}-12-31" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
             </div>
 
             <!-- EMAIL -->
-            <div>
-                <input type="email" name="email" placeholder="Email Address" required
-                       value="{{ old('email') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-            </div>
+            <input type="email" name="email" placeholder="Email Address" required value="{{ old('email') }}" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
 
-            <!-- CONTACT NUMBER -->
-            <div>
-                <input type="text" name="contact_number" placeholder="Contact Number"
-                       value="{{ old('contact_number') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
+            <!-- CONTACT NUMBER & HOME ADDRESS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- CONTACT NUMBER -->
+                <div class="flex items-center gap-2 mt-1">
+                    <div class="px-3 py-2 bg-gray-100 rounded-xl border text-gray-700 text-sm flex items-center">+63</div>
+                    <input type="text"
+                           id="contact_number"
+                           name="contact_number"
+                           maxlength="12"
+                           inputmode="numeric"
+                           placeholder="917 123 4567"
+                           value="{{ old('contact_number') }}"
+                           class="flex-1 rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-center"
+                           oninput="formatPhone(this)" />
+                </div>
+
+                <!-- HOME ADDRESS -->
+                <div>
+                    <x-input-label for="address" value="Home Address" />
+                    <input list="addresses" id="address" name="address" placeholder="Enter your address" value="{{ old('address') }}" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+                    <datalist id="addresses">
+                        <option value="Bulak, Dauin, Negros Oriental">
+                        <option value="Libjo, Dauin, Negros Oriental">
+                        <option value="Lipayo, Dauin, Negros Oriental">
+                        <option value="Mag-aso, Dauin, Negros Oriental">
+                        <option value="Tugawe, Dauin, Negros Oriental">
+                    </datalist>
+                </div>
             </div>
 
             <!-- SCHOOL YEAR -->
-<div>
-    <label class="block text-sm text-gray-600 mb-1">School Year</label>
-    <select name="school_year_id" required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300">
-        <option value="">-- Select School Year --</option>
-        @foreach($schoolYears as $year)
-            <option value="{{ $year->id }}"
-                {{ old('school_year_id') == $year->id ? 'selected' : '' }}>
-                {{ $year->name }}
-            </option>
-        @endforeach
-    </select>
+            <div>
+                <label class="block text-sm text-gray-600 mb-1">School Year</label>
+                <select name="school_year_id" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
+                    <option value="">-- Select School Year --</option>
+                    @foreach($schoolYears as $year)
+                        <option value="{{ $year->id }}" {{ old('school_year_id') == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- PASSWORDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="password" name="password" placeholder="Password" required class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+            </div>
+
+          <!-- PROFILE PHOTO (Add Student) -->
+<div class="mb-3 mt-3">
+    <label for="addPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
+    <input type="file" name="photo" id="addPhoto" accept="image/*" class="mt-1 block w-full">
+    <div class="mt-2">
+        <img id="addPhotoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
+    </div>
 </div>
 
+<script>
+document.getElementById('addPhoto').addEventListener('change', function(event) {
+    const preview = document.getElementById('addPhotoPreview');
+    const file = event.target.files[0];
 
-            <!-- HOME ADDRESS -->
-            <div>
-                <label for="address" class="block text-gray-700 text-sm font-medium mb-1">Home Address</label>
-                <input list="addresses" 
-                       id="address" 
-                       name="address" 
-                       placeholder="Enter your address"
-                       value="{{ old('address') }}"
-                       class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
-                <datalist id="addresses">
-                    <option value="Bulak, Dauin, Negros Oriental">
-                    <option value="Libjo, Dauin, Negros Oriental">
-                    <option value="Lipayo, Dauin, Negros Oriental">
-                    <option value="Mag-aso, Dauin, Negros Oriental">
-                    <option value="Tugawe, Dauin, Negros Oriental">
-                </datalist>
-            </div>
-
-            <!-- PASSWORD -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="password" name="password" placeholder="Password" required
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-                <input type="password" name="password_confirmation" placeholder="Confirm Password" required
-                       class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
-            </div>
-
-            <!-- PHOTO UPLOAD -->
-            <div class="mb-3 mt-3">
-                <label for="editPhoto" class="block text-sm font-medium text-gray-700">Profile Photo</label>
-                <input type="file" name="photo" id="editPhoto" accept="image/*" class="mt-1 block w-full">
-                <div class="mt-2">
-                    <img id="photoPreview" src="{{ asset('images/photo-placeholder.png') }}" class="w-24 h-24 object-cover rounded-full border" alt="Photo Preview">
-                </div>
-            </div>
-            
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        // Reset to placeholder if no file selected
+        preview.src = "{{ asset('images/photo-placeholder.png') }}";
+    }
+});
+</script>
 
             <!-- ACTION BUTTONS -->
             <div class="flex justify-end gap-3 pt-4">
-                <button type="button" onclick="closeAddStudentModal()"
-                        class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg font-medium">
-                    Cancel
-                </button>
-                <button type="submit"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-md font-medium">
-                    Save Student
-                </button>
+                <button type="button" onclick="closeAddStudentModal()" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg font-medium">Cancel</button>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow-md font-medium">Save Student</button>
             </div>
-
         </form>
     </div>
 </div>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+const prefix = '120231';
+
+function handleLRNInput(input) {
+    let numbers = input.value.replace(/\D/g, '');
+    let typed = numbers.slice(prefix.length, prefix.length + 6); // max 6 digits
+    input.value = prefix + typed;
+}
+
+function preventPrefixDeletion(event) {
+    const input = event.target;
+    const cursorPos = input.selectionStart;
+
+    if ((event.key === 'Backspace' && cursorPos <= prefix.length) ||
+        (event.key === 'Delete' && cursorPos < prefix.length)) {
+        event.preventDefault();
+        input.setSelectionRange(prefix.length, prefix.length);
+    }
+}
+
+function formatPhone(input) {
+    let numbers = input.value.replace(/\D/g, '').substring(0,10);
+    let formatted = numbers;
+    if (numbers.length > 3 && numbers.length <= 6) formatted = numbers.slice(0,3) + ' ' + numbers.slice(3);
+    else if (numbers.length > 6) formatted = numbers.slice(0,3) + ' ' + numbers.slice(3,6) + ' ' + numbers.slice(6);
+    input.value = formatted; // +63 shown only visually, not included in input
+}
+</script>
 
 
 <!-- Section Selection Modal -->
@@ -712,8 +741,15 @@ function closeSectionModal() {
             </div>
 
             <!-- BIRTHDAY -->
-            <input type="date" name="birthday" placeholder="Birthday" required
-                   class="w-full px-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition">
+           <div>
+    <label class="block text-sm text-gray-600 mb-1">Birthday</label>
+    <input type="date" name="birthday" required
+           value="{{ old('birthday') }}"
+           min="1900-01-01"
+           max="{{ date('Y') }}-12-31"
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+</div>
+
 
             <!-- EMAIL & USERNAME -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

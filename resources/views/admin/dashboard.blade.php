@@ -544,27 +544,82 @@ function previewTeacherPhoto(event) {
                        onkeydown="preventPrefixDeletion(event)" />
             </div>
 
-            <!-- SEX -->
-            <select name="sex" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
-                <option value="">-- Select Sex --</option>
-                <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
-                <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
-            </select>
+<!-- EMAIL & HOME ADDRESS -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Email -->
+    <input type="email"
+           name="email"
+           placeholder="Email Address"
+           required
+           value="{{ old('email') }}"
+           class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
 
-            <!-- BIRTHDAY -->
-            <div>
-                <label class="block text-sm text-gray-600 mb-1">Birthday</label>
-                <input type="date" name="birthday" required value="{{ old('birthday') }}" min="1900-01-01" max="{{ date('Y') }}-12-31" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
-            </div>
+    <!-- Home Address -->
+    <div>
+        <x-input-label for="address" value="Home Address" />
+        <input list="addresses"
+               id="address"
+               name="address"
+               placeholder="Enter your address"
+               value="{{ old('address') }}"
+               class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+        <datalist id="addresses">
+            <option value="Bulak, Dauin, Negros Oriental">
+            <option value="Libjo, Dauin, Negros Oriental">
+            <option value="Lipayo, Dauin, Negros Oriental">
+            <option value="Mag-aso, Dauin, Negros Oriental">
+            <option value="Tugawe, Dauin, Negros Oriental">
+        </datalist>
+    </div>
+</div>
+            
 
-            <!-- EMAIL -->
-            <input type="email" name="email" placeholder="Email Address" required value="{{ old('email') }}" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400">
+            <!-- SEX, BIRTHDAY, SCHOOL YEAR -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
+    <!-- SEX -->
+    <div>
+        <label class="block text-sm text-gray-600 mb-1">Sex</label>
+        <select name="sex" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
+            <option value="">-- Select Sex --</option>
+            <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
+            <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
+        </select>
+    </div>
+
+    <!-- BIRTHDAY -->
+    <div>
+        <label class="block text-sm text-gray-600 mb-1">Birthday</label>
+        <input type="date"
+               name="birthday"
+               required
+               value="{{ old('birthday') }}"
+               min="1900-01-01"
+               max="{{ date('Y') }}-12-31"
+               class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+    </div>
+
+    <!-- SCHOOL YEAR -->
+    <div>
+        <label class="block text-sm text-gray-600 mb-1">School Year</label>
+        <select name="school_year_id" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
+            <option value="">-- Select School Year --</option>
+            @foreach($schoolYears as $year)
+                <option value="{{ $year->id }}" {{ old('school_year_id') == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+</div>
+
+          
             <!-- CONTACT NUMBER & HOME ADDRESS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- CONTACT NUMBER -->
+                 
                 <div class="flex items-center gap-2 mt-1">
                     <div class="px-3 py-2 bg-gray-100 rounded-xl border text-gray-700 text-sm flex items-center">+63</div>
+                   
                     <input type="text"
                            id="contact_number"
                            name="contact_number"
@@ -576,30 +631,9 @@ function previewTeacherPhoto(event) {
                            oninput="formatPhone(this)" />
                 </div>
 
-                <!-- HOME ADDRESS -->
-                <div>
-                    <x-input-label for="address" value="Home Address" />
-                    <input list="addresses" id="address" name="address" placeholder="Enter your address" value="{{ old('address') }}" class="w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
-                    <datalist id="addresses">
-                        <option value="Bulak, Dauin, Negros Oriental">
-                        <option value="Libjo, Dauin, Negros Oriental">
-                        <option value="Lipayo, Dauin, Negros Oriental">
-                        <option value="Mag-aso, Dauin, Negros Oriental">
-                        <option value="Tugawe, Dauin, Negros Oriental">
-                    </datalist>
-                </div>
             </div>
 
-            <!-- SCHOOL YEAR -->
-            <div>
-                <label class="block text-sm text-gray-600 mb-1">School Year</label>
-                <select name="school_year_id" required class="w-full px-4 py-2 rounded-lg border border-gray-300">
-                    <option value="">-- Select School Year --</option>
-                    @foreach($schoolYears as $year)
-                        <option value="{{ $year->id }}" {{ old('school_year_id') == $year->id ? 'selected' : '' }}>{{ $year->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+           
 
             <!-- PASSWORDS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -847,7 +881,14 @@ function closeSectionModal() {
                             data-role-id="{{ $user->role_id }}"
                             data-name="{{ strtolower($user->first_name . ' ' . $user->last_name) }}">
 
-                            <td class="p-3">{{ $user->first_name }} {{ $user->last_name }}</td>
+                            <td class="p-3">
+                            <div class="flex items-center gap-4">
+        <img src="{{ $user->photo ? asset('storage/'.$user->photo) : asset('images/photo-placeholder.png') }}"
+             class="w-12 h-12 rounded-full object-cover shadow" alt="Photo">
+        <div>
+        
+        <p>{{ $user->first_name }} {{ $user->middle_name }} {{ $user->last_name }} {{ $user->suffix }}</p>
+    </td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->role->name ?? 'N/A' }}</td>

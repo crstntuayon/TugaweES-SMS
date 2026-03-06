@@ -11,78 +11,80 @@
 
 
 <!-- HEADER -->
-<header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 shadow-lg rounded-2xl mb-8">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div x-data="{ sidebarOpen: true }" class="min-h-screen bg-gray-50 flex">
 
-        <!-- LEFT: LOGO + TITLE -->
-        <div class="flex items-center gap-4">
-            <img src="{{ asset('images/logo.jpg') }}"
-                 class="h-16 w-16 rounded-full shadow-lg ring-4 ring-emerald-300"
-                 alt="School Logo">
-            <div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-gray-800">Teacher Dashboard</h1>
-                <p class="text-sm text-gray-500">Tugawe Elementary School | Dauin District</p>
-            </div>
-        </div>
-
-
-        <!-- USER DROPDOWN -->
-        <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open"
-                    class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-xl shadow-md text-sm font-medium text-gray-700 transition">
-                <span class="hidden md:block">Account</span>
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+    <aside 
+        :class="sidebarOpen ? 'w-72' : 'w-20'" 
+        class="fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex flex-col shadow-sm"
+    >
+        <div class="p-4 flex items-center gap-3 h-20 border-b border-gray-50">
+            <button @click="sidebarOpen = !sidebarOpen" 
+                    class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-
-            <div x-show="open" @click.away="open = false" x-transition
-                 class="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                <div class="px-4 py-3 border-b bg-gray-50">
-                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
-                    <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-                </div>
-
-               <a href="#"
-   @click="open = false; document.getElementById('profileModal').classList.remove('hidden'); document.getElementById('profileModal').classList.add('flex');"
-   class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-   👤 My Profile
-</a>
-
-
-                <a href="#" @click="document.getElementById('enrollStudentModal').classList.remove('hidden'); open = false;"
-                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600">➕ Enroll Student</a>
-<!-- Create Announcement -->
-<a href="#"
-   @click="open = false; document.getElementById('announcementModal').classList.remove('hidden'); document.getElementById('announcementModal').classList.add('flex');"
-   class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
-   📢 Create Announcement
-</a>
-
-<div class="border-t"></div>
-
-                <div class="border-t"></div>
-
-                <a href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                   class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-                    </svg>
-                    Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+            
+            <div x-show="sidebarOpen" x-transition:enter.duration.300ms class="overflow-hidden whitespace-nowrap">
+                <h2 class="text-lg font-bold text-gray-800">Menu</h2>
             </div>
         </div>
-    </div>
-</header>
 
+        
 
+        <nav class="flex-1 mt-4 px-3 space-y-1">
+            <a href="#" class="flex items-center gap-4 p-3 rounded-r-full bg-blue-50 text-blue-700 transition group">
+                <span class="text-xl">🏠</span>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Home</span>
+            </a>
 
+            <button @click="document.getElementById('profileModal').classList.remove('hidden'); document.getElementById('profileModal').classList.add('flex');"
+                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
+                <span class="text-xl">👤</span>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">My Profile</span>
+            </button>
 
-<main class="max-w-7xl mx-auto space-y-12 px-4">
+            <button @click="document.getElementById('enrollStudentModal').classList.remove('hidden');"
+                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
+                <span class="text-xl">➕</span>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Enroll Student</span>
+            </button>
 
-    @if($sections->isEmpty())
+            <button @click="document.getElementById('announcementModal').classList.remove('hidden');"
+                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
+                <span class="text-xl">📢</span>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Announcements</span>
+            </button>
+        </nav>
+
+        <div class="p-3 border-t border-gray-100">
+            <a href="{{ route('logout') }}"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+               class="flex items-center gap-4 p-3 rounded-r-full text-red-500 hover:bg-red-50 transition">
+                <span class="text-xl">🚪</span>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Logout</span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+        </div>
+    </aside>
+
+    <div class="flex-1 transition-all duration-300" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
+        
+        <header class="h-50 bg-white border-b border-gray-200 flex items-center px-8 sticky top-0 z-40">
+            <div x-show="sidebarOpen" class="px-6 py-6 border-b border-gray-50 bg-gray-50/50">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.jpg') }}" class="h-10 w-10 rounded-full ring-2 ring-emerald-300 shadow-sm">
+                <div class="overflow-hidden">
+                    <p class="text-sm font-bold text-gray-800 truncate">{{ auth()->user()->name ?? 'Teacher' }}</p>
+                    <p class="text-xs text-gray-500 truncate">Tugawe Elementary School</p>
+                </div>
+            </div>
+        </div>
+        
+            <h1 class="text-xl font-bold text-gray-800">Teacher Dashboard</h1>
+        </header>
+
+       @if($sections->isEmpty())
         <div class="bg-white rounded-3xl shadow-xl p-10 text-center">
             <div class="text-gray-500 text-lg font-medium">
                 You are not assigned to any section yet.
@@ -322,6 +324,16 @@
 
         @endforeach
     </div>
+    </div>
+</div>
+
+
+
+
+
+<main class="max-w-7xl mx-auto space-y-12 px-4">
+
+    
 </main>
 
 

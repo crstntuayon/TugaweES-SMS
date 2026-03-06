@@ -4,59 +4,60 @@
     <meta charset="UTF-8">
     <title>Reports Dashboard | Student Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         @media print {
-            body {
-                background: white !important;
-            }
-            button, select, form {
-                display: none !important;
-            }
-            .shadow-md, .shadow-lg, .shadow-xl {
-                box-shadow: none !important;
-            }
+            body { background: white !important; }
+            button, select, form { display: none !important; }
+            .shadow-md, .shadow-lg, .shadow-xl { box-shadow: none !important; }
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-100 p-6">
 
-<div class="max-w-7xl mx-auto space-y-8">
+<body class="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-50 to-purple-100">
+
+<div class="max-w-7xl mx-auto px-6 py-10 space-y-10">
 
     <!-- HEADER -->
-    <div class="bg-white shadow-lg rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-4">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/40 
+                shadow-xl rounded-3xl p-6 flex flex-col md:flex-row 
+                justify-between items-center gap-6">
+
+        <div class="flex items-center gap-5">
             <a href="{{ route('admin.dashboard') }}"
-               class="bg-indigo-100 hover:bg-indigo-200 text-indigo-600 p-2 rounded-xl transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+               class="bg-white shadow-md hover:shadow-lg 
+                      text-indigo-600 px-4 py-2 rounded-2xl transition">
+                ← 
             </a>
 
             <img src="{{ asset('images/logo.jpg') }}"
-                 class="h-14 w-14 rounded-full shadow-md ring-4 ring-indigo-100"
+                 class="h-16 w-16 rounded-2xl shadow-md ring-4 ring-indigo-100"
                  alt="School Logo">
 
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Reports Dashboard</h1>
-                <p class="text-gray-500 text-sm">Academic Performance & Enrollment Overview</p>
+                <h1 class="text-3xl font-bold text-slate-800 tracking-tight">
+                    Reports Dashboard
+                </h1>
+                <p class="text-slate-500 text-sm">
+                    Academic Performance & Enrollment Overview
+                </p>
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2 md:gap-4 mt-4 md:mt-0">
-            <form id="schoolYearForm" action="{{ route('admin.reports') }}" method="GET" class="flex items-center gap-2">
-                <label for="school_year" class="text-sm font-medium text-gray-600">School Year:</label>
-                <select name="school_year" id="school_year"
+        <div class="flex flex-wrap items-center gap-3">
+            <form id="schoolYearForm" action="{{ route('admin.reports') }}" method="GET">
+                <select name="school_year"
                         onchange="document.getElementById('schoolYearForm').submit()"
-                        class="rounded-xl border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        class="rounded-2xl border-slate-300 shadow-sm 
+                               focus:ring-indigo-500 focus:border-indigo-500 text-sm px-4 py-2">
                     @foreach($schoolYears as $year)
                         <option value="{{ $year->id }}"
-                            {{ request('school_year') == $year->id ? 'selected' : ($activeYearId == $year->id ? 'selected' : '') }}>
+                            {{ request('school_year') == $year->id ? 'selected' : '' }}>
                             {{ $year->name }}
                         </option>
                     @endforeach
@@ -64,219 +65,288 @@
             </form>
 
             <button onclick="window.print()"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-xl shadow-md transition">
-                🖨 Print
+                class="bg-indigo-600 hover:bg-indigo-700 
+                       text-white text-sm px-5 py-2.5 rounded-2xl shadow-md transition">
+                Print
             </button>
+
             <button onclick="exportPDF()"
-                    class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-xl shadow-md transition">
-                📄 Export PDF
+                class="bg-emerald-600 hover:bg-emerald-700 
+                       text-white text-sm px-5 py-2.5 rounded-2xl shadow-md transition">
+                Export PDF
             </button>
         </div>
     </div>
 
     <!-- SUMMARY CARDS -->
-    <div class="grid md:grid-cols-3 gap-6 mt-6">
+    <div class="grid md:grid-cols-3 gap-8">
         @foreach($cards as $card)
-            <div class="{{ $card['bg'] }} rounded-2xl p-6 shadow-md hover:shadow-xl transition flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-500">{{ $card['title'] }}</p>
-                    <h2 class="text-3xl font-bold {{ $card['text'] }}">{{ $card['value'] }}</h2>
+            <div class="bg-white rounded-3xl p-7 
+                        shadow-md hover:shadow-2xl 
+                        hover:-translate-y-1 transition duration-300">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-slate-500 text-sm uppercase tracking-wide">
+                            {{ $card['title'] }}
+                        </p>
+                        <h2 class="text-4xl font-bold mt-2 text-slate-800">
+                            {{ $card['value'] }}
+                        </h2>
+                    </div>
+                    <div class="text-4xl">
+                        {{ $card['icon'] }}
+                    </div>
                 </div>
-                <div class="text-3xl">{{ $card['icon'] }}</div>
             </div>
         @endforeach
     </div>
 
-    <!-- SECTION POPULATION CARDS (Modern ID Style) -->
-<div class="grid md:grid-cols-3 gap-6 mt-6">
-    @foreach($studentsPerSection as $section)
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition relative overflow-hidden">
 
-            <!-- Colored top border -->
-            <div class="h-2 w-full bg-gradient-to-r from-indigo-400 to-purple-500"></div>
+  <!-- SECTIONS & TEACHERS -->
+<div>
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-2 md:gap-0">
+        <h2 class="text-2xl font-bold text-slate-800">
+            Sections & Advisers
+        </h2>
+        <p class="text-sm text-slate-500">
+            Teachers handling each section
+        </p>
+    </div>
 
-            <div class="p-5 flex flex-col items-center">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach($studentsPerSection as $section)
 
-                <!-- Teacher Profile Photo -->
-                @php
-                    $photoPath = $section->teacher->photo ?? null;
-                    $photoUrl = $photoPath && file_exists(storage_path('app/public/' . $photoPath)) 
-                                ? asset('storage/' . $photoPath) 
-                                : asset('images/photo-placeholder.png');
-                @endphp
+            @php
+                $teacher = $section->teacher ?? null;
+                // Fix teacher photo URL
+                $photoUrl = $teacher && $teacher->photo
+                    ? asset('storage/teachers/' . $teacher->photo)
+                    : asset('images/photo-placeholder.png');
 
-                <div class="w-20 h-20">
-                    <img src="{{ $photoUrl }}" 
-                         alt="{{ $section->teacher->full_name ?? 'Teacher' }}" 
-                         class="w-full h-full object-cover rounded-lg border-2 border-white shadow-md">
+                // Progress bar percentage
+                $progress = min(($section->students_count / 50) * 100, 100);
+            @endphp
+
+            <div class="bg-white rounded-3xl shadow-md hover:shadow-2xl transition-transform duration-300 overflow-hidden hover:-translate-y-1">
+                
+                <!-- Top Gradient Accent -->
+                <div class="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+
+                <div class="p-6 space-y-4">
+
+                    <!-- Teacher Info -->
+                    <div class="flex items-center gap-4">
+                        <img src="{{ $photoUrl }}" 
+                             class="h-16 w-16 rounded-2xl object-cover shadow-md" 
+                             alt='Teacher'>
+
+                        <div>
+                            <p class="font-semibold text-slate-800 text-sm">
+                                {{ $teacher 
+                                    ? trim("{$teacher->first_name} {$teacher->middle_name} {$teacher->last_name} {$teacher->suffix}") 
+                                    : 'No Teacher Assigned!' 
+                                }}
+                            </p>
+                            <p class="text-sm text-slate-500">Section Adviser</p>
+                        </div>
+                    </div>
+
+                    <!-- Section Info -->
+                    <div class="border-t pt-4 space-y-2">
+                        <p class="text-sm text-slate-500 uppercase tracking-wide">Section</p>
+                        <h4 class="text-lg font-bold text-slate-700">{{ $section->year_level }} - {{ $section->name }}</h4>
+
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-sm text-slate-500">Students</span>
+                            <span class="text-xl font-bold text-emerald-600">{{ $section->students_count }}</span>
+                        </div>
+
+                        <!-- Progress bar -->
+                        <div class="relative w-full h-3 bg-slate-200 rounded-full mt-2 overflow-hidden">
+                            <div class="absolute h-3 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-700 ease-out"
+                                 style="width: {{ $progress }}%">
+                            </div>
+
+                            <!-- Circle tip -->
+                            <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 bg-white border-2 border-emerald-500 rounded-full shadow-md"
+                                 style="left: {{ $progress }}%">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-
-                <!-- Section Info -->
-                <p class="text-sm text-gray-400 uppercase font-medium mt-3">Section</p>
-                <h3 class="text-lg font-semibold text-gray-800 mt-1">{{ $section->year_level }} - {{ $section->name }}</h3>
-
-                <!-- Student Count -->
-                <p class="text-2xl font-bold text-green-600 mt-4">{{ $section->students_count }}</p>
-                <p class="text-xs text-gray-400 mt-1">Total Population</p>
-
-                <!-- Mini Progress Bar -->
-                @php
-                    $progress = min($section->students_count / 50 * 100, 100);
-                @endphp
-                <div class="mt-4 relative w-full bg-gray-200 rounded-full h-2">
-                    <div class="h-2 rounded-full bg-gradient-to-r from-green-400 to-green-600" 
-                         style="width: {{ $progress }}%"></div>
-
-                    <!-- Circle tip at the end of the progress -->
-                    <div class="absolute top-1/2 -translate-y-1/2 right-0 w-4 h-4 bg-white border-2 border-green-600 rounded-full shadow-md"
-                         style="transform: translateX({{ $progress }}%) translateY(-50%)"></div>
-                </div>
-
             </div>
-        </div>
-    @endforeach
+
+        @endforeach
+    </div>
 </div>
 
 
     <!-- CHARTS -->
-    <div class="grid md:grid-cols-2 gap-8 mt-6">
-        <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Total Enrollees Distribution</h2>
-            <canvas id="enrolleesPieChart" class="w-full h-64"></canvas>
+    <div class="grid lg:grid-cols-2 gap-10">
+        <div class="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition">
+            <h2 class="text-lg font-semibold text-slate-700 mb-6">
+                Total Enrollees Distribution
+            </h2>
+            <canvas id="enrolleesPieChart"></canvas>
         </div>
-        <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Total Enrollees by Gender</h2>
-            <canvas id="enrolleesGenderChart" class="w-full h-64"></canvas>
+
+        <div class="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition">
+            <h2 class="text-lg font-semibold text-slate-700 mb-6">
+                Total Enrollees by Gender
+            </h2>
+            <canvas id="enrolleesGenderChart"></canvas>
         </div>
-        <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Students Per Section</h2>
-            <canvas id="sectionChart" class="w-full h-64"></canvas>
+
+        <div class="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition">
+            <h2 class="text-lg font-semibold text-slate-700 mb-6">
+                Students Per Section
+            </h2>
+            <canvas id="sectionChart"></canvas>
         </div>
-        <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Top 10 Students (Average Grade)</h2>
-            <canvas id="topStudentsChart" class="w-full h-64"></canvas>
+
+        <div class="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition">
+            <h2 class="text-lg font-semibold text-slate-700 mb-6">
+                Top 10 Students (Average Grade)
+            </h2>
+            <canvas id="topStudentsChart"></canvas>
         </div>
     </div>
 
     <!-- TABLES -->
-    <div class="space-y-8 mt-6">
-        <!-- Total Enrollees Table -->
-        <div class="bg-white shadow-xl rounded-2xl p-6 overflow-x-auto">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Total Enrollees</h2>
-            <table class="w-full text-sm border-separate border-spacing-y-2">
-                <thead>
-                   <tr class="text-gray-600 uppercase text-xs tracking-wider {{ $year['school_year'] == $schoolYears->find($activeYearId)->name ? 'bg-indigo-50 font-bold' : '' }}">
+    <div class="space-y-10">
 
-                        <th class="text-left py-2">School Year</th>
-                        <th class="text-left py-2">Male</th>
-                        <th class="text-left py-2">Female</th>
-                        <th class="text-left py-2">Total</th>
-                    </tr>
-                </thead>
-               <tbody>
-    @foreach($enrolleesPerYear as $year)
-        <tr class="text-gray-600 uppercase text-xs tracking-wider
-                   {{ $year['school_year'] == $schoolYears->find($activeYearId)->name ? 'bg-indigo-50 font-bold' : '' }}">
-            <td class="py-2 font-medium">{{ $year['school_year'] }}</td>
-            <td class="py-2 text-blue-600 font-bold">{{ $year['male'] }}</td>
-            <td class="py-2 text-pink-600 font-bold">{{ $year['female'] }}</td>
-            <td class="py-2 font-bold text-indigo-600">{{ $year['total'] }}</td>
-        </tr>
-    @endforeach
-</tbody>
+      <!-- Enrollees Table -->
+<div class="bg-white rounded-3xl shadow-md p-8 overflow-x-auto">
+    <h2 class="text-xl font-semibold mb-6 text-slate-800">
+        Total Enrollees
+    </h2>
 
-            </table>
-        </div>
+    <table class="w-full text-sm">
+        <thead class="text-slate-500 text-xs uppercase tracking-wider border-b">
+            <tr>
+                <th class="text-left py-3">School Year</th>
+                <th class="text-left py-3">Male</th>
+                <th class="text-left py-3">Female</th>
+                <th class="text-left py-3">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($enrolleesPerYear as $year)
+                @php
+                    // Determine if this is the active year
+                    $isActive = $schoolYears->find($activeYearId)->name === $year['school_year'];
+                @endphp
 
-        
+                <tr class="hover:bg-slate-50 transition {{ $isActive ? 'bg-indigo-50 font-semibold' : '' }}">
+                    <td class="py-3">{{ $year['school_year'] }}</td>
+                    <td class="py-3 text-blue-600 font-semibold">{{ $year['male'] }}</td>
+                    <td class="py-3 text-pink-600 font-semibold">{{ $year['female'] }}</td>
+                    <td class="py-3 text-indigo-600 font-bold">{{ $year['total'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
         <!-- Top Students Table -->
-        <div class="bg-white shadow-xl rounded-2xl p-6 overflow-x-auto">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Top 10 Students</h2>
-            <table class="w-full text-sm border-separate border-spacing-y-2">
-                <thead>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition rounded-xl">
-                        <th class="text-left py-2">Rank</th>
-                        <th class="text-left py-2">Student Name</th>
-                        <th class="text-left py-2">Average Grade</th>
+        <div class="bg-white rounded-3xl shadow-md p-8 overflow-x-auto">
+            <h2 class="text-xl font-semibold mb-6 text-slate-800">
+                Top 10 Students
+            </h2>
+
+            <table class="w-full text-sm">
+                <thead class="text-slate-500 text-xs uppercase tracking-wider border-b">
+                    <tr>
+                        <th class="text-left py-3">Rank</th>
+                        <th class="text-left py-3">Student Name</th>
+                        <th class="text-left py-3">Average Grade</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($topStudents as $index => $student)
-                        <tr class="text-gray-600 uppercase text-xs tracking-wider">
-                            <td class="py-2 font-semibold text-gray-600">#{{ $index + 1 }}</td>
-                            <td class="py-2 font-medium flex items-center gap-2">
-                                @if($index == 0) 🥇
-                                @elseif($index == 1) 🥈
-                                @elseif($index == 2) 🥉
-                                @endif
-                                {{ $student->full_name }}
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="py-3 font-semibold">#{{ $index + 1 }}</td>
+                            <td class="py-3">{{ $student->full_name }}</td>
+                            <td class="py-3 font-bold text-purple-600">
+                                {{ $student->average_grade }}
                             </td>
-                            <td class="py-2 font-bold text-purple-600">{{ $student->average_grade }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+
     </div>
 
 </div>
 
+<!-- EXPORT PDF -->
 <script>
 function exportPDF() {
     const element = document.querySelector('.max-w-7xl');
-    const opt = {
-        margin: 0.3,
-        filename: 'reports-dashboard.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: true, scrollY: 0 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
+    html2pdf().from(element).save('reports-dashboard.pdf');
 }
 </script>
 
-<!-- Chart.js Scripts (unchanged) -->
+<!-- CHARTS -->
 <script>
-    const genderCtx = document.getElementById('enrolleesGenderChart').getContext('2d');
-    new Chart(genderCtx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($enrolleesPerYear->pluck('school_year')) !!},
-            datasets: [
-                { label: 'Male', data: {!! json_encode($enrolleesPerYear->pluck('male')) !!}, backgroundColor: 'rgba(59, 130, 246, 0.7)' },
-                { label: 'Female', data: {!! json_encode($enrolleesPerYear->pluck('female')) !!}, backgroundColor: 'rgba(236, 72, 153, 0.7)' }
-            ]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, stepSize: 1 } } }
-    });
+const chartOptions = {
+    responsive: true,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+        y: {
+            beginAtZero: true,
+            grid: { color: "rgba(0,0,0,0.05)" }
+        }
+    }
+};
 
-    const sectionsCtx = document.getElementById('sectionChart').getContext('2d');
-    new Chart(sectionsCtx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($studentsPerSection->pluck('section_name')) !!},
-            datasets: [{ label: 'Students', data: {!! json_encode($studentsPerSection->pluck('students_count')) !!}, backgroundColor: 'rgba(16, 185, 129, 0.7)' }]
-        },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-    });
+new Chart(document.getElementById('enrolleesGenderChart'), {
+    type: 'bar',
+    data: {
+        labels: {!! json_encode($enrolleesPerYear->pluck('school_year')) !!},
+        datasets: [
+            { label: 'Male', data: {!! json_encode($enrolleesPerYear->pluck('male')) !!}, backgroundColor: 'rgba(59,130,246,0.7)' },
+            { label: 'Female', data: {!! json_encode($enrolleesPerYear->pluck('female')) !!}, backgroundColor: 'rgba(236,72,153,0.7)' }
+        ]
+    },
+    options: chartOptions
+});
 
-    const topStudentsCtx = document.getElementById('topStudentsChart').getContext('2d');
-    new Chart(topStudentsCtx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($topStudents->pluck('full_name')) !!},
-            datasets: [{ label: 'Average Grade', data: {!! json_encode($topStudents->pluck('average_grade')) !!}, backgroundColor: 'rgba(139, 92, 246, 0.7)' }]
-        },
-        options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, max: 100 } } }
-    });
+new Chart(document.getElementById('sectionChart'), {
+    type: 'bar',
+    data: {
+        labels: {!! json_encode($studentsPerSection->pluck('section_name')) !!},
+        datasets: [
+            { label: 'Students', data: {!! json_encode($studentsPerSection->pluck('students_count')) !!}, backgroundColor: 'rgba(16,185,129,0.7)' }
+        ]
+    },
+    options: chartOptions
+});
 
-    const pieCtx = document.getElementById('enrolleesPieChart').getContext('2d');
-    new Chart(pieCtx, {
-        type: 'pie',
-        data: { labels: ['Male', 'Female'], datasets: [{ data: [{{ $totalMale }}, {{ $totalFemale }}], backgroundColor: ['rgba(59, 130, 246, 0.8)','rgba(236, 72, 153, 0.8)'] }] },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-    });
+new Chart(document.getElementById('topStudentsChart'), {
+    type: 'bar',
+    data: {
+        labels: {!! json_encode($topStudents->pluck('full_name')) !!},
+        datasets: [
+            { label: 'Average Grade', data: {!! json_encode($topStudents->pluck('average_grade')) !!}, backgroundColor: 'rgba(139,92,246,0.7)' }
+        ]
+    },
+    options: { ...chartOptions, indexAxis: 'y' }
+});
+
+new Chart(document.getElementById('enrolleesPieChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            data: [{{ $totalMale }}, {{ $totalFemale }}],
+            backgroundColor: ['rgba(59,130,246,0.8)','rgba(236,72,153,0.8)']
+        }]
+    },
+    options: { responsive: true }
+});
 </script>
 
 </body>

@@ -75,94 +75,118 @@ document.addEventListener('DOMContentLoaded', function () {
             <tr>
                 <th class="px-5 py-3 text-left">No.</th>
                 <th class="px-5 py-3 text-left">Student</th>
+                <th class="px-5 py-3 text-left">Grade</th>
+                <th class="px-5 py-3 text-left">Section</th>
                 <th class="px-5 py-3 text-center">Actions</th>
             </tr>
         </thead>
+
         <tbody class="divide-y">
-            @foreach($students->sortBy('last_name') as $student)
-            <tr class="hover:bg-indigo-50 transition student-row"
-                data-search="{{ strtolower($student->first_name.' '.$student->middle_name.' '.$student->last_name.' '.$student->school_id) }}">
-                <td class="px-5 py-4">{{ $loop->iteration }}</td>
-               <td class="px-5 py-4">
-    <div class="flex items-center gap-4">
-        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-             class="w-12 h-12 rounded-full object-cover shadow" alt="Photo">
-        <div>
-            <p class="font-semibold text-gray-800 leading-tight">
-                {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }} {{ $student->suffix }}
-            </p>
-            <p class="text-xs text-gray-500 mt-1">S-ID: {{ $student->school_id }}</p>
-            
-            <!-- STATUS BADGE -->
-            @php
-                $enrollment = $student->enrollments()->where('school_year_id', $activeYear->id)->first();
-                $status = $enrollment->status ?? 'N/A';
-                $statusColor = match($status) {
-                    'enrolled' => 'bg-green-100 text-green-800',
-                    'unenrolled' => 'bg-red-100 text-red-800',
-                    'promoted' => 'bg-blue-100 text-blue-800',
-                    'retained' => 'bg-yellow-100 text-yellow-800',
-                    'transferred' => 'bg-purple-100 text-purple-800',
-                    default => 'bg-gray-100 text-gray-800',
-                };
-            @endphp
-            <span class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full {{ $statusColor }}">
-                {{ ucfirst($status) }}
-            </span>
-        </div>
-    </div>
-</td>
-                <td class="px-5 py-4 text-center">
-                    <div class="flex justify-center gap-3 relative">
-                        <div class="relative inline-block text-left">
-                            <button onclick="toggleFormDropdown({{ $student->id }})"
-                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs">
-                                School Forms
-                            </button>
-                            <div id="formDropdown{{ $student->id }}"
-                                 class="hidden absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-50">
-                                <a href="{{ route('admin.sf9.show', $student->id) }}" class="block px-4 py-2 text-sm hover:bg-indigo-100">SF9</a>
-                                <a href="{{ route('admin.sf10.show', $student->id) }}" class="block px-4 py-2 text-sm hover:bg-indigo-100">SF10</a>
-                                <button onclick="openEditStudentModal(this)"
-                                        data-id="{{ $student->id }}"
-                                        data-first="{{ $student->first_name }}"
-                                        data-middle="{{ $student->middle_name ?? '' }}"
-                                        data-last="{{ $student->last_name }}"
-                                        data-suffix="{{ $student->suffix ?? '' }}"
-                                        data-birthday="{{ $student->birthday }}"
-                                        data-email="{{ $student->email }}"
-                                        data-contact="{{ $student->contact_number ?? '' }}"
-                                        data-sex="{{ $student->sex ?? '' }}"
-                                        data-address="{{ $student->address ?? '' }}"
-                                        data-photo="{{ $student->photo ?? '' }}"
-                                        class="block px-4 py-2 text-sm hover:bg-indigo-100">
-                                    Update Student
-                                </button>
-                            </div>
-                        </div>
+        @foreach($students->sortBy('last_name') as $student)
+
+        @php
+            $enrollment = $student->enrollments()->where('school_year_id', $activeYear->id)->first();
+
+            $status = $enrollment->status ?? 'N/A';
+
+            $statusColor = match($status) {
+                'enrolled' => 'bg-green-100 text-green-800',
+                'unenrolled' => 'bg-red-100 text-red-800',
+                'promoted' => 'bg-blue-100 text-blue-800',
+                'retained' => 'bg-yellow-100 text-yellow-800',
+                'transferred' => 'bg-purple-100 text-purple-800',
+                default => 'bg-gray-100 text-gray-800',
+            };
+        @endphp
+
+        <tr class="hover:bg-indigo-50 transition student-row"
+            data-search="{{ strtolower($student->first_name.' '.$student->middle_name.' '.$student->last_name.' '.$student->school_id) }}">
+
+            <!-- NUMBER -->
+            <td class="px-5 py-4">
+                {{ $loop->iteration }}
+            </td>
+
+            <!-- STUDENT -->
+            <td class="px-5 py-4">
+                <div class="flex items-center gap-4">
+                    <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                         class="w-12 h-12 rounded-full object-cover shadow">
+
+                    <div>
+                        <p class="font-semibold text-gray-800 leading-tight">
+                            {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }} {{ $student->suffix }}
+                        </p>
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            S-ID: {{ $student->school_id }}
+                        </p>
+
+                        <span class="mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full {{ $statusColor }}">
+                            {{ ucfirst($status) }}
+                        </span>
                     </div>
-                </td>
-            </tr>
-            @endforeach
+                </div>
+            </td>
+
+            <!-- GRADE -->
+          <td class="px-5 py-4 text-gray-700">
+    {{ $enrollment->gradeLevel->name ?? 'N/A' }}
+</td>
+
+            <!-- SECTION -->
+       <td class="px-5 py-4 text-gray-700">
+    {{ $enrollment->section->name ?? 'N/A' }}
+</td>
+
+            <!-- ACTIONS -->
+            <td class="px-5 py-4 text-center">
+                <div class="flex justify-center gap-3 relative">
+
+                    <div class="relative inline-block text-left">
+
+                        <button onclick="toggleFormDropdown({{ $student->id }})"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs">
+                            School Forms
+                        </button>
+
+                        <div id="formDropdown{{ $student->id }}"
+                             class="hidden absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-50">
+
+                            <a href="{{ route('admin.sf9.show', $student->id) }}"
+                               class="block px-4 py-2 text-sm hover:bg-indigo-100">SF9</a>
+
+                            <a href="{{ route('admin.sf10.show', $student->id) }}"
+                               class="block px-4 py-2 text-sm hover:bg-indigo-100">SF10</a>
+
+                            <button onclick="openEditStudentModal(this)"
+                                    data-id="{{ $student->id }}"
+                                    data-first="{{ $student->first_name }}"
+                                    data-middle="{{ $student->middle_name ?? '' }}"
+                                    data-last="{{ $student->last_name }}"
+                                    data-suffix="{{ $student->suffix ?? '' }}"
+                                    data-birthday="{{ $student->birthday }}"
+                                    data-email="{{ $student->email }}"
+                                    data-contact="{{ $student->contact_number ?? '' }}"
+                                    data-sex="{{ $student->sex ?? '' }}"
+                                    data-address="{{ $student->address ?? '' }}"
+                                    data-photo="{{ $student->photo ?? '' }}"
+                                    class="block px-4 py-2 text-sm hover:bg-indigo-100">
+                                Update Student
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </td>
+
+        </tr>
+        @endforeach
         </tbody>
     </table>
 </div>
-
-<script>
-function toggleFormDropdown(studentId) {
-    let dropdown = document.getElementById('formDropdown' + studentId);
-    dropdown.classList.toggle('hidden');
-}
-
-document.addEventListener('click', function(event) {
-    document.querySelectorAll('[id^="formDropdown"]').forEach(dropdown => {
-        if (!dropdown.contains(event.target) &&
-            !dropdown.previousElementSibling.contains(event.target)) {
-            dropdown.classList.add('hidden');
-        }
-    });
-});
-</script>
 
 <!-- ================= ADD STUDENT MODAL ================= -->
 <div id="addStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
@@ -197,29 +221,32 @@ document.addEventListener('click', function(event) {
        onkeydown="preventPrefixDeletion(event)" />
 
 <script>
-const prefix = '120231';
+function toggleFormDropdown(studentId) {
+    let dropdown = document.getElementById('formDropdown' + studentId);
 
-function handleLRNInput(input) {
-    // Remove all non-digit characters
-    let numbers = input.value.replace(/\D/g, '');
+    // Close other dropdowns first
+    document.querySelectorAll('[id^="formDropdown"]').forEach(menu => {
+        if(menu !== dropdown){
+            menu.classList.add('hidden');
+        }
+    });
 
-    // Always keep the prefix
-    let typed = numbers.slice(prefix.length, prefix.length + 6); // only 6 digits max
-
-    input.value = prefix + typed;
+    dropdown.classList.toggle('hidden');
 }
 
-function preventPrefixDeletion(event) {
-    const input = event.target;
-    const cursorPos = input.selectionStart;
+document.addEventListener('click', function(event) {
 
-    // Prevent backspace/delete inside the prefix
-    if ((event.key === 'Backspace' && cursorPos <= prefix.length) ||
-        (event.key === 'Delete' && cursorPos < prefix.length)) {
-        event.preventDefault();
-        input.setSelectionRange(prefix.length, prefix.length);
-    }
-}
+    document.querySelectorAll('[id^="formDropdown"]').forEach(dropdown => {
+
+        let button = dropdown.parentElement.querySelector('button');
+
+        if(!dropdown.contains(event.target) && !button.contains(event.target)){
+            dropdown.classList.add('hidden');
+        }
+
+    });
+
+});
 </script>
 
 </div>

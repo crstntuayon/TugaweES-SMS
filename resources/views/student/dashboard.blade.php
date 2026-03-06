@@ -21,37 +21,43 @@
             </div>
         </div>
 
-        <!-- Account Dropdown -->
         <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open" class="flex items-center gap-2 bg-white/60 hover:bg-gray-100 px-4 py-2 rounded-xl shadow-sm text-sm font-medium text-gray-700 transition">
-                <span class="hidden md:block">Account</span>
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+            <button @click="open = !open" class="flex items-center justify-center p-2 rounded-xl bg-white/60 hover:bg-gray-100 shadow-sm text-gray-700 transition focus:outline-none ring-1 ring-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 transition-transform duration-200" :class="{'rotate-90': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
 
-            <div x-show="open" @click.away="open = false" x-transition
-                 class="absolute right-0 mt-3 w-64 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 overflow-hidden z-50">
-                <div class="px-4 py-3 border-b bg-gray-50/70">
-                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
-                    <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-                </div>
-               
+            <div x-show="open" 
+                 x-cloak
+                 @click.away="open = false" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 class="absolute right-0 mt-3 w-64 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
                 
-                <a href="#" onclick="openProfileModal()" 
-   class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-   👤 My Profile
-</a>
+                <div class="px-4 py-4 border-b bg-gray-50/70">
+                    <p class="text-sm font-bold text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email ?? 'student@example.com' }}</p>
+                </div>
+                
+                <div class="py-1">
+                    <a href="#" onclick="openProfileModal()" 
+                       class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                        <span>👤</span> My Profile
+                    </a>
 
-
-                <div class="border-t"></div>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
-                   class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-                    </svg>
-                    Logout
-                </a>
+                    <div class="border-t border-gray-100"></div>
+                    
+                    <a href="{{ route('logout') }}" 
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                       class="flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
             </div>
         </div>

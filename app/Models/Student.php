@@ -74,4 +74,21 @@ public function enrollments()
 {
     return $this->hasMany(Enrollment::class);
 }
+
+// App/Models/Student.php
+public function scopeGraduated($query)
+{
+    return $query->where('graduation_status', 'graduated');
+}
+
+public function scopeCandidate($query)
+{
+    return $query->where('graduation_status', 'candidate');
+}
+
+public function scopeActive($query)
+{
+    return $query->where('graduation_status', 'active');
+}
+
 }

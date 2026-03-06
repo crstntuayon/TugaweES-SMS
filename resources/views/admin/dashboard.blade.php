@@ -20,325 +20,462 @@
 <body class="min-h-screen bg-gradient-to-br from-indigo-100 via-blue-100 to-sky-200">
  
 
+<div class="flex min-h-screen bg-gray-100" x-data="{ sidebarOpen: true }">
+<!-- SIDEBAR -->
+<aside
+x-data="{ sidebarOpen: true }"
+class="bg-white/80 backdrop-blur-xl shadow-2xl border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out"
+:class="sidebarOpen ? 'w-64' : 'w-20'"
+>
+
 <!-- HEADER -->
-<header class="sticky top-0 z-50 backdrop-blur bg-white/80 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <img src="{{ asset('images/logo.jpg') }}"   class="mx-auto h-20 w-20 rounded-full shadow-lg mb-4 ring-4 ring-indigo-200" alt="School Logo">
-            <div>
-                <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
-                <p class="text-sm text-gray-500">Tugawe Elementary School | Dauin District</p>
-            </div>
-        </div>
+<div class="flex items-center justify-between p-4 border-b">
+
+<span
+class="font-bold text-gray-800 text-lg tracking-wide"
+x-show="sidebarOpen"
+x-transition>
+Admin Panel
+</span>
+
+<button
+@click="sidebarOpen = !sidebarOpen"
+class="p-2 rounded-lg hover:bg-indigo-50 hover:scale-110 transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-6 h-6 text-gray-700"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+d="M4 6h16M4 12h16M4 18h16"/>
+
+</svg>
+</button>
+
+</div>
 
 
-    
-      <!-- MENU DROPDOWN -->
-<div class="relative" x-data="{ open: false }">
+<!-- USER PROFILE -->
+<div class="p-4 border-b">
 
-    <!-- Trigger -->
-    <button @click="open = !open"
-        class="flex items-center gap-2 bg-white hover:bg-gray-100 px-4 py-2 rounded-xl shadow text-sm font-medium text-gray-700 transition">
-        <span class="hidden md:block">Menu</span>
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-        </svg>
-    </button>
+@php
+$first = auth()->user()->first_name;
+$last = auth()->user()->last_name;
+$initials = strtoupper(substr($first,0,1) . substr($last,0,1));
+@endphp
 
-    <!-- Dropdown -->
-    <div x-show="open" @click.away="open = false" x-transition
-        class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+<div class="flex items-center gap-3">
 
-        <!-- User Info -->
-        <div class="px-4 py-3 border-b bg-gray-50">
-            <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name ?? 'User' }}</p>
-            <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
-        </div>
+<div class="relative">
 
-        <!-- Menu Items -->
-        <div class="flex flex-col divide-y divide-gray-100">
+<!-- Avatar -->
+<div class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-indigo-700 text-white font-bold shadow-md">
+{{ $initials }}
+</div>
 
-          <!-- Profile -->
-<a href="{{ route('profile.edit') }}"
-   class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-    
-    <!-- User Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="18" height="18"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-    </svg>
+<!-- Online indicator -->
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
 
-    <span>Profile</span>
+</div>
+
+<div x-show="sidebarOpen" x-transition>
+
+<p class="text-sm font-semibold text-gray-800 leading-tight">
+
+{{ auth()->user()->first_name }}
+{{ auth()->user()->middle_name }}
+{{ auth()->user()->last_name }}
+{{ auth()->user()->suffix }}
+
+</p>
+
+<p class="text-xs text-gray-500 truncate">
+{{ auth()->user()->email }}
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- NAVIGATION -->
+<div class="flex flex-col gap-2 p-3 flex-1 text-gray-600">
+
+
+<!-- Dashboard -->
+<a href="{{ route('admin.dashboard') }}"
+class="group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200
+{{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md scale-[1.02]' : 'hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02]' }}">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3h8v6h-8zM3 21h8v-6H3z"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Dashboard</span>
+
 </a>
 
+
+<!-- Profile -->
+<a href="{{ route('profile.edit') }}"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<circle cx="12" cy="7" r="4"/>
+<path d="M5.5 21a7.5 7.5 0 0 1 13 0"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Profile</span>
+
+</a>
+
+
 <!-- Manage Users -->
-<button type="button" onclick="openManageUsersModal()"
-    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-    
-    <!-- Users Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="18" height="18"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M7 21v-2a4 4 0 0 1 3-3.87"/>
-        <circle cx="12" cy="7" r="4"/>
-    </svg>
+<button onclick="openManageUsersModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition w-full text-left">
 
-    <span>Manage Users</span>
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
+<path d="M7 21v-2a4 4 0 0 1 3-3.87"/>
+<circle cx="12" cy="7" r="4"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Manage Users</span>
+
 </button>
 
-<!-- Create New Admin -->
-<button type="button" onclick="openAddAdminModal()"
-    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
-    
-    <!-- User Plus Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="18" height="18"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6"/>
-        <circle cx="9" cy="7" r="4"/>
-        <line x1="19" y1="8" x2="19" y2="14"/>
-        <line x1="22" y1="11" x2="16" y2="11"/>
-    </svg>
 
-    <span>Create Admin</span>
+<!-- Create Admin -->
+<button onclick="openAddAdminModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-green-50 hover:text-green-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M12 5v14M5 12h14"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Create Admin</span>
+
 </button>
 
-             <!-- Issue School IDs Button -->
-    
-        <button 
-    onclick="openSectionModal()"
-    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
-    
-    <!-- ID Card Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" 
-         width="18" height="18" 
-         viewBox="0 0 24 24" 
-         fill="none" 
-         stroke="currentColor" 
-         stroke-width="2" 
-         stroke-linecap="round" 
-         stroke-linejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"/>
-        <circle cx="8" cy="12" r="2"/>
-        <path d="M14 10h4"/>
-        <path d="M14 14h4"/>
-    </svg>
-
-    <span>Issue School IDs</span>
-</button>
 
 <!-- Reports -->
 <a href="{{ route('admin.reports') }}"
-   class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition">
-    
-    <!-- Bar Chart Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="18" height="18"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-        <line x1="12" y1="20" x2="12" y2="10"/>
-        <line x1="18" y1="20" x2="18" y2="4"/>
-        <line x1="6" y1="20" x2="6" y2="16"/>
-    </svg>
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-purple-50 hover:text-purple-600 hover:scale-[1.02] transition">
 
-    <span>Reports</span>
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M3 3v18h18"/>
+<path d="M7 15l4-4 4 4 5-5"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Reports</span>
+
 </a>
 
 
+<!-- Graduation -->
+<a href="{{ route('admin.students.graduation') }}"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-yellow-50 hover:text-yellow-600 hover:scale-[1.02] transition">
 
-            <!-- Active School Year Selector -->
-            <div class="px-4 py-3 bg-gray-50">
-                <span class="block text-sm font-semibold text-gray-700 mb-2">Active School Year</span>
-                <form action="{{ route('admin.schoolyears.activate') }}" method="POST">
-                    @csrf
-                    <select name="school_year" onchange="this.form.submit()"
-                        class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm">
-                        @foreach($schoolYears as $year)
-                            <option value="{{ $year->id }}" {{ $year->is_active ? 'selected' : '' }}>
-                                {{ $year->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </form>
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M22 10L12 5 2 10l10 5 10-5z"/>
+<path d="M6 12v5a6 3 0 0 0 12 0v-5"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Graduation</span>
+
+</a>
+
+
+<!-- Issue School IDs -->
+<button onclick="openSectionModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<rect x="3" y="6" width="18" height="12" rx="2"/>
+<path d="M7 10h6M7 14h4"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Issue School IDs</span>
+
+</button>
+
+
+<!-- SCHOOL YEAR -->
+<div class="bg-gray-50 p-3 rounded-xl mt-3 shadow-inner" x-show="sidebarOpen">
+
+<span class="text-xs font-semibold text-gray-500">
+ACTIVE SCHOOL YEAR
+</span>
+
+<form action="{{ route('admin.schoolyears.activate') }}" method="POST">
+@csrf
+
+<select
+name="school_year"
+onchange="this.form.submit()"
+class="w-full border mt-2 px-2 py-1 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+
+@foreach($schoolYears as $year)
+
+<option value="{{ $year->id }}"
+{{ $year->is_active ? 'selected' : '' }}>
+{{ $year->name }}
+</option>
+
+@endforeach
+
+</select>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- LOGOUT -->
+<div class="p-3 border-t">
+
+<a href="{{ route('logout') }}"
+onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+class="flex items-center gap-3 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+<path d="M16 17l5-5-5-5"/>
+<path d="M21 12H9"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Logout</span>
+
+</a>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+@csrf
+</form>
+
+</div>
+
+</aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col">
+
+        <!-- HEADER -->
+        <header class="sticky top-0 bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
+
+                <img src="{{ asset('images/logo.jpg') }}"
+                     class="h-14 w-14 rounded-full shadow ring-2 ring-indigo-200">
+
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">
+                        Admin Dashboard
+                    </h1>
+                    <p class="text-sm text-gray-500">
+                        Tugawe Elementary School | Dauin District
+                    </p>
+                </div>
+
+            </div>
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <main class="max-w-7xl mx-auto px-6 py-10 w-full">
+
+            <!-- NAVIGATION TABS -->
+            <div class="flex flex-wrap gap-3 mb-10">
+                <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm shadow">Dashboard</a>
+                <a href="{{ route('admin.students.index') }}" class="px-4 py-2 rounded-lg bg-white hover:bg-indigo-50 text-gray-700 text-sm shadow">Students</a>
+                <a href="{{ route('admin.teachers.index') }}" class="px-4 py-2 rounded-lg bg-white hover:bg-green-50 text-gray-700 text-sm shadow">Teachers</a>
+                <a href="{{ route('admin.sections.index') }}" class="px-4 py-2 rounded-lg bg-white hover:bg-yellow-50 text-gray-700 text-sm shadow">Sections</a>
             </div>
 
-            <!-- Logout -->
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                class="flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-                </svg>
-                Logout
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
 
-        </div>
-    </div>
+            <!-- DASHBOARD CARDS -->
+            <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                <!-- STUDENTS -->
+                <div class="bg-white rounded-3xl shadow-lg p-6 hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase">Total Students</h2>
+                        <span class="bg-indigo-100 text-indigo-600 p-3 rounded-xl">🎓</span>
+                    </div>
+
+                    <p class="text-5xl font-extrabold text-indigo-600 mt-4">
+                        {{ $totalStudents ?? 0 }}
+                    </p>
+
+                    <a href="{{ route('admin.students.index') }}" 
+                   class="mt-4 inline-block text-sm font-medium text-indigo-600 hover:underline">
+                   Manage Students →
+                </a>
+
+                <button onclick="openAddStudentModal()" 
+                    class="mt-6 w-full bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-2xl p-6 shadow-lg flex flex-col hover:scale-105 transition">
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-semibold text-lg">Add Student</h3>
+
+                        <span class="bg-white/20 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <p class="mt-2 text-sm text-indigo-100">
+                        Add new student with basic information
+                    </p>
+                </button>
+
+            </div>
+
+
+                <!-- TEACHERS -->
+                <div class="bg-white rounded-3xl shadow-lg p-6 hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase">Total Teachers</h2>
+                        <span class="bg-green-100 text-green-600 p-3 rounded-xl">👩‍🏫</span>
+                    </div>
+
+                    <p class="text-5xl font-extrabold text-green-600 mt-4">
+                        {{ $totalTeachers ?? 0 }}
+                    </p>
+
+                      <a href="{{ route('admin.teachers.index') }}" 
+                   class="mt-4 inline-block text-sm font-medium text-green-600 hover:underline">
+                   Manage Teachers →
+                </a>
+
+                <button onclick="openAddTeacherModal()" 
+                    class="mt-6 w-full bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg flex flex-col hover:scale-105 transition">
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-semibold text-lg">Add Teacher</h3>
+
+                        <span class="bg-white/20 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <p class="mt-2 text-sm text-green-100">
+                        Create teacher account
+                    </p>
+                </button>
+
+            </div>
+
+
+
+                <!-- SECTIONS -->
+                <div class="bg-white rounded-3xl shadow-lg p-6 hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-semibold text-gray-500 uppercase">Total Sections</h2>
+                        <span class="bg-orange-100 text-orange-600 p-3 rounded-xl">🏫</span>
+                    </div>
+
+                    <p class="text-5xl font-extrabold text-orange-600 mt-4">
+                        {{ $totalSections ?? 0 }}
+                    </p>
+  <a href="{{ route('admin.sections.index') }}" 
+        class="mt-4 inline-block text-sm font-medium text-orange-600 hover:underline">
+        Manage Sections →
+        </a>
+
+        <button onclick="openAddSectionModal()" 
+        class="mt-6 w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl p-6 shadow-lg flex flex-col hover:scale-105 transition">
+
+
+        <div class="flex items-center justify-between">
+                        <h3 class="font-semibold text-lg">Add Section</h3>
+
+                        <span class="bg-white/20 p-2 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </span>
+                    </div>
+
+   <p class="mt-2 text-sm text-bg-orange-100">
+                        Create section
+                    </p>
 </div>
-
-</header>
-
-<main class="max-w-7xl mx-auto px-6 py-10">
-
-
- <!-- NAVIGATION TABS -->
-    <div class="flex flex-wrap gap-3 mb-10">
-        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm shadow">Dashboard</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-indigo-50 text-gray-700 text-sm shadow">Students</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-green-50 text-gray-700 text-sm shadow">Teachers</a>
-        <a href="" class="px-4 py-2 rounded-lg bg-white hover:bg-yellow-50 text-gray-700 text-sm shadow">Sections</a>
-    </div>
-
-    <!-- STATS CARDS -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-
-        <!-- Students Card -->
-<div id="students-card" class="bg-white/90 backdrop-blur-lg rounded-3xl shadow-xl p-6 hover:scale-105 transition-transform duration-300 ease-in-out">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Students</h2>
-        <span class="bg-indigo-100 text-indigo-600 p-3 rounded-xl shadow-inner text-lg">🎓</span>
-    </div>
-
-    <!-- COUNT -->
-    <p id="students-count" class="text-5xl font-extrabold text-indigo-600 mt-4 tracking-tight">
-        {{ $totalStudents ?? 0 }}
-    </p>
-
-    <!-- LINK -->
-    <a href="{{ route('admin.students.index') }}" 
-       class="mt-4 inline-block text-sm font-medium text-indigo-600 hover:underline hover:text-indigo-800 transition">
-       Manage Students →
-    </a>
-
-    <!-- ADD STUDENT BUTTON -->
-   <button onclick="openAddStudentModal()" 
-        class="mt-6 group w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-2xl p-6 shadow-lg flex flex-col transition-transform duration-300 hover:scale-105">
-    
-    <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-lg">Add Student</h3>
-
-        <!-- SVG Plus Icon -->
-        <span class="bg-white/20 p-2 rounded-full shadow-sm transition group-hover:bg-white/30 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-        </span>
-    </div>
-
-    <p class="mt-2 text-sm text-indigo-100">Add new student with basic information</p>
-</button>
-
-</div>
-
-        
-           <!-- Teachers Card -->
-<div id="teachers-card" class="bg-white/90 backdrop-blur-lg rounded-3xl shadow-xl p-6 hover:scale-105 transition-transform duration-300 ease-in-out">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Teachers</h2>
-        <span class="bg-green-100 text-green-600 p-3 rounded-xl shadow-inner text-lg">👩‍🏫</span>
-    </div>
-
-    <!-- COUNT -->
-    <p id="teachers-count" class="text-5xl font-extrabold text-green-600 mt-4 tracking-tight">
-        {{ $totalTeachers ?? 0 }}
-    </p>
-
-     <!-- LINK -->
-    <a href="{{ route('admin.teachers.index') }}" 
-       class="mt-4 inline-block text-sm font-medium text-green-600 hover:underline hover:text-green-800 transition">
-       Manage Teachers →
-    </a>
-
-    <!-- ADD TEACHER BUTTON -->
-   <button onclick="openAddTeacherModal()" 
-        class="mt-6 group w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-2xl p-6 shadow-lg flex flex-col transition-transform duration-300 hover:scale-105">
-    
-    <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-lg">Add Teacher</h3>
-
-        <!-- SVG Plus Icon -->
-        <span class="bg-white/20 p-2 rounded-full shadow-sm transition group-hover:bg-white/30 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-        </span>
-    </div>
-
-    <p class="mt-2 text-sm text-green-100">Create teacher account</p>
-</button>
-
-</div>
-
-   <!-- Sections Card -->
-<div id="sections-card" class="bg-white/90 backdrop-blur-lg rounded-3xl shadow-xl p-6 hover:scale-105 transition-transform duration-300 ease-in-out">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Sections</h2>
-        <span class="bg-orange-100 text-orange-600 p-3 rounded-xl shadow-inner text-lg">🏫</span>
-    </div>
-
-    <!-- COUNT -->
-    <p id="sections-count" class="text-5xl font-extrabold text-orange-600 mt-4 tracking-tight">
-        {{ $totalSections ?? 0 }}
-    </p>
-
-    <!-- LINK -->
-    <a href="{{ route('admin.sections.index') }}" 
-       class="mt-4 inline-block text-sm font-medium text-orange-600 hover:underline hover:text-orange-800 transition">
-       Manage Sections →
-    </a>
-
-    <!-- ADD SECTION BUTTON -->
-   <button onclick="openAddSectionModal()" 
-        class="mt-6 group w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-2xl p-6 shadow-lg flex flex-col transition-transform duration-300 hover:scale-105">
-    
-    <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-lg">Add Section</h3>
-        <!-- SVG Plus Icon -->
-        <span class="bg-white/20 p-2 rounded-full shadow-sm transition group-hover:bg-white/30 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-        </span>
-    </div>
-
-    <p class="mt-2 text-sm text-orange-100">Assign and Organize Sections</p>
-</button>
-
-</div>
-    </section>
-
-
+  
+        </button>
     
 
-</main>
+            </section>
+
+        </main>
+
+    </div>
+</div>
 
 
 

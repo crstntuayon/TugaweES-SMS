@@ -47,21 +47,8 @@
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="space-y-5">
         @csrf
 
-       <!-- LRN -->
-<div>
-    <x-input-label for="lrn" value="LRN" />
-    <x-text-input 
-        id="lrn" 
-        name="lrn" 
-        type="text"
-        maxlength="12"
-        pattern="\d{12}"
-        inputmode="numeric"
-        class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-        required 
-    />
-    <x-input-error :messages="$errors->get('lrn')" class="mt-1" />
-</div>
+  
+
 
         <!-- Name Fields -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -103,23 +90,103 @@
 
         </div>
 
-        <!-- Sex -->
-        <div>
-            <x-input-label for="sex" value="Sex" />
-            <select id="sex" name="sex" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
-                <option value="">Select Sex</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-            <x-input-error :messages="$errors->get('sex')" class="mt-1" />
-        </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <!-- Email -->
-        <div>
-            <x-input-label for="email" value="Email" />
-            <x-text-input id="email" type="email" name="email" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Leave blank to auto-generate" />
-            <x-input-error :messages="$errors->get('email')" class="mt-1" />
-        </div>
+    <!-- LRN -->
+    <div>
+        <x-input-label for="lrn" value="LRN" />
+        <input type="text"
+               name="lrn"
+               id="lrn"
+               required
+               maxlength="12"
+               inputmode="numeric"
+               value="120231"
+               class="mt-1 w-full px-4 py-2 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+               oninput="handleLRNInput(this)"
+               onkeydown="preventPrefixDeletion(event)" />
+        <x-input-error :messages="$errors->get('lrn')" class="mt-1" />
+    </div>
+    <script>
+    const prefix = "120231";
+
+    function handleLRNInput(input) {
+        input.value = input.value.replace(/\D/g, '');
+
+        if (!input.value.startsWith(prefix)) {
+            input.value = prefix;
+        }
+
+        if (input.value.length > 12) {
+            input.value = input.value.slice(0, 12);
+        }
+    }
+
+    function preventPrefixDeletion(event) {
+        const input = event.target;
+
+        if (
+            input.selectionStart <= prefix.length &&
+            (event.key === "Backspace" || event.key === "Delete")
+        ) {
+            event.preventDefault();
+        }
+    }
+
+    document.getElementById("lrn").addEventListener("focus", function () {
+        setTimeout(() => {
+            this.setSelectionRange(prefix.length, prefix.length);
+        }, 0);
+    });
+</script>
+
+    <!-- Sex -->
+    <div>
+        <x-input-label for="sex" value="Sex" />
+        <select id="sex"
+                name="sex"
+                class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                required>
+            <option value="">Select Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <x-input-error :messages="$errors->get('sex')" class="mt-1" />
+    </div>
+
+</div>
+       
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Email -->
+    <div>
+        <x-input-label for="email" value="Email" />
+        <x-text-input 
+            id="email" 
+            type="email" 
+            name="email" 
+            
+            class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
+        />
+        <x-input-error :messages="$errors->get('email')" class="mt-1" />
+    </div>
+
+    <!-- Username -->
+    <div>
+        <x-input-label for="username" value="Username" />
+        <x-text-input 
+            id="username" 
+            name="username" 
+            placeholder="Leave blank to auto-generate"
+            class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
+        />
+        <x-input-error :messages="$errors->get('username')" class="mt-1" />
+    </div>
+
+</div>
+
+
 
        <!-- Contact & Address -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -177,6 +244,35 @@ function formatPhone(input) {
 }
 </script>
 
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Password -->
+    <div>
+        <x-input-label for="password" value="Password" />
+        <x-text-input 
+            id="password" 
+            type="password" 
+            name="password" 
+            required
+            class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
+        />
+        <x-input-error :messages="$errors->get('password')" class="mt-1" />
+    </div>
+
+    <!-- Confirm Password -->
+    <div>
+        <x-input-label for="password_confirmation" value="Confirm Password" />
+        <x-text-input 
+            id="password_confirmation" 
+            type="password" 
+            name="password_confirmation" 
+            required
+            class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
+        />
+    </div>
+
+</div>
+
         <!-- Photo -->
         <div>
             <x-input-label for="photo" value="Photo (optional)" />
@@ -184,25 +280,6 @@ function formatPhone(input) {
             <x-input-error :messages="$errors->get('photo')" class="mt-1" />
         </div>
 
-        <!-- Username -->
-        <div>
-            <x-input-label for="username" value="Username" />
-            <x-text-input id="username" name="username" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Leave blank to auto-generate" />
-            <x-input-error :messages="$errors->get('username')" class="mt-1" />
-        </div>
-
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" value="Password" />
-            <x-text-input id="password" type="password" name="password" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required />
-            <x-input-error :messages="$errors->get('password')" class="mt-1" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div>
-            <x-input-label for="password_confirmation" value="Confirm Password" />
-            <x-text-input id="password_confirmation" type="password" name="password_confirmation" class="mt-1 block w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required />
-        </div>
 
         <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl">
             Create Account

@@ -265,4 +265,8 @@ public function exportIdsPdf(Request $request)
 
     return $pdf->download('school_ids_' . ($section->name ?? 'section') . '.pdf');
 }
+
+
+
+
 }

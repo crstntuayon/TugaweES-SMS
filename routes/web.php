@@ -458,17 +458,11 @@ Route::put('/sections/{section}/unenroll-all', [App\Http\Controllers\Teacher\Das
     ->middleware('auth');
 
 
-    
+    Route::get('/admin/students/graduation', [\App\Http\Controllers\Admin\GraduationController::class, 'graduation'])
+         ->name('admin.students.graduation');
+    Route::get('/admin/students/search', [App\Http\Controllers\Admin\GraduationController::class, 'search']);
+    Route::post('/admin/students/{student}/update-status', [App\Http\Controllers\Admin\GraduationController::class, 'updateStatus']);
   
-//wala ni gamit
-Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function () {
-
-    // Update student status (dropdown actions)
-    Route::put('/students/{student}/update-status', [App\Http\Controllers\Teacher\DashboardController::class, 'updateStatus'])
-        ->name('students.updateStatus');
-
-});
-//hangtud diri
 
 
 require __DIR__.'/auth.php';

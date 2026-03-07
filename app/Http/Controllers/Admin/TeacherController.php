@@ -33,7 +33,11 @@ $teachers = Teacher::all();
     // Get the active school year
     $activeSchoolYear = SchoolYear::where('is_active', 1)->first();
 
-        return view('admin.teachers.index', compact('activeSchoolYear','teachers', 'sections', 'yearLevels'));
+     $schoolYears = SchoolYear::orderByDesc('name')->get();
+  
+     $users = User::with('role')->latest()->paginate(10);
+
+        return view('admin.teachers.index', compact('users', 'schoolYears', 'activeSchoolYear','teachers', 'sections', 'yearLevels'));
     }
 
     /**

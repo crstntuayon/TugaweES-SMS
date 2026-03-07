@@ -8,19 +8,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Section;
+use App\Models\SchoolYear;
+ use App\Models\User;
 
+ 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+  
 
+
+
+public function edit(Request $request): View
+{
+    $user = $request->user();
+
+    $schoolYears = SchoolYear::orderBy('name', 'desc')->get();
+    $sections = Section::all(); // or add orderBy if you want
+        $users = User::paginate(10); // add this
+
+    return view('profile.edit', [
+        'user' => $user,
+        'schoolYears' => $schoolYears,
+        'sections' => $sections,
+        'users' => $users,
+    ]);
+}
     /**
      * Update the user's profile information.
      */
@@ -33,6 +49,8 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+
+          $schoolYears = SchoolYear::orderByDesc('name')->get();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

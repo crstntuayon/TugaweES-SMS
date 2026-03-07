@@ -13,60 +13,107 @@
 <!-- HEADER -->
 <div x-data="{ sidebarOpen: true }" class="min-h-screen bg-gray-50 flex">
 
-    <aside 
-        :class="sidebarOpen ? 'w-72' : 'w-20'" 
-        class="fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex flex-col shadow-sm"
-    >
-        <div class="p-4 flex items-center gap-3 h-20 border-b border-gray-50">
-            <button @click="sidebarOpen = !sidebarOpen" 
-                    class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
-            
-            <div x-show="sidebarOpen" x-transition:enter.duration.300ms class="overflow-hidden whitespace-nowrap">
-                <h2 class="text-lg font-bold text-gray-800">Menu</h2>
+   <aside 
+    :class="sidebarOpen ? 'w-72' : 'w-20'" 
+    class="fixed left-0 top-0 h-screen bg-white border-r border-gray-200 z-50 flex flex-col shadow-sm overflow-y-auto transition-all duration-300 ease-in-out"
+>
+    <!-- Sidebar Header -->
+    <div class="p-4 flex items-center gap-3 h-24 border-b border-gray-50">
+
+        <!-- Hamburger Button -->
+        <button @click="sidebarOpen = !sidebarOpen" 
+                class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+
+        <!-- Logo + User Info -->
+        <div x-show="sidebarOpen" x-transition class="flex flex-col gap-2 overflow-hidden">
+
+           
+
+            <!-- User Info -->
+            @php
+                $user = auth()->user();
+                $fullName = trim(($user->first_name ?? '') . ' ' . ($user->middle_name ?? '') . ' ' . ($user->last_name ?? '') . ' ' . ($user->suffix ?? ''));
+                $initials = collect(explode(' ', $fullName))->map(fn($n) => $n ? strtoupper($n[0]) : '')->join('');
+            @endphp
+
+            <div class="flex items-center gap-2">
+                <!-- Profile Picture or Initials -->
+                @if($user && $user->photo)
+                    <img src="{{ asset('storage/'.$user->photo) }}" 
+                         alt="Profile" 
+                         class="w-10 h-10 rounded-full object-cover shadow-md">
+                @else
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-bold shadow-md text-sm">
+                        {{ $initials ?: 'T' }}
+                    </div>
+                @endif
+
+                <!-- Username / Full Name -->
+                <div class="flex flex-col overflow-hidden">
+                    <span class="text-sm font-bold text-gray-800 truncate">{{ $user->name ?? 'Teacher' }}</span>
+                    <span class="text-xs text-gray-500 truncate">{{ $fullName ?: 'N/A' }}</span>
+                </div>
             </div>
+
         </div>
+    </div>
 
-        
+    <!-- Sidebar Nav -->
+    <nav class="flex-1 mt-4 px-3 space-y-1">
+        <!-- Home -->
+        <a href="{{ route('teacher.dashboard') }}"  class="flex items-center gap-4 p-3 rounded-r-full bg-blue-50 text-blue-700 transition group hover:scale-[1.02]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m2 12H5a2 2 0 01-2-2V7a2 2 0 012-2h2"/>
+            </svg>
+            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Home</span>
+        </a>
 
-        <nav class="flex-1 mt-4 px-3 space-y-1">
-            <a href="#" class="flex items-center gap-4 p-3 rounded-r-full bg-blue-50 text-blue-700 transition group">
-                <span class="text-xl">🏠</span>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Home</span>
-            </a>
+        <!-- My Profile -->
+        <button @click="document.getElementById('profileModal').classList.remove('hidden'); document.getElementById('profileModal').classList.add('flex');"
+                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.879 6.196 9 9 0 015.121 17.804zM12 12a3 3 0 100-6 3 3 0 000 6z"/>
+            </svg>
+            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">My Profile</span>
+        </button>
 
-            <button @click="document.getElementById('profileModal').classList.remove('hidden'); document.getElementById('profileModal').classList.add('flex');"
-                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
-                <span class="text-xl">👤</span>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">My Profile</span>
-            </button>
+        <!-- Enroll Student -->
+        <button @click="document.getElementById('enrollStudentModal').classList.remove('hidden');"
+                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Enroll Student</span>
+        </button>
 
-            <button @click="document.getElementById('enrollStudentModal').classList.remove('hidden');"
-                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
-                <span class="text-xl">➕</span>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Enroll Student</span>
-            </button>
+        <!-- Announcements -->
+        <button @click="document.getElementById('announcementModal').classList.remove('hidden');"
+                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Announcements</span>
+        </button>
+    </nav>
 
-            <button @click="document.getElementById('announcementModal').classList.remove('hidden');"
-                    class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group">
-                <span class="text-xl">📢</span>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Announcements</span>
-            </button>
-        </nav>
+    <!-- Logout -->
+    <div class="p-3 border-t border-gray-100">
+        <a href="{{ route('logout') }}"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+           class="flex items-center gap-4 p-3 rounded-r-full text-red-500 hover:bg-red-50 transition group hover:scale-[1.02]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/>
+            </svg>
+            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Logout</span>
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+    </div>
+</aside>
 
-        <div class="p-3 border-t border-gray-100">
-            <a href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-               class="flex items-center gap-4 p-3 rounded-r-full text-red-500 hover:bg-red-50 transition">
-                <span class="text-xl">🚪</span>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Logout</span>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
-        </div>
-    </aside>
 
     <div class="flex-1 transition-all duration-300" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
         
@@ -75,13 +122,22 @@
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.jpg') }}" class="h-10 w-10 rounded-full ring-2 ring-emerald-300 shadow-sm">
                 <div class="overflow-hidden">
-                    <p class="text-sm font-bold text-gray-800 truncate">{{ auth()->user()->name ?? 'Teacher' }}</p>
+                    <p class="text-sm font-bold text-gray-800 truncate">
+    {{ auth()->user()->first_name }}
+    @if(auth()->user()->middle_name)
+        {{ auth()->user()->middle_name }}
+    @endif
+    {{ auth()->user()->last_name }}
+    @if(auth()->user()->suffix)
+        {{ auth()->user()->suffix }}
+    @endif
+</p>
                     <p class="text-xs text-gray-500 truncate">Tugawe Elementary School</p>
                 </div>
             </div>
         </div>
         
-            <h1 class="text-xl font-bold text-gray-800">Teacher Dashboard</h1>
+            
         </header>
 
        @if($sections->isEmpty())

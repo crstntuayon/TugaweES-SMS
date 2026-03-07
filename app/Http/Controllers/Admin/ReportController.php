@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\SchoolYear;
 use App\Models\Section;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 
 
@@ -92,7 +93,8 @@ class ReportController extends Controller
 
     $totalMale = $enrolleesPerYear->sum('male');
 $totalFemale = $enrolleesPerYear->sum('female');
-
+ $users = User::with('role')->latest()->paginate(10);
+  $sections = Section::all(); // <- fetch all sections
 
         return view('admin.reports.index', compact(
             'schoolYears',
@@ -102,7 +104,9 @@ $totalFemale = $enrolleesPerYear->sum('female');
             'topStudents',
             'cards',
             'totalMale',
-            'totalFemale'
+            'totalFemale',
+            'users',
+            'sections',
         ));
     }
 }

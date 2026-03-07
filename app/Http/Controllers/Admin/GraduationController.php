@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\SchoolYear;
+use App\Models\User;
+use App\Models\Section;
 
 class GraduationController extends Controller
 {
@@ -26,6 +29,8 @@ public function index(Request $request)
     // Group by graduation status
     $studentsByStatus = $students->groupBy('graduation_status');
 
+    
+
     return view('admin.students.graduation', compact('studentsByStatus'));
 }
 
@@ -39,8 +44,12 @@ public function graduation()
 
     // Group students by graduation_status (since graduation_year doesn't exist)
     $studentsByStatus = $students->groupBy('graduation_status');
+  $schoolYears = SchoolYear::orderBy('name','desc')->get();
+   $users = User::paginate(10); // or Student::paginate(10)
+    $sections = Section::all(); // fetch all sections
 
-    return view('admin.students.graduation', compact('studentsByStatus'));
+
+    return view('admin.students.graduation', compact('sections', 'users', 'schoolYears', 'students', 'studentsByStatus'));
 }
 
 public function search(Request $request)
@@ -67,4 +76,6 @@ public function updateStatus(Request $request, Student $student)
 
     return response()->json(['success' => true]);
 }
+
+
 }

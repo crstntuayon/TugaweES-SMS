@@ -20,11 +20,14 @@
 <body class="min-h-screen bg-gradient-to-br from-indigo-100 via-blue-100 to-sky-200">
  
 
-<div class="flex min-h-screen bg-gray-100" x-data="{ sidebarOpen: true }">
+<div class="flex h-screen bg-gray-100 overflow-hidden" x-data="{ sidebarOpen: true }">
+
 <!-- SIDEBAR -->
 <aside
 x-data="{ sidebarOpen: true }"
-class="bg-white/80 backdrop-blur-xl shadow-2xl border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out"
+class="bg-white/80 backdrop-blur-xl shadow-2xl border-r border-gray-200 
+flex flex-col transition-all duration-300 ease-in-out
+h-screen sticky top-0"
 :class="sidebarOpen ? 'w-64' : 'w-20'"
 >
 
@@ -321,11 +324,11 @@ viewBox="0 0 24 24">
 </aside>
 
     <!-- MAIN CONTENT -->
-    <div class="flex-1 flex flex-col">
+   <main class="flex-1 p-6 space-y-6 overflow-y-auto h-screen">
 
         <!-- HEADER -->
-        <header class="sticky top-0 bg-white shadow-sm">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
+      <header class="bg-white shadow-sm border rounded-xl px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
 
                 <img src="{{ asset('images/logo.jpg') }}"
                      class="h-14 w-14 rounded-full shadow ring-2 ring-indigo-200">

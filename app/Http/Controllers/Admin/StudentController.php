@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Enrollment;
 use App\Models\Section;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\SchoolYear;
 use Carbon\Carbon;
+
+
 
 class StudentController extends Controller
 {
@@ -29,7 +32,10 @@ class StudentController extends Controller
  // ✅ Get all school years for the dropdown
     $schoolYears = SchoolYear::orderByDesc('name')->get();
      $activeYear = SchoolYear::active()->first(); // ✅ define active school year
-    return view('admin.students.index', compact('activeYear', 'students', 'sections', 'schoolYears'));
+
+        $users = User::with('role')->latest()->paginate(10);
+
+    return view('admin.students.index', compact('users', 'activeYear', 'students', 'sections', 'schoolYears'));
 }
     // Show form to create new student
     public function create()
@@ -206,11 +212,13 @@ public function unenroll(Student $student)
   
 
 
+
+
 public function issueIds(Request $request)
 {
     $sectionId = $request->section_id;
 
-    // FIXED SCHOOL ID (change only if needed)
+    // Fixed school ID (change if needed)
     $schoolId = '120231';
 
     // Last 2 digits of current year (e.g. 26)
@@ -222,32 +230,37 @@ public function issueIds(Request $request)
         ->orderBy('school_id', 'desc')
         ->first();
 
-    // Get last 4-digit sequence
     $lastSequence = $lastStudent
         ? (int) substr($lastStudent->school_id, -4)
         : 0;
 
-    $students = Student::where('section_id', $sectionId)->get();
+    // ✅ Get students in the section, alphabetically by last_name, only those without school_id
+    $students = Student::whereHas('enrollments', function($query) use ($sectionId) {
+            $query->where('section_id', $sectionId);
+        })
+        ->with('section')
+        ->orderBy('last_name', 'asc')   // <-- Alphabetical by last name
+        ->get();
 
+    // Generate school IDs
     foreach ($students as $student) {
-        if (!$student->school_id) {
+        if (!$student->school_id) {  // only assign if not already assigned
             $lastSequence++;
-
-            // ✅ FINAL FORMAT: S-120231260000
             $student->school_id = sprintf(
                 'S-%s%s%04d',
                 $schoolId,
                 $year,
                 $lastSequence
             );
-
             $student->save();
         }
     }
 
+    $section = Section::find($sectionId);
+
     return view('admin.students.print-ids', [
         'students' => $students,
-        'section' => optional($students->first())->section,
+        'section' => $section,
         'schoolYear' => Carbon::now()->year,
     ]);
 }

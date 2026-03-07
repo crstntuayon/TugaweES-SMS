@@ -8,19 +8,40 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Grade; // Assume you have a Grade model
+use App\Models\Announcement;
 
 class GradeController extends Controller
 {
     // Show grades form for a section
     public function index($sectionId)
     {
-        $section = Section::with(['students.grades'])->findOrFail($sectionId);
-        $subjects = Subject::all(); // Or filter subjects for the section if needed
+       // Controller method
 
-        // Group subjects by grade level for the view
-        $allSubjectsByGrade = $subjects->groupBy('grade_level');
+$section = Section::with(['students' => function($q) {
+    $q->orderBy('last_name')->orderBy('first_name');
+}])->find($sectionId);
 
-        return view('teacher.grades', compact('section', 'subjects', 'allSubjectsByGrade'));
+// Get all subjects
+$subjects = Subject::all();
+
+// Optional: prepare subjects grouped by grade for each student
+$allSubjectsByGrade = [];
+foreach ($section->students as $student) {
+    $grades = Grade::where('student_id', $student->id)->get();
+    $allSubjectsByGrade[$student->id] = $grades;
+}
+
+$announcements = Announcement::with('user') // eager load poster
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+return view('teacher.grades', [
+    'section' => $section,
+    'sections' => Section::all(), // for dropdowns
+    'subjects' => $subjects,
+    'allSubjectsByGrade' => $allSubjectsByGrade,
+     'announcements' => $announcements,
+]);
     }
 
     // Store grades

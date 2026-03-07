@@ -23,8 +23,10 @@ public function index()
 
         
      $schoolYears = SchoolYear::orderBy('name', 'desc')->get();
+     $users = User::with('role')->latest()->paginate(10);
+$allSections = Section::orderBy('name')->get();
 
-    return view('admin.sections.index', compact('sections', 'teachers', 'schoolYears')); // ✅ PASS TO VIEW
+    return view('admin.sections.index', compact('users', 'allSections', 'sections', 'teachers', 'schoolYears')); // ✅ PASS TO VIEW
 }
     public function create()
     {

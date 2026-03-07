@@ -9,13 +9,18 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf; // for PDF export
+use App\Models\Announcement;
 
 class AttendanceController extends Controller
 {
     // Show attendance modal / month view
-   public function index(Request $request, $sectionId)
+  public function index(Request $request, $sectionId)
 {
+    // Current section with students and attendances
     $section = Section::with('students.attendances')->findOrFail($sectionId);
+
+    // All sections for the dropdown
+    $sections = Section::orderBy('year_level')->orderBy('name')->get();
 
     // Parse month from query parameter
     $monthParam = $request->query('month'); // expects "YYYY-MM"
@@ -26,15 +31,24 @@ class AttendanceController extends Controller
         $month = date('m');
     }
 
-    $students = $section->students()->with([
-        'attendances' => fn($q) => $q->whereYear('date', $year)
-                                     ->whereMonth('date', $month)
-    ])->get();
+    // Students in this section, with attendances for selected month, alphabetically
+    $students = $section->students()
+        ->with([
+            'attendances' => fn($q) => $q->whereYear('date', $year)
+                                         ->whereMonth('date', $month)
+        ])
+        ->orderBy('last_name')
+        ->orderBy('first_name')
+        ->get();
 
     $daysInMonth = Carbon::parse("$year-$month-01")->daysInMonth;
 
+    $announcements = Announcement::with('user') // eager load poster
+    ->orderBy('created_at', 'desc')
+    ->get();
+
     return view('teacher.attendance', compact(
-        'section','students','month','year','daysInMonth'
+        'section', 'announcements', 'sections', 'students', 'month', 'year', 'daysInMonth'
     ));
 }
 

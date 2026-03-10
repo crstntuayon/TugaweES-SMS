@@ -25,11 +25,7 @@ class TeacherController extends Controller
        
         $sections = Section::all();
         $yearLevels = YearLevel::all();
-<<<<<<< HEAD
 //$teachers = Teacher::all();
-=======
-$teachers = Teacher::all();
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 
     // Load teachers with sections and teaching load
     $teachers = Teacher::with(['sections','teachingLoad'])->get();
@@ -227,12 +223,8 @@ public function store(Request $request)
         return redirect()->back()->with('success', 'Sections assigned successfully.');
     }
 
-<<<<<<< HEAD
 
 
-=======
-// TeacherController.php
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 public function updateProgram(Request $request, Teacher $teacher)
 {
     $data = $request->validate([
@@ -244,10 +236,7 @@ public function updateProgram(Request $request, Teacher $teacher)
         'prepared_by' => 'nullable|string|max:255',
         'conforme' => 'nullable|string|max:255',
         'approved_by' => 'nullable|string|max:255',
-<<<<<<< HEAD
 
-=======
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
         'teaching_load' => 'nullable|array',
         'teaching_load.*.id' => 'nullable|exists:teaching_loads,id',
         'teaching_load.*.time' => 'required|string',
@@ -255,11 +244,7 @@ public function updateProgram(Request $request, Teacher $teacher)
         'teaching_load.*.subject' => 'required|string',
     ]);
 
-<<<<<<< HEAD
     // Update teacher information
-=======
-    // Update teacher main info
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
     $teacher->update([
         'position' => $data['position'] ?? $teacher->position,
         'years_experience' => $data['years_experience'] ?? $teacher->years_experience,
@@ -271,7 +256,6 @@ public function updateProgram(Request $request, Teacher $teacher)
         'approved_by' => $data['approved_by'] ?? $teacher->approved_by,
     ]);
 
-<<<<<<< HEAD
     // Collect IDs that are still present
     $existingIds = collect($data['teaching_load'] ?? [])
         ->pluck('id')
@@ -284,9 +268,6 @@ public function updateProgram(Request $request, Teacher $teacher)
         ->delete();
 
     // Update or Create rows
-=======
-    // Update / Create teaching loads
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
     foreach ($data['teaching_load'] ?? [] as $load) {
 
         if (!empty($load['id'])) {
@@ -309,7 +290,6 @@ public function updateProgram(Request $request, Teacher $teacher)
         }
     }
 
-<<<<<<< HEAD
 // Reload updated relations
 $teacher->load(['sections', 'teachingLoad']);
 
@@ -323,17 +303,5 @@ return response()->json([
 
 }
 
-=======
-    // 🔥 RETURN UPDATED TEACHER WITH RELATIONS
-    $teacher->load(['sections', 'teachingLoad']);
-
-    return response()->json([
-        'success' => true,
-        'teacher' => $teacher
-    ]);
-}
-
-
->>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 }
     

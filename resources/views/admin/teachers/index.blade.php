@@ -436,6 +436,7 @@ setTimeout(() => {
 
     <h2 class="text-2xl font-bold text-green-700 mb-6">Teachers List</h2>
 
+<<<<<<< HEAD
     <!-- TEACHERS GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
@@ -496,12 +497,82 @@ setTimeout(() => {
 
         @endforelse
 
+=======
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden">
+            
+            <!-- Table Head -->
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">No.</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold">Teacher</th>
+                    <th class="px-6 py-3 text-center text-sm font-semibold">Action</th>
+                </tr>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody class="divide-y divide-gray-200 bg-white">
+
+                @forelse($teachers->sortBy('last_name')->values() as $index => $teacher)
+                    <tr class="hover:bg-green-50 transition">
+
+                        <!-- Number -->
+                        <td class="px-6 py-4 text-sm text-gray-700">
+                            {{ $index + 1 }}
+                        </td>
+
+                        <!-- Teacher Name -->
+                       <td class="px-5 py-4">
+                                <div class="flex items-center gap-4">
+                                    <img
+                                        src="{{ $teacher->photo ? asset('storage/'.$teacher->photo) : asset('images/photo-placeholder.png') }}"
+                                        class="w-12 h-12 rounded-full object-cover shadow"
+                                        alt="Photo">
+
+                                    <div>
+                                        <p class="font-semibold text-gray-800 leading-tight">
+                                            {{ $teacher->first_name }}
+                                            {{ $teacher->middle_name }}
+                                            {{ $teacher->last_name }}
+                                            {{ $teacher->suffix }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Email: {{ $teacher->email }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+
+                        <!-- Action -->
+                        <td class="px-6 py-4 text-center">
+                            <button 
+                                onclick="openTeacherModal({{ $teacher->id }})"
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">
+                                View Profile
+                            </button>
+                        </td>
+
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="3" class="px-6 py-6 text-center text-gray-500">
+                            No teachers found.
+                        </td>
+                    </tr>
+                @endforelse
+
+            </tbody>
+        </table>
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
     </div>
 
 </div>
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 <!-- Teacher Profile Modal -->
 <div id="teacherModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative overflow-auto max-h-[90vh]">
@@ -575,8 +646,11 @@ function openTeacherModal(id) {
 }
 
 function renderTeacherDocument() {
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
     let t = currentTeacher;
 
     const photoUrl = t.photo 
@@ -645,11 +719,19 @@ function renderTeacherDocument() {
             <!-- RIGHT SIDE -->
             <div class="space-y-2">
 
+<<<<<<< HEAD
                <p><strong>Grade Level Assigned:</strong><br>
     ${t.sections && t.sections.length > 0
         ? t.sections.map(s => s.year_level).join(', ')
         : '-'}
 </p>
+=======
+                <p><strong>Grade Level Assigned:</strong><br>
+                    ${t.sections.length > 0 
+                        ? t.sections.map(s => s.year_level).join(', ') 
+                        : '-'}
+                </p>
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 
                 <p><strong>Enrollment (Male):</strong><br>
                     ${isEditing 
@@ -680,6 +762,7 @@ function renderTeacherDocument() {
 
             <div class="overflow-auto">
                 <table class="w-full border text-xs">
+<<<<<<< HEAD
                  <thead>
     <tr class="bg-gray-200 text-center">
         <th class="border px-2 py-1">Time</th>
@@ -729,6 +812,35 @@ function renderTeacherDocument() {
         </td>
     ` : ''}
 </tr>
+=======
+                    <thead>
+                        <tr class="bg-gray-200 text-center">
+                            <th class="border px-2 py-1">Time</th>
+                            <th class="border px-2 py-1">Minutes</th>
+                            <th class="border px-2 py-1">Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${t.teaching_load?.length > 0 
+                            ? t.teaching_load.map((l, index) => `
+                                <tr>
+                                    <td class="border px-2 py-1">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="time" value="${l.time}" class="border w-full px-1 rounded">`
+                                            : l.time}
+                                    </td>
+                                    <td class="border px-2 py-1 text-center">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="minutes" value="${l.minutes}" class="border w-full px-1 rounded">`
+                                            : l.minutes}
+                                    </td>
+                                    <td class="border px-2 py-1">
+                                        ${isEditing 
+                                            ? `<input data-index="${index}" data-field="subject" value="${l.subject}" class="border w-full px-1 rounded">`
+                                            : l.subject}
+                                    </td>
+                                </tr>
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
                             `).join('')
                             : '<tr><td colspan="3" class="border px-2 py-2 text-center">No load assigned</td></tr>'
                         }
@@ -797,6 +909,7 @@ function addTeachingRow() {
     renderTeacherDocument();
 }
 
+<<<<<<< HEAD
 function removeTeachingRow(index) {
     if (!currentTeacher.teaching_load) return;
 
@@ -824,6 +937,16 @@ document.querySelectorAll('[data-index]').forEach(input => {
 });
 
 currentTeacher.teaching_load = teachingLoad;
+=======
+function saveTeacherChanges() {
+
+    // collect teaching load inputs
+    document.querySelectorAll('[data-index]').forEach(input => {
+        let index = input.dataset.index;
+        let field = input.dataset.field;
+        currentTeacher.teaching_load[index][field] = input.value;
+    });
+>>>>>>> a2e1da32ac52ddd5b71a7d0ebd78dc817a30e466
 
     let data = {
         position: document.getElementById('position')?.value,

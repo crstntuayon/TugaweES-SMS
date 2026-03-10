@@ -1,0 +1,5 @@
+Name: {{name}}
+ID: {{school_id}}
+Type: {{type}}
+Grade/Section: {{section}}
+Photo: {{photo}}

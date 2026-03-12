@@ -32,7 +32,11 @@ public function store(Request $request)
         'last_name'       => 'required|string',
          'lrn' => 'required|digits:12|unique:students,lrn',
         'birthday'        => 'required|date',
+<<<<<<< HEAD
         'email'           => 'required|email|unique:users,email',
+=======
+        'email'           => 'nullable|email|unique:users,email',
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
         'contact_number' => 'nullable|string',
 
         'address'         => 'nullable|string',
@@ -49,7 +53,11 @@ public function store(Request $request)
         }
 
         // ✅ Use provided email or auto-generate
+<<<<<<< HEAD
        // $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
+=======
+        $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 
         // ✅ Generate username if not provided
         $username = $validated['username'] ?? strtolower($validated['first_name'][0] . $validated['last_name'] . rand(100, 999));

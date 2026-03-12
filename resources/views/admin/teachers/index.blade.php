@@ -15,6 +15,7 @@
 
 <!-- SIDEBAR -->
 <aside
+<<<<<<< HEAD
 x-data="{ sidebarOpen: true, activeDropdown: null }"
 class="bg-white/90 backdrop-blur-2xl shadow-2xl shadow-indigo-500/5 border-r border-gray-200/80 
 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
@@ -49,10 +50,49 @@ h-screen sticky top-0 z-50"
             <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
         </svg>
     </button>
+=======
+x-data="{ sidebarOpen: true }"
+class="bg-white/80 backdrop-blur-xl shadow-2xl border-r border-gray-200 
+flex flex-col transition-all duration-300 ease-in-out
+h-screen sticky top-0"
+:class="sidebarOpen ? 'w-64' : 'w-20'"
+>
+
+
+<!-- HEADER -->
+<div class="flex items-center justify-between p-4 border-b">
+
+<span
+class="font-bold text-gray-800 text-lg tracking-wide"
+x-show="sidebarOpen"
+x-transition>
+Admin Panel
+</span>
+
+<button
+@click="sidebarOpen = !sidebarOpen"
+class="p-2 rounded-lg hover:bg-indigo-50 hover:scale-110 transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-6 h-6 text-gray-700"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+d="M4 6h16M4 12h16M4 18h16"/>
+
+</svg>
+</button>
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 </div>
 
 
 <!-- USER PROFILE -->
+<<<<<<< HEAD
 <div class="p-5 border-b border-gray-100">
     @php
     $first = auth()->user()->first_name;
@@ -88,10 +128,54 @@ h-screen sticky top-0 z-50"
             </span>
         </div>
     </div>
+=======
+<div class="p-4 border-b">
+
+@php
+$first = auth()->user()->first_name;
+$last = auth()->user()->last_name;
+$initials = strtoupper(substr($first,0,1) . substr($last,0,1));
+@endphp
+
+<div class="flex items-center gap-3">
+
+<div class="relative">
+
+<!-- Avatar -->
+<div class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-indigo-700 text-white font-bold shadow-md">
+{{ $initials }}
+</div>
+
+<!-- Online indicator -->
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+
+</div>
+
+<div x-show="sidebarOpen" x-transition>
+
+<p class="text-sm font-semibold text-gray-800 leading-tight">
+
+{{ auth()->user()->first_name }}
+{{ auth()->user()->middle_name }}
+{{ auth()->user()->last_name }}
+{{ auth()->user()->suffix }}
+
+</p>
+
+<p class="text-xs text-gray-500 truncate">
+{{ auth()->user()->email }}
+</p>
+
+</div>
+
+</div>
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 </div>
 
 
 <!-- NAVIGATION -->
+<<<<<<< HEAD
 <div class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto scrollbar-thin">
     
     <!-- Section Label -->
@@ -307,10 +391,193 @@ h-screen sticky top-0 z-50"
             </form>
         </div>
     </div>
+=======
+<div class="flex flex-col gap-2 p-3 flex-1 text-gray-600">
+
+
+<!-- Dashboard -->
+<a href="{{ route('admin.dashboard') }}"
+class="group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200
+{{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md scale-[1.02]' : 'hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02]' }}">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3h8v6h-8zM3 21h8v-6H3z"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Dashboard</span>
+
+</a>
+
+
+<!-- Profile -->
+<a href="{{ route('profile.edit') }}"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<circle cx="12" cy="7" r="4"/>
+<path d="M5.5 21a7.5 7.5 0 0 1 13 0"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Profile</span>
+
+</a>
+
+
+<!-- Manage Users -->
+<button onclick="openManageUsersModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition w-full text-left">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
+<path d="M7 21v-2a4 4 0 0 1 3-3.87"/>
+<circle cx="12" cy="7" r="4"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Manage Users</span>
+
+</button>
+
+
+<!-- Create Admin -->
+<button onclick="openAddAdminModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-green-50 hover:text-green-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M12 5v14M5 12h14"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Create Admin</span>
+
+</button>
+
+
+<!-- Reports -->
+<a href="{{ route('admin.reports') }}"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-purple-50 hover:text-purple-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M3 3v18h18"/>
+<path d="M7 15l4-4 4 4 5-5"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Reports</span>
+
+</a>
+
+
+<!-- Graduation -->
+<a href="{{ route('admin.students.graduation') }}"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-yellow-50 hover:text-yellow-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M22 10L12 5 2 10l10 5 10-5z"/>
+<path d="M6 12v5a6 3 0 0 0 12 0v-5"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Graduation</span>
+
+</a>
+
+
+<!-- Issue School IDs -->
+<button onclick="openSectionModal()"
+class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5 group-hover:scale-110 transition"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<rect x="3" y="6" width="18" height="12" rx="2"/>
+<path d="M7 10h6M7 14h4"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Issue School IDs</span>
+
+</button>
+
+
+<!-- SCHOOL YEAR -->
+<div class="bg-gray-50 p-3 rounded-xl mt-3 shadow-inner" x-show="sidebarOpen">
+
+<span class="text-xs font-semibold text-gray-500">
+ACTIVE SCHOOL YEAR
+</span>
+
+<form action="{{ route('admin.schoolyears.activate') }}" method="POST">
+@csrf
+
+<select
+name="school_year"
+onchange="this.form.submit()"
+class="w-full border mt-2 px-2 py-1 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+
+@foreach($schoolYears as $year)
+
+<option value="{{ $year->id }}"
+{{ $year->is_active ? 'selected' : '' }}>
+{{ $year->name }}
+</option>
+
+@endforeach
+
+</select>
+
+</form>
+
+</div>
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 </div>
 
 
 <!-- LOGOUT -->
+<<<<<<< HEAD
 <div class="p-4 border-t border-gray-100 mt-auto">
     <a href="{{ route('logout') }}"
     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -341,11 +608,41 @@ h-screen sticky top-0 z-50"
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
         @csrf
     </form>
+=======
+<div class="p-3 border-t">
+
+<a href="{{ route('logout') }}"
+onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+class="flex items-center gap-3 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 hover:scale-[1.02] transition">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+stroke="currentColor"
+stroke-width="2"
+viewBox="0 0 24 24">
+
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+<path d="M16 17l5-5-5-5"/>
+<path d="M21 12H9"/>
+
+</svg>
+
+<span x-show="sidebarOpen">Logout</span>
+
+</a>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+@csrf
+</form>
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 </div>
 
 </aside>
 
 
+<<<<<<< HEAD
  <main class="flex-1 p-8 space-y-8 overflow-y-auto h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-emerald-50/30">
 
     <!-- ENHANCED HEADER -->
@@ -684,11 +981,196 @@ function filterTeachers() {
     } else {
         noResults.classList.add('hidden');
         gridContainer.classList.remove('hidden');
+=======
+ <main class="flex-1 p-6 space-y-6 overflow-y-auto h-screen">
+
+
+ <!-- HEADER -->
+<header class="sticky top-0 z-50 backdrop-blur-lg bg-white/80 shadow-md rounded-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+
+        <!-- TOP ROW -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+            <!-- LEFT: BACK + LOGO + TITLE -->
+            <div class="flex items-center gap-4">
+                <a href="{{ route('admin.dashboard') }}"
+                   class="hover:bg-green-300 text-gray-700 px-3 py-2 rounded-lg shadow-sm transition flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                              d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+
+                <img src="{{ asset('images/logo.jpg') }}"
+                     class="h-16 w-16 rounded-full shadow-lg ring-4 ring-indigo-200"
+                     alt="School Logo">
+
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Teacher Management</h1>
+                    <p class="text-sm text-gray-500">Tugawe Elementary School</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: SEARCH + ADD BUTTON -->
+            <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+
+                <!-- SEARCH -->
+                <input type="text" id="teacherSearch" placeholder="Search Teacher..."
+                       class="px-4 py-2 border rounded-lg w-full md:w-64 focus:ring-2 focus:ring-green-400"
+                       onkeyup="filterTeachers()">
+
+                <!-- ADD TEACHER BUTTON -->
+                <button onclick="openAddTeacherModal()"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
+                               px-5 py-2.5 rounded-xl shadow-lg hover:scale-105 transition
+                               whitespace-nowrap">
+                    + Add Teacher
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<!-- FILTER SCRIPT -->
+<script>
+function filterTeachers() {
+    const input = document.getElementById('teacherSearch');
+    const filter = input.value.toLowerCase();
+    const table = document.querySelector('table tbody');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const nameCell = rows[i].querySelector('td:nth-child(2)');
+        if (nameCell) {
+            const txtValue = nameCell.textContent || nameCell.innerText;
+            rows[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+        }
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
     }
 }
 </script>
 
 
+<<<<<<< HEAD
+=======
+
+@if(session('success'))
+<div id="successAlert"
+     class="flex items-center justify-between gap-4
+            bg-green-100 border border-green-300 text-green-800
+            px-6 py-4 rounded-xl shadow-lg transition-all duration-500">
+
+    <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-6 w-6 text-green-600"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 13l4 4L19 7"/>
+        </svg>
+        <span class="font-semibold">
+            {{ session('success') }}
+        </span>
+    </div>
+
+    <button onclick="closeSuccessAlert()"
+            class="text-green-700 hover:text-red-500 text-xl font-bold">
+        ✕
+    </button>
+</div>
+@endif
+<script>
+
+function closeSuccessAlert(){
+    const alert = document.getElementById('successAlert');
+    if(alert){
+        alert.classList.add('opacity-0');
+        setTimeout(() => alert.remove(), 500);
+    }
+}
+
+// auto-hide after 5 seconds
+setTimeout(() => {
+    closeSuccessAlert();
+}, 5000);
+
+
+</script>
+
+
+  <div class="bg-white rounded-2xl shadow-xl p-6">
+
+    <h2 class="text-2xl font-bold text-green-700 mb-6">Teachers List</h2>
+
+    <!-- TEACHERS GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+        @forelse($teachers->sortBy('last_name')->values() as $index => $teacher)
+
+        <!-- CARD -->
+        <div class="bg-white border rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-6 text-center group">
+
+            <!-- NUMBER -->
+            <div class="text-sm text-black-400 mb-5">
+                {{ $index + 1 }}
+            </div>
+
+            <!-- PHOTO -->
+            <div class="flex justify-center mb-4">
+                <div class="relative group">
+
+                    <img
+                        src="{{ $teacher->photo ? asset('storage/'.$teacher->photo) : asset('images/photo-placeholder.png') }}"
+                        class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg group-hover:scale-105 transition"
+                        alt="Photo">
+
+                    <!-- GREEN HOVER OVERLAY -->
+                    <div class="absolute inset-0 rounded-full bg-green-600 opacity-0 group-hover:opacity-30 transition"></div>
+
+                </div>
+            </div>
+
+            <!-- NAME -->
+            <p class="font-semibold text-gray-800 text-lg leading-tight">
+                {{ $teacher->first_name }}
+                {{ $teacher->middle_name }}
+                {{ $teacher->last_name }}
+                {{ $teacher->suffix }}
+            </p>
+
+            <!-- EMAIL -->
+            <p class="text-xs text-gray-500 mt-2">
+                {{ $teacher->email }}
+            </p>
+
+            <!-- ACTION -->
+            <div class="mt-4">
+                <button 
+                    onclick="openTeacherModal({{ $teacher->id }})"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition text-sm">
+                    View Profile
+                </button>
+            </div>
+
+        </div>
+
+        @empty
+
+        <div class="col-span-full text-center text-gray-500 py-10">
+            No teachers found.
+        </div>
+
+        @endforelse
+
+    </div>
+
+</div>
+
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 <!-- Teacher Profile Modal -->
 <div id="teacherModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative overflow-auto max-h-[90vh]">

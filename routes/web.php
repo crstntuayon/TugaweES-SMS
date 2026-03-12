@@ -464,6 +464,7 @@ Route::put('/sections/{section}/unenroll-all', [App\Http\Controllers\Teacher\Das
     Route::post('/admin/students/{student}/update-status', [App\Http\Controllers\Admin\GraduationController::class, 'updateStatus']);
   
 
+<<<<<<< HEAD
 // MARCH 12, 2026
 // Social Authentication Routes
 Route::prefix('auth')->group(function () {
@@ -475,4 +476,7 @@ Route::prefix('auth')->group(function () {
         ->name('social.callback')
         ->where('provider', 'google|facebook');
 });
+=======
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
 require __DIR__.'/auth.php';

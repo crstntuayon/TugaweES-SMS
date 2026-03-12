@@ -1,0 +1,285 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use App\Models\Student;
+use App\Models\Enrollment;
+use App\Models\Section;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\SchoolYear;
+use Carbon\Carbon;
+
+
+
+class StudentController extends Controller
+{
+     // Show all students
+  public function index()
+{
+    $students = Student::orderBy('last_name', 'asc') // sort by last name
+                   ->orderBy('first_name', 'asc') // optional secondary sort
+                   ->get();
+    $sections = Section::all(); // <- fetch all sections
+ // ✅ Get all school years for the dropdown
+    $schoolYears = SchoolYear::orderByDesc('name')->get();
+     $activeYear = SchoolYear::active()->first(); // ✅ define active school year
+
+        $users = User::with('role')->latest()->paginate(10);
+
+    return view('admin.students.index', compact('users', 'activeYear', 'students', 'sections', 'schoolYears'));
+}
+    // Show form to create new student
+    public function create()
+    {
+        $sections = Section::all();
+        $users = User::whereHas('role', fn($q) => $q->where('name', 'Student'))->get();
+        return view('admin.students.create', compact('sections', 'users'));
+    }
+
+    // Store new student
+ public function store(Request $request)
+{
+    $validated = $request->validate([
+        'first_name'      => 'required|string',
+        'middle_name'     => 'nullable|string|max:255',
+        'last_name'       => 'required|string',
+        'suffix' => 'nullable|string|max:50',
+       'lrn'             => 'required|digits:12|unique:students,lrn',
+        'birthday'        => 'required|date',
+        'email'           => 'nullable|email|unique:users,email',
+        'contact_number'  => 'nullable|string',
+        'address'         => 'nullable|string',
+        'sex'             => 'required|in:Male,Female',
+        'photo'           => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'password'        => 'required|confirmed|min:6',
+          'school_year_id'  => 'required|exists:school_years,id', // add this
+        
+    ]);
+
+    DB::transaction(function () use ($request, &$validated) {
+
+
+   
+    
+       $contactNumber = null;
+
+if ($request->contact_number) {
+    $cleanNumber = str_replace(' ', '', $request->contact_number);
+
+    if (strlen($cleanNumber) === 10) {
+        $contactNumber = '+63' . $cleanNumber;
+    }
+}
+       // 🔥 GET ACTIVE SCHOOL YEAR
+        $activeSchoolYearId = SchoolYear::where('is_active', 1)->value('id');
+
+        // If no active school year
+        if (!$activeSchoolYearId) {
+            throw new \Exception('No active school year found.');
+        }
+
+
+        // ✅ Photo upload
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')
+                ->store('photos', 'public');
+        }
+
+        // ✅ Use provided email or auto-generate
+        $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
+
+        // ✅ CREATE USER (role_id = 4 → Student)
+      $username = $validated['username']
+    ?? strtolower($validated['first_name'][0] . $validated['last_name'] . rand(100, 999));
+
+$user = User::create([
+    'first_name' => $validated['first_name'],
+    'middle_name' => $validated['middle_name'],
+    'last_name'  => $validated['last_name'],
+    'suffix' => $validated['suffix'],
+    'username'   => $username,
+   // 'name'       => $validated['first_name'] . ' ' . $validated['last_name'],
+    'email'      => $email,
+    'password' => Hash::make($request->password), // hash password!
+    'role_id'    => 4,
+]);
+
+
+        // ✅ CREATE STUDENT (linked)
+        Student::create(array_merge($validated, [
+            'user_id' => $user->id,
+            'email'   => $email,
+            'school_year_id' => $activeSchoolYearId,
+             'contact_number' => $contactNumber,
+        ]));
+    });
+
+    return redirect()->back()->with('success', 'Student added successfully!');
+}
+
+
+    // Edit student
+    public function edit(Student $student)
+    {
+        $sections = Section::all();
+        $users = User::whereHas('role', fn($q) => $q->where('name', 'Student'))->get();
+        return view('admin.students.edit', compact('student', 'sections', 'users'));
+    }
+
+    // Update student
+public function update(Request $request, Student $student)
+{
+    // Validate input
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'suffix' => 'nullable|string|max:50',
+        'birthday' => 'required|date',
+        'email' => 'required|email',
+        'contact_number' => 'nullable|string|max:20',
+        'sex' => 'required|string',
+     
+        'lrn' => 'nullable|string|max:20',
+        'address' => 'required|string|max:255',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        
+    ]);
+
+    // Update all fields except photo
+    $student->update($request->only([
+        'first_name', 'middle_name', 'last_name', 'suffix',
+        'birthday', 'email', 'contact_number', 'sex',
+         'lrn', 'address'
+    ]));
+
+    // Handle photo upload if present
+    if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+
+        // Delete old photo if exists
+        if ($student->photo && Storage::disk('public')->exists($student->photo)) {
+            Storage::disk('public')->delete($student->photo);
+        }
+
+        // Store new photo with unique name
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('photos', $filename, 'public');
+
+        // Save path in DB
+        $student->photo = $path;
+        $student->save();
+    }
+
+    return redirect()->back()->with('success', 'Student updated successfully!');
+}
+
+
+
+    // Delete student
+    public function destroy(Student $student)
+    {
+        $student->delete();
+        return redirect()->route('admin.students.index')
+                         ->with('success', 'Student deleted successfully');
+    }
+
+    public function getStudentsJson()
+{
+    $students = Student::with('section')->get();
+
+    return response()->json($students);
+}
+
+public function unenroll(Student $student)
+{
+    // Remove section assignment
+    $student->section_id = null;
+    $student->save();
+
+    return redirect()->back()->with('success', $student->first_name . ' has been unenrolled.');
+}
+
+  
+
+
+
+
+public function issueIds(Request $request)
+{
+    $sectionId = $request->section_id;
+
+    // Fixed school ID (change if needed)
+    $schoolId = '120231';
+
+    // Last 2 digits of current year (e.g. 26)
+    $year = Carbon::now()->format('y');
+
+    // Get last issued ID for THIS SCHOOL + YEAR
+    $lastStudent = Student::whereNotNull('school_id')
+        ->where('school_id', 'like', "S-{$schoolId}{$year}%")
+        ->orderBy('school_id', 'desc')
+        ->first();
+
+    $lastSequence = $lastStudent
+        ? (int) substr($lastStudent->school_id, -4)
+        : 0;
+
+    // ✅ Get students in the section, alphabetically by last_name, only those without school_id
+    $students = Student::whereHas('enrollments', function($query) use ($sectionId) {
+            $query->where('section_id', $sectionId);
+        })
+        ->with('section')
+        ->orderBy('last_name', 'asc')   // <-- Alphabetical by last name
+        ->get();
+
+    // Generate school IDs
+    foreach ($students as $student) {
+        if (!$student->school_id) {  // only assign if not already assigned
+            $lastSequence++;
+            $student->school_id = sprintf(
+                'S-%s%s%04d',
+                $schoolId,
+                $year,
+                $lastSequence
+            );
+            $student->save();
+        }
+    }
+
+    $section = Section::find($sectionId);
+
+    return view('admin.students.print-ids', [
+        'students' => $students,
+        'section' => $section,
+        'schoolYear' => Carbon::now()->year,
+    ]);
+}
+
+
+public function exportIdsPdf(Request $request)
+{
+    $sectionId = $request->section_id;
+    $students = Student::where('section_id', $sectionId)->get();
+    $section = $students->first()->section ?? null;
+    $schoolYear = date('Y');
+
+    $pdf = Pdf::loadView('admin.students.print-ids', compact('students', 'section', 'schoolYear'))
+              ->setPaper('a4', 'portrait'); // Adjust orientation if needed
+
+    return $pdf->download('school_ids_' . ($section->name ?? 'section') . '.pdf');
+}
+
+
+
+
+}

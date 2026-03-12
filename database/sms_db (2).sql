@@ -3,15 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
-<<<<<<< HEAD
--- Generation Time: Mar 12, 2026 at 01:25 AM
-=======
-<<<<<<< HEAD
--- Generation Time: Mar 12, 2026 at 01:25 AM
-=======
--- Generation Time: Feb 23, 2026 at 03:26 PM
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+-- Generation Time: Feb 26, 2026 at 07:34 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -37,21 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `announcements` (
   `id` bigint UNSIGNED NOT NULL,
-<<<<<<< HEAD
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('admin','teacher') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
-=======
-<<<<<<< HEAD
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('admin','teacher') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
-=======
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` enum('admin','teacher') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   `user_id` bigint UNSIGNED NOT NULL,
   `section_id` bigint UNSIGNED DEFAULT NULL,
   `is_pinned` tinyint(1) NOT NULL DEFAULT '0',
@@ -60,22 +40,6 @@ CREATE TABLE `announcements` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
---
--- Dumping data for table `announcements`
---
-
-INSERT INTO `announcements` (`id`, `title`, `content`, `type`, `user_id`, `section_id`, `is_pinned`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(6, 'morning cleaners', 'report to stage', 'teacher', 42, NULL, 0, '2026-03-11 13:54:21', '2026-03-11 13:54:21', NULL);
-
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- --------------------------------------------------------
 
 --
@@ -92,98 +56,6 @@ CREATE TABLE `attendances` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
---
--- Dumping data for table `attendances`
---
-
-INSERT INTO `attendances` (`id`, `student_id`, `section_id`, `date`, `status`, `created_at`, `updated_at`) VALUES
-(161, 164, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(162, 164, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(163, 164, 50, '2026-02-04', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(164, 164, 50, '2026-02-05', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(165, 164, 50, '2026-02-06', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(166, 164, 50, '2026-02-09', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(167, 164, 50, '2026-02-10', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(168, 164, 50, '2026-02-11', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(169, 164, 50, '2026-02-12', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(170, 164, 50, '2026-02-13', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(171, 164, 50, '2026-02-16', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(172, 164, 50, '2026-02-17', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(173, 164, 50, '2026-02-18', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(174, 164, 50, '2026-02-19', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(175, 164, 50, '2026-02-20', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(176, 164, 50, '2026-02-23', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(177, 164, 50, '2026-02-24', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(178, 164, 50, '2026-02-25', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(179, 164, 50, '2026-02-26', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(180, 164, 50, '2026-02-27', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(181, 165, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(182, 165, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(183, 165, 50, '2026-02-04', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(184, 165, 50, '2026-02-05', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(185, 165, 50, '2026-02-06', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(186, 165, 50, '2026-02-09', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(187, 165, 50, '2026-02-10', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(188, 165, 50, '2026-02-11', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(189, 165, 50, '2026-02-12', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(190, 165, 50, '2026-02-13', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(191, 165, 50, '2026-02-16', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(192, 165, 50, '2026-02-17', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(193, 165, 50, '2026-02-18', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(194, 165, 50, '2026-02-19', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(195, 165, 50, '2026-02-20', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(196, 165, 50, '2026-02-23', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(197, 165, 50, '2026-02-24', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(198, 165, 50, '2026-02-25', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(199, 165, 50, '2026-02-26', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(200, 165, 50, '2026-02-27', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(201, 163, 50, '2026-02-02', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(202, 163, 50, '2026-02-03', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(203, 163, 50, '2026-02-04', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(204, 163, 50, '2026-02-05', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(205, 163, 50, '2026-02-06', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(206, 163, 50, '2026-02-09', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(207, 163, 50, '2026-02-10', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(208, 163, 50, '2026-02-11', 'late', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(209, 163, 50, '2026-02-12', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(210, 163, 50, '2026-02-13', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(211, 163, 50, '2026-02-16', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(212, 163, 50, '2026-02-17', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(213, 163, 50, '2026-02-18', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(214, 163, 50, '2026-02-19', 'late', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(215, 163, 50, '2026-02-20', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(216, 163, 50, '2026-02-23', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(217, 163, 50, '2026-02-24', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(218, 163, 50, '2026-02-25', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(219, 163, 50, '2026-02-26', 'present', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(220, 163, 50, '2026-02-27', 'absent', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(221, 166, 50, '2026-02-02', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(222, 166, 50, '2026-02-03', 'none', '2026-02-23 07:22:03', '2026-02-23 07:22:03'),
-(223, 166, 50, '2026-02-04', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(224, 166, 50, '2026-02-05', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(225, 166, 50, '2026-02-06', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(226, 166, 50, '2026-02-09', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(227, 166, 50, '2026-02-10', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(228, 166, 50, '2026-02-11', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(229, 166, 50, '2026-02-12', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(230, 166, 50, '2026-02-13', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(231, 166, 50, '2026-02-16', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(232, 166, 50, '2026-02-17', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(233, 166, 50, '2026-02-18', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(234, 166, 50, '2026-02-19', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(235, 166, 50, '2026-02-20', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(236, 166, 50, '2026-02-23', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(237, 166, 50, '2026-02-24', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(238, 166, 50, '2026-02-25', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(239, 166, 50, '2026-02-26', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04'),
-(240, 166, 50, '2026-02-27', 'none', '2026-02-23 07:22:04', '2026-02-23 07:22:04');
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- --------------------------------------------------------
 
 --
@@ -233,39 +105,11 @@ CREATE TABLE `enrollments` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `school_year_id` bigint UNSIGNED NOT NULL,
-<<<<<<< HEAD
   `section_id` bigint UNSIGNED DEFAULT NULL,
-  `status` enum('enrolled','promoted','retained','transfer','unenrolled') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
-=======
-<<<<<<< HEAD
-  `section_id` bigint UNSIGNED DEFAULT NULL,
-  `status` enum('enrolled','promoted','retained','transfer','unenrolled') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
-=======
-  `section_id` bigint UNSIGNED NOT NULL,
-  `status` enum('enrolled','promoted','retained','transferred','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+  `status` enum('enrolled','promoted','retained','transfer','unenrolled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `enrollments`
---
-
-INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
-<<<<<<< HEAD
-(3, 165, 1, 56, 'enrolled', '2026-03-11 13:52:38', '2026-03-11 13:52:38');
-=======
-<<<<<<< HEAD
-(3, 165, 1, 56, 'enrolled', '2026-03-11 13:52:38', '2026-03-11 13:52:38');
-=======
-(34, 163, 1, 50, 'enrolled', '2026-02-21 20:41:19', '2026-02-21 20:41:19'),
-(35, 164, 1, 50, 'enrolled', '2026-02-23 05:20:24', '2026-02-23 05:20:24'),
-(36, 165, 1, 50, 'enrolled', '2026-02-23 05:20:36', '2026-02-23 05:20:36'),
-(37, 166, 1, 50, 'enrolled', '2026-02-23 05:20:51', '2026-02-23 05:20:51');
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 -- --------------------------------------------------------
 
@@ -293,41 +137,13 @@ CREATE TABLE `grades` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `subject_id` bigint UNSIGNED NOT NULL,
-<<<<<<< HEAD
-  `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-=======
-<<<<<<< HEAD
-  `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-=======
   `component` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   `quarter` tinyint NOT NULL,
   `grade` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
---
--- Dumping data for table `grades`
---
-
-INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `component`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
-(1, 163, 131, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(2, 163, 132, NULL, 1, 87, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(3, 163, 133, NULL, 1, 88, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(4, 163, 134, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(5, 163, 135, NULL, 1, 85, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(6, 163, 136, NULL, 1, 86, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(7, 163, 137, NULL, 1, 88, '2026-02-23 05:46:24', '2026-02-23 05:46:24'),
-(8, 163, 138, NULL, 1, 90, '2026-02-23 05:46:24', '2026-02-23 05:46:24');
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- --------------------------------------------------------
 
 --
@@ -366,31 +182,6 @@ CREATE TABLE `job_batches` (
 -- --------------------------------------------------------
 
 --
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
--- Table structure for table `messages`
---
-
-CREATE TABLE `messages` (
-  `id` bigint UNSIGNED NOT NULL,
-  `sender_id` bigint UNSIGNED NOT NULL,
-  `receiver_id` bigint UNSIGNED NOT NULL,
-  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_read` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- Table structure for table `migrations`
 --
 
@@ -477,26 +268,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (74, '2026_02_19_053101_add_teacher_id_to_subjects_table', 64),
 (75, '2026_02_21_125747_create_enrollments_table', 64),
 (76, '2026_02_23_121808_drop_lrn_from_users_table', 65),
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 (77, '2026_02_23_133912_create_grades_table', 66),
 (78, '2026_02_24_013207_remove_section_id_from_students', 67),
 (79, '2026_02_24_045942_create_enrollments_table', 68),
 (80, '2026_02_24_054919_add_status_to_enrollments_table', 69),
 (81, '2026_02_24_062255_add_status_column_to_enrollments_table', 70),
-(82, '2026_02_24_064911_create_enrollments_table', 71),
-(83, '2026_03_01_122540_add_graduation_status_to_students_table', 72),
-(84, '2026_03_01_141005_add_graduation_year_to_students_table', 72),
-(85, '2026_03_11_154124_create_messages_table', 72),
-(86, '2026_03_11_193109_add_social_login_to_users_table', 73);
-<<<<<<< HEAD
-=======
-=======
-(77, '2026_02_23_133912_create_grades_table', 66);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+(82, '2026_02_24_064911_create_enrollments_table', 71);
 
 -- --------------------------------------------------------
 
@@ -552,33 +329,15 @@ CREATE TABLE `school_years` (
 --
 
 INSERT INTO `school_years` (`id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
-(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57');
-<<<<<<< HEAD
-=======
-=======
-(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31'),
-(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-02-21 06:02:31');
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32'),
+(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-02-23 21:38:32');
 
 -- --------------------------------------------------------
 
@@ -602,21 +361,8 @@ CREATE TABLE `sections` (
 --
 
 INSERT INTO `sections` (`id`, `name`, `year_level`, `teacher_id`, `created_at`, `updated_at`, `capacity`, `school_year_id`) VALUES
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 (55, 'SAMPAGUITA', 'Kindergarten', 42, '2026-02-23 17:39:40', '2026-02-23 18:04:41', 40, 1),
-(56, 'ROSAL', 'Grade 1', 42, '2026-02-23 18:06:38', '2026-02-23 18:06:46', 40, 1),
-(57, 'MABINI', 'Grade 2', NULL, '2026-03-11 17:15:19', '2026-03-11 17:15:19', 40, 1),
-(58, 'ANGELES', 'Grade 3', NULL, '2026-03-11 17:15:41', '2026-03-11 17:15:41', 40, 1);
-<<<<<<< HEAD
-=======
-=======
-(50, 'SAMPAGUITA', 'Grade 6', 42, '2026-02-14 01:35:15', '2026-02-22 18:20:45', 40, 1),
-(54, 'Lily', 'Grade 2', NULL, '2026-02-16 17:42:51', '2026-02-22 18:20:55', 40, 1);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+(56, 'ROSAL', 'Grade 1', 42, '2026-02-23 18:06:38', '2026-02-23 18:06:46', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -681,15 +427,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-<<<<<<< HEAD
-('kr9qKX2lJaoylYKpupe4SdgiVUQDDHbvyvLfHN6a', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiN0h2c1pFSjAxNWpJZ0hUd2IydWhQTEFPTVB1ckJrMVdrSnU0S3JUWCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fX0=', 1773278517);
-=======
-<<<<<<< HEAD
-('kr9qKX2lJaoylYKpupe4SdgiVUQDDHbvyvLfHN6a', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiN0h2c1pFSjAxNWpJZ0hUd2IydWhQTEFPTVB1ckJrMVdrSnU0S3JUWCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fX0=', 1773278517);
-=======
-('ZWSxH2nTcRgoSv6gXMywqV0SSc43WqI0qQybYAi6', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZTBlZXJwY3NiZmJoMVQ5dFoxYmFnTFl3T1V3WkozWVNlenppQVp3eCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9zZWN0aW9ucyI7czo1OiJyb3V0ZSI7czoyMDoiYWRtaW4uc2VjdGlvbnMuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1771860329);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+('HcEp7twqFcOjqvrkT0LDPx5cRNuCscBVMjOqXwoK', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiQjhvdUJiNUhlbmgwQU1xVzBvVkVIQUs5cnRqc3lPOXpLN0d2dkFFaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1771918666);
 
 -- --------------------------------------------------------
 
@@ -711,57 +449,23 @@ CREATE TABLE `students` (
   `contact_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` bigint UNSIGNED DEFAULT NULL,
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-  `section_id` bigint UNSIGNED DEFAULT NULL,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `teacher_id` bigint UNSIGNED DEFAULT NULL,
   `school_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `school_year_id` bigint UNSIGNED DEFAULT NULL,
-<<<<<<< HEAD
-  `grade_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `graduation_status` enum('active','candidate','graduated') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `graduation_year` year DEFAULT NULL
-=======
-<<<<<<< HEAD
-  `grade_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `graduation_status` enum('active','candidate','graduated') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `graduation_year` year DEFAULT NULL
-=======
   `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
-INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `average_grade`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`, `school_year_id`, `grade_level`, `graduation_status`, `graduation_year`) VALUES
-(165, '120231260083', 'Ejie Mae', 'Santos', 'Tradio', NULL, 'Female', NULL, '2003-10-31', 'tradioejiee@gmail.com', '09368726540', 'Tugawe, Dauin, Negros Oriental', 165, '2026-02-23 04:21:36', '2026-02-23 05:12:19', NULL, 'S-120231260003', 'photos/aPrFgEImpA3rfYOlwtSXe1ej47jsImOgkpAQ0NhA.jpg', 1, NULL, 'active', NULL),
-(166, '120231260005', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2005-05-02', 'troituayon@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 166, '2026-02-23 04:25:08', '2026-02-23 05:12:19', NULL, 'S-120231260004', 'photos/UXBwhA00hs8kQ7GeHSB479b6PHuqL79FvMcVTJmO.jpg', 1, NULL, 'active', NULL),
-(170, '120231260008', 'Noime', 'Talorete', 'Baldomar', NULL, 'Female', NULL, '2003-06-11', 'noimebaldomartalorete@gmail.com', '+639636084589', 'Cantil-e', 172, '2026-03-11 17:09:34', '2026-03-11 17:09:34', NULL, NULL, 'students/biv1dhJIJiqxTOZbCHcMzh4AYyw5z9Du3j0r2hgS.jpg', NULL, NULL, 'active', NULL),
-(171, '120231260007', 'Cres', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2004-01-07', 'cresttuayon07@gmail.com', '+639636084589', 'Tugawe, Dauin Neg.Or.', 175, '2026-03-11 17:21:57', '2026-03-11 17:21:57', NULL, NULL, NULL, NULL, NULL, 'active', NULL);
-<<<<<<< HEAD
-=======
-=======
-INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `average_grade`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `section_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`, `school_year_id`, `grade_level`) VALUES
-(163, '120231090040', 'Crestian', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2004-01-07', 'cresttuayon@gmail.com', '09368726547', 'Tugawe, Dauin, Negros Oriental', 163, 50, '2026-02-21 17:36:01', '2026-02-23 05:10:27', NULL, 'S-120231260001', 'students/0tGMCaY8Z5vFTJGDTreJgGwbzaK0uTv8XVn7NHod.jpg', NULL, NULL),
-(164, '120231260081', 'Noime', 'Tolerete', 'Baldomar', NULL, 'Female', NULL, '2003-11-06', 'noimetaloretebaldomar@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 164, 50, '2026-02-22 18:19:28', '2026-02-23 05:12:19', NULL, 'S-120231260002', 'students/gudSCGjijD1Nn4CkjusQy9KxrsNd4ycFLSD5OEnd.jpg', NULL, NULL),
-(165, '120231260083', 'Ejie Mae', 'Santos', 'Tradio', NULL, 'Female', NULL, '2003-10-31', 'tradioejiee@gmail.com', '09368726540', 'Tugawe, Dauin, Negros Oriental', 165, 50, '2026-02-23 04:21:36', '2026-02-23 05:12:19', NULL, 'S-120231260003', 'photos/aPrFgEImpA3rfYOlwtSXe1ej47jsImOgkpAQ0NhA.jpg', 1, NULL),
-(166, '120231260005', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2005-05-02', 'troituayon@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 166, 50, '2026-02-23 04:25:08', '2026-02-23 05:12:19', NULL, 'S-120231260004', 'photos/UXBwhA00hs8kQ7GeHSB479b6PHuqL79FvMcVTJmO.jpg', 1, NULL);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `average_grade`, `sex`, `suffix`, `birthday`, `email`, `contact_number`, `address`, `user_id`, `created_at`, `updated_at`, `teacher_id`, `school_id`, `photo`, `school_year_id`, `grade_level`) VALUES
+(164, '120231260081', 'Noime', 'Tolerete', 'Baldomar', NULL, 'Female', NULL, '2003-11-06', 'noimetaloretebaldomar@gmail.com', '09636084589', 'Cantil-e, Dumaguete City, Negros Oriental, Philippines', 164, '2026-02-22 18:19:28', '2026-02-23 18:35:40', NULL, 'S-120231260002', 'students/gudSCGjijD1Nn4CkjusQy9KxrsNd4ycFLSD5OEnd.jpg', NULL, NULL),
+(165, '120231260083', 'Ejie Mae', 'Santos', 'Tradio', NULL, 'Female', NULL, '2003-10-31', 'tradioejiee@gmail.com', '09368726540', 'Tugawe, Dauin, Negros Oriental', 165, '2026-02-23 04:21:36', '2026-02-23 05:12:19', NULL, 'S-120231260003', 'photos/aPrFgEImpA3rfYOlwtSXe1ej47jsImOgkpAQ0NhA.jpg', 1, NULL),
+(166, '120231260005', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2005-05-02', 'troituayon@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 166, '2026-02-23 04:25:08', '2026-02-23 05:12:19', NULL, 'S-120231260004', 'photos/UXBwhA00hs8kQ7GeHSB479b6PHuqL79FvMcVTJmO.jpg', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -788,21 +492,9 @@ CREATE TABLE `student_subjects` (
 
 CREATE TABLE `subjects` (
   `id` bigint UNSIGNED NOT NULL,
-<<<<<<< HEAD
-  `code` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `grade_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-=======
-<<<<<<< HEAD
-  `code` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `grade_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-=======
   `code` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
   `grade_level` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   `components` json DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -899,19 +591,7 @@ CREATE TABLE `teachers` (
 
 INSERT INTO `teachers` (`id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `email`, `contact_number`, `employee_id`, `date_hired`, `photo`, `advisory_section_id`, `created_at`, `updated_at`, `position`, `years_experience`, `grade_experience`, `male_enrollment`, `female_enrollment`, `prepared_by`, `conforme`, `approved_by`) VALUES
 (3, 42, 'Juan', 'De La', 'Cruz', 'Jr.', '1995-01-02', 'juandelacruz@gmail.com', '09759264665', NULL, NULL, 'teachers/AA9eOlMh5rsiZ6u1VXW65kIoRnb22v6Np4HqZjPC.jpg', NULL, '2026-02-10 23:50:01', '2026-02-15 21:00:20', 'Principal I', 4, '1', 14, 13, 'Mae Harriet M. De la Pena, EdD', 'Alelyn D. Nocete', 'Beda Jovenciana D. Agor, EdD'),
-<<<<<<< HEAD
-(14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(15, 173, 'Jerome', 'Valdez', 'Ponce', NULL, '1999-01-12', 'jeromeponce@gmail.com', NULL, NULL, NULL, 'teachers/BKwFoTYcTTA1noA3wCp5WmJC8y6EdVXYB3fqD7r6.jpg', NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(16, 174, 'Margarette', 'Mondragon', 'Bartolome', NULL, '2000-02-19', 'mondragonmarga@gmail.com', NULL, NULL, NULL, 'teachers/a6i8tV7zSS1FdfUhSPWr531tKzaUJK3jcWXNnrTA.jpg', NULL, '2026-03-11 17:18:53', '2026-03-11 17:18:53', NULL, 0, NULL, 0, 0, NULL, NULL, NULL);
-=======
-<<<<<<< HEAD
-(14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(15, 173, 'Jerome', 'Valdez', 'Ponce', NULL, '1999-01-12', 'jeromeponce@gmail.com', NULL, NULL, NULL, 'teachers/BKwFoTYcTTA1noA3wCp5WmJC8y6EdVXYB3fqD7r6.jpg', NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(16, 174, 'Margarette', 'Mondragon', 'Bartolome', NULL, '2000-02-19', 'mondragonmarga@gmail.com', NULL, NULL, NULL, 'teachers/a6i8tV7zSS1FdfUhSPWr531tKzaUJK3jcWXNnrTA.jpg', NULL, '2026-03-11 17:18:53', '2026-03-11 17:18:53', NULL, 0, NULL, 0, 0, NULL, NULL, NULL);
-=======
 (14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 -- --------------------------------------------------------
 
@@ -930,10 +610,6 @@ CREATE TABLE `teaching_loads` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 --
 -- Dumping data for table `teaching_loads`
 --
@@ -946,8 +622,6 @@ INSERT INTO `teaching_loads` (`id`, `teacher_id`, `session`, `time`, `minutes`, 
 (5, 3, 'Morning', '2:00-3:00 PM', 60, 'MAPEH 2', '2026-02-11 15:41:33', '2026-02-15 21:00:20'),
 (6, 3, 'Morning', '3:00-4:00 pm', 60, 'ESP 2', '2026-02-11 17:46:41', '2026-02-15 21:00:20');
 
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- --------------------------------------------------------
 
 --
@@ -960,18 +634,6 @@ CREATE TABLE `users` (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-<<<<<<< HEAD
-  `google_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `facebook_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-=======
-<<<<<<< HEAD
-  `google_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `facebook_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -989,36 +651,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
-INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `google_id`, `facebook_id`, `avatar`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'qrxEV3zwl8EkJ6qvaY0XhQQ3t9iUCBIVQybjP96J83bt0Hs6SrDJ3pdIHxlN', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
-(2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', NULL, NULL, NULL, 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
-(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, NULL, NULL, NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 5, NULL),
-(163, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$qYxrwngqjSJTO7M8s0JqdeETmL9W42Fmn/PGnLCTGUTqqJ1/DpekO', NULL, NULL, NULL, NULL, '2026-02-21 17:36:01', '2026-02-21 17:36:01', 'Crestian', 'Bajado', 'Tuayon', 'III', '2004-01-07', 'crstn', 0, NULL),
-(165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, NULL, NULL, NULL, '2026-02-23 04:21:36', '2026-03-11 13:56:15', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 4, NULL),
-(166, 4, 'troituayon@gmail.com', NULL, '$2y$12$vFuEjOrlaVArsfniQZnyKOwR0mt2tGnozPTobE2bVx8h/F2AfZx02', NULL, NULL, NULL, NULL, '2026-02-23 04:25:08', '2026-02-23 04:25:08', 'Troilan', NULL, 'Tuayon', NULL, NULL, 'ttuayon512', 0, NULL),
-(167, 2, 'teacher@tugaweES.edu.ph', NULL, '$2y$12$/uktMVzTTEt14BN9KUOQG.MSlzfnAQktr7eDOdv36EB6hUWI5DiEq', NULL, NULL, NULL, NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', 'Teacher', NULL, 'Cruz', NULL, NULL, 'cruz112', 0, NULL),
-(172, 4, 'noimebaldomartalorete@gmail.com', NULL, '$2y$12$tfhx3MPyNJEaGZhVmAW10OhChE9kdslq0pXKFTzGEzDeFZbgpTTbu', NULL, NULL, NULL, NULL, '2026-03-11 17:09:34', '2026-03-11 17:09:34', 'Noime', 'Talorete', 'Baldomar', NULL, '2003-06-11', 'evarocksredhell', 0, NULL),
-(173, 2, 'jeromeponce@gmail.com', NULL, '$2y$12$Rn4zdkRZTP47hgqDYhFXdeEp79j65FshRqwMjPAM9fwT/pt15DUM6', NULL, NULL, NULL, NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', 'Jerome', 'Valdez', 'Ponce', NULL, NULL, 'romeponce89', 0, NULL),
-(174, 2, 'mondragonmarga@gmail.com', NULL, '$2y$12$Rforz9fj.KayUrbXNRtxkuSs9GzCwj1T3g5EEebOm8aSx.sAv6rxC', NULL, NULL, NULL, NULL, '2026-03-11 17:18:53', '2026-03-11 17:18:53', 'Margarette', 'Mondragon', 'Bartolome', NULL, NULL, 'marga112', 0, NULL),
-(175, 4, 'cresttuayon07@gmail.com', NULL, '$2y$12$tvuBk.2swcATs5DKGZ32F.XCvMRsIUBdjVH4RkDd5DHOBpg5jozgS', NULL, NULL, NULL, NULL, '2026-03-11 17:21:57', '2026-03-11 17:21:57', 'Cres', 'Bajado', 'Tuayon', NULL, '2004-01-07', 'ctuayon540', 0, NULL);
-<<<<<<< HEAD
-=======
-=======
 INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'IMvSkqMUjkQpgMm6okbBI5YIZ46CEWe2FaXtrUxvW9wu0yDB5UbF5amAzwID', '2026-01-27 05:37:20', '2026-02-23 07:19:05', '', NULL, '', NULL, NULL, '', 3, NULL),
+(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', 'W4fhOhI5KDtbaiD5GOYYVv2cDV7tNVx6gULq0n77QowNbmcx9OJx8WF8kXo6', '2026-01-27 05:37:20', '2026-02-23 07:19:05', '', NULL, '', NULL, NULL, '', 3, NULL),
 (2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
-(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-23 07:19:27', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 4, NULL),
+(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 5, NULL),
 (163, 4, 'cresttuayon@gmail.com', NULL, '$2y$12$qYxrwngqjSJTO7M8s0JqdeETmL9W42Fmn/PGnLCTGUTqqJ1/DpekO', NULL, '2026-02-21 17:36:01', '2026-02-21 17:36:01', 'Crestian', 'Bajado', 'Tuayon', 'III', '2004-01-07', 'crstn', 0, NULL),
 (164, 4, 'noimetaloretebaldomar@gmail.com', NULL, '$2y$12$dbbdviC0AZJDDG50DIqalu/6B9W3ysL0hb7PZmnBmQJR0yxywoxT2', NULL, '2026-02-22 18:19:28', '2026-02-22 18:19:28', 'Noime', 'Tolerete', 'Baldomar', NULL, '2003-11-06', 'evarocksredhell', 0, NULL),
 (165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, '2026-02-23 04:21:36', '2026-02-23 04:21:36', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 0, NULL),
 (166, 4, 'troituayon@gmail.com', NULL, '$2y$12$vFuEjOrlaVArsfniQZnyKOwR0mt2tGnozPTobE2bVx8h/F2AfZx02', NULL, '2026-02-23 04:25:08', '2026-02-23 04:25:08', 'Troilan', NULL, 'Tuayon', NULL, NULL, 'ttuayon512', 0, NULL),
 (167, 2, 'teacher@tugaweES.edu.ph', NULL, '$2y$12$/uktMVzTTEt14BN9KUOQG.MSlzfnAQktr7eDOdv36EB6hUWI5DiEq', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', 'Teacher', NULL, 'Cruz', NULL, NULL, 'cruz112', 0, NULL);
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 -- --------------------------------------------------------
 
@@ -1093,15 +734,7 @@ ALTER TABLE `cache_locks`
 --
 ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`id`),
-<<<<<<< HEAD
   ADD KEY `enrollments_student_id_foreign` (`student_id`),
-=======
-<<<<<<< HEAD
-  ADD KEY `enrollments_student_id_foreign` (`student_id`),
-=======
-  ADD UNIQUE KEY `enrollments_student_id_school_year_id_unique` (`student_id`,`school_year_id`),
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   ADD KEY `enrollments_school_year_id_foreign` (`school_year_id`),
   ADD KEY `enrollments_section_id_foreign` (`section_id`);
 
@@ -1134,23 +767,6 @@ ALTER TABLE `job_batches`
   ADD PRIMARY KEY (`id`);
 
 --
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
--- Indexes for table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `messages_sender_id_foreign` (`sender_id`),
-  ADD KEY `messages_receiver_id_foreign` (`receiver_id`);
-
---
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -1222,13 +838,6 @@ ALTER TABLE `students`
   ADD UNIQUE KEY `students_email_unique` (`email`),
   ADD UNIQUE KEY `students_school_id_unique` (`school_id`),
   ADD KEY `students_user_id_foreign` (`user_id`),
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-  ADD KEY `students_section_id_foreign` (`section_id`),
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   ADD KEY `students_teacher_id_foreign` (`teacher_id`),
   ADD KEY `students_school_year_id_foreign` (`school_year_id`);
 
@@ -1273,16 +882,6 @@ ALTER TABLE `teaching_loads`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`),
-<<<<<<< HEAD
-  ADD UNIQUE KEY `users_google_id_unique` (`google_id`),
-  ADD UNIQUE KEY `users_facebook_id_unique` (`facebook_id`),
-=======
-<<<<<<< HEAD
-  ADD UNIQUE KEY `users_google_id_unique` (`google_id`),
-  ADD UNIQUE KEY `users_facebook_id_unique` (`facebook_id`),
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   ADD KEY `users_role_id_foreign` (`role_id`);
 
 --
@@ -1299,15 +898,7 @@ ALTER TABLE `year_levels`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-=======
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 --
 -- AUTO_INCREMENT for table `attendances`
@@ -1325,15 +916,7 @@ ALTER TABLE `attendance_records`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-=======
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1345,15 +928,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-=======
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1362,29 +937,10 @@ ALTER TABLE `jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
--- AUTO_INCREMENT for table `messages`
---
-ALTER TABLE `messages`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
-<<<<<<< HEAD
-=======
-=======
--- AUTO_INCREMENT for table `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1402,15 +958,7 @@ ALTER TABLE `school_years`
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-=======
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `section_student`
@@ -1434,15 +982,7 @@ ALTER TABLE `section_teacher`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
-=======
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 --
 -- AUTO_INCREMENT for table `student_subjects`
@@ -1460,15 +1000,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-=======
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 --
 -- AUTO_INCREMENT for table `teaching_loads`
@@ -1480,15 +1012,7 @@ ALTER TABLE `teaching_loads`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
-=======
-<<<<<<< HEAD
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
-=======
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 --
 -- AUTO_INCREMENT for table `year_levels`
@@ -1526,15 +1050,7 @@ ALTER TABLE `attendance_records`
 --
 ALTER TABLE `enrollments`
   ADD CONSTRAINT `enrollments_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
-<<<<<<< HEAD
   ADD CONSTRAINT `enrollments_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE SET NULL,
-=======
-<<<<<<< HEAD
-  ADD CONSTRAINT `enrollments_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE SET NULL,
-=======
-  ADD CONSTRAINT `enrollments_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   ADD CONSTRAINT `enrollments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
@@ -1545,22 +1061,6 @@ ALTER TABLE `grades`
   ADD CONSTRAINT `grades_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE;
 
 --
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
--- Constraints for table `messages`
---
-ALTER TABLE `messages`
-  ADD CONSTRAINT `messages_receiver_id_foreign` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `messages_sender_id_foreign` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 -- Constraints for table `section_student`
 --
 ALTER TABLE `section_student`
@@ -1587,13 +1087,6 @@ ALTER TABLE `section_teacher`
 --
 ALTER TABLE `students`
   ADD CONSTRAINT `students_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-  ADD CONSTRAINT `students_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
   ADD CONSTRAINT `students_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `students_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 

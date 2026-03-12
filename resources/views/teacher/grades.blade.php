@@ -130,6 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
 </aside>
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <!-- ================= MAIN CONTENT ================= -->
 <main :class="sidebarOpen ? 'ml-72' : 'ml-20'" class="flex-1 p-6 transition-all duration-300 space-y-8 bg-gradient-to-br from-slate-50 to-gray-100 min-h-screen">
 
@@ -308,6 +312,109 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 
+<<<<<<< HEAD
+=======
+=======
+    <!-- ================= MAIN CONTENT ================= -->
+    <main :class="sidebarOpen ? 'ml-72' : 'ml-20'" class="flex-1 p-6 transition-all duration-300 space-y-6">
+
+    <div class="bg-white/80 backdrop-blur rounded-2xl shadow-md p-5 border border-gray-200">
+       
+
+
+            <div class="flex items-center gap-3 flex-wrap">
+
+                <!-- Back Button -->
+                <a href="{{ route('teacher.dashboard') }}"
+                  class="group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200
+{{ request()->routeIs('teacher.dashboard') ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md scale-[1.02]' : 'hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02]' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="2"
+                         stroke="currentColor"
+                         class="w-5 h-5 group-hover:-translate-x-0.5 transition-transform">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800 flex items-center gap-2">
+                    Grades
+                    <span class="text-indigo-600">
+                        – {{ $section->year_level }} {{ $section->name }}
+                    </span>
+                </h1>
+            </div>
+
+            <!-- Subtitle -->
+            <p class="text-sm text-gray-600 flex items-center gap-2 pl-14">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                </svg>
+                School Year:
+                <span class="font-semibold text-gray-700">
+                    {{ $section->schoolYear?->name ?? 'N/A' }}
+                </span>
+            </p>
+
+        </div>
+
+        <!-- Student Table -->
+        <div class="overflow-auto rounded-xl border border-gray-200 shadow bg-white">
+            <table class="min-w-full text-sm divide-y divide-gray-200">
+                <thead class="bg-gray-100 font-semibold text-gray-700">
+                    <tr>
+                        <th class="border px-3 py-2">No.</th>
+                        <th class="border px-3 py-2 text-left">Student</th>
+                        <th class="border px-3 py-2 text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100">
+                @foreach($section->students as $i => $student)
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="border px-3 py-2">{{ $i + 1 }}</td>
+
+                        <td class="px-5 py-4">
+                            <div class="flex items-center gap-4">
+                                <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                     class="w-12 h-12 rounded-full object-cover shadow"
+                                     alt="Photo">
+                                <div>
+                                    <p class="font-semibold text-gray-800 leading-tight">
+                                        {{ $student->last_name }},
+                                        {{ $student->first_name }}
+                                        {{ $student->middle_name ?? '' }}
+                                        {{ $student->suffix ?? '' }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        S-ID: {{ $student->school_id ?? 'N/A' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="border px-3 py-2 text-center">
+                            <button onclick="openReportCard({{ $student->id }})"
+                                    class="bg-indigo-600 text-white px-4 py-1 rounded text-xs hover:bg-indigo-700 transition">
+                                View Report Card
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <!-- ================= REPORT CARD MODAL ================= -->
 <div id="reportModal"
      class="fixed inset-0 hidden bg-black/50 z-50 flex items-center justify-center p-4 overflow-auto">
@@ -324,32 +431,80 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="border-b pb-3 mb-4">
             <div class="flex items-center justify-center gap-4">
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                 <div class="w-20">
                     <img src="{{ asset('images/logo1.png') }}" class="w-full">
                 </div>
 
+<<<<<<< HEAD
+=======
+=======
+                <!-- LEFT LOGO -->
+                <div class="w-20 flex-shrink-0">
+                    <img src="{{ asset('images/logo1.png') }}"
+                         alt="DepEd Logo"
+                         class="w-full h-auto object-contain">
+                </div>
+
+                <!-- CENTER TEXT -->
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                 <div class="text-center">
                     <p class="text-xs">Republic of the Philippines</p>
                     <p class="text-sm font-semibold">Department of Education</p>
                     <p class="text-xs">Division of Negros Oriental</p>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                     <h2 class="text-lg font-bold mt-1">
                         TUGAWE ELEMENTARY SCHOOL
                     </h2>
 
                     <p class="text-sm font-semibold">
+<<<<<<< HEAD
+=======
+=======
+                    <h2 class="text-lg font-bold mt-1 tracking-wide">
+                        TUGAWE ELEMENTARY SCHOOL
+                    </h2>
+
+                    <p class="text-sm font-semibold mt-1">
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                         STUDENT REPORT CARD
                     </p>
                 </div>
 
+<<<<<<< HEAD
                 <div class="w-20">
                     <img src="{{ asset('images/logo.jpg') }}" class="w-full">
+=======
+<<<<<<< HEAD
+                <div class="w-20">
+                    <img src="{{ asset('images/logo.jpg') }}" class="w-full">
+=======
+                <!-- RIGHT LOGO -->
+                <div class="w-20 flex-shrink-0">
+                    <img src="{{ asset('images/logo.jpg') }}"
+                         alt="School Logo"
+                         class="w-full h-auto object-contain">
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                 </div>
 
             </div>
         </div>
 
         <!-- ================= STUDENT INFO ================= -->
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
         <div class="grid grid-cols-3 gap-3 text-sm mb-4">
 
             <div>
@@ -365,11 +520,35 @@ document.addEventListener('DOMContentLoaded', function () {
             <div>
                 <p class="font-semibold">Address:</p>
                 <p id="modalStudentAddress" class="border-b pb-1"></p>
+<<<<<<< HEAD
+=======
+=======
+        <div class="grid grid-cols-3 gap-3 text-sm text-gray-700 mb-4">
+
+            <div>
+                <p><span class="font-semibold">Name:</span></p>
+                <p id="modalStudentName" class="border-b border-gray-400 pb-1"></p>
+            </div>
+
+            <div>
+                <p><span class="font-semibold">Student ID:</span></p>
+                <p id="modalStudentId" class="border-b border-gray-400 pb-1"></p>
+            </div>
+
+            <div>
+                <p><span class="font-semibold">Address:</span></p>
+                <p id="modalStudentAddress" class="border-b border-gray-400 pb-1"></p>
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
             </div>
 
         </div>
 
         <!-- ================= TABLE ================= -->
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
         <div class="overflow-auto max-h-[50vh] border rounded">
 
             <table class="min-w-full text-sm border">
@@ -382,11 +561,35 @@ document.addEventListener('DOMContentLoaded', function () {
                         <th class="border px-2 py-2 text-center">3rd</th>
                         <th class="border px-2 py-2 text-center">4th</th>
                         <th class="border px-2 py-2 text-center bg-indigo-100">Average</th>
+<<<<<<< HEAD
+=======
+=======
+        <div class="overflow-auto max-h-[50vh] border border-gray-300 rounded">
+            <table class="min-w-full text-sm border border-gray-400">
+
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border border-gray-400 px-3 py-2 text-left">
+                            Learning Areas
+                        </th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">1st</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">2nd</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">3rd</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center">4th</th>
+                        <th class="border border-gray-400 px-2 py-2 text-center bg-indigo-100">
+                            Average
+                        </th>
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                     </tr>
                 </thead>
 
                 <tbody id="report-body"></tbody>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                 <tfoot class="bg-gray-100 font-semibold">
                     <tr>
                         <td class="border px-3 py-2">General Average</td>
@@ -406,6 +609,18 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="mt-4 text-right">
             <button onclick="saveModalGrades()"
                 class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700">
+<<<<<<< HEAD
+=======
+=======
+            </table>
+        </div>
+
+        <!-- ================= SAVE BUTTON ================= -->
+        <div class="mt-4 text-right">
+            <button onclick="saveModalGrades()"
+                class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 shadow">
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
                 💾 Save Grades
             </button>
         </div>
@@ -557,6 +772,10 @@ function reportCard() {
 
 <script>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 const currentYearLevel = @json($section->year_level);
 
 const students = @json(
@@ -581,23 +800,61 @@ const subjects = @json(
             'name'=>$s->name
         ];
     })
+<<<<<<< HEAD
+=======
+=======
+const students = @json(
+    $section->students->mapWithKeys(fn($s)=>[
+        $s->id => [
+            'name' => $s->last_name.', '.$s->first_name,
+            'grades' => $s->grades
+                ->groupBy('subject_id')
+                ->map(fn($g)=>$g->keyBy('quarter')->map->grade)
+        ]
+    ])
+);
+
+const subjects = @json(
+    $subjects->map(fn($s)=>[
+        'id'=>$s->id,
+        'name'=>$s->name,
+        'grade_level'=>$s->grade_level
+    ])
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 );
 
 let activeStudentId = null;
 
 
 /* ================= OPEN MODAL ================= */
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 function openReportCard(id){
 
     activeStudentId = id;
 
+<<<<<<< HEAD
+=======
+=======
+function openReportCard(id){
+
+    activeStudentId = id;
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     const student = students[id];
 
     document.getElementById('modalStudentName').textContent = student.name;
 
     let body = '';
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     subjects.forEach(sub => {
 
         body += `<tr class="subject-row">
@@ -621,6 +878,70 @@ function openReportCard(id){
         </tr>`;
     });
 
+<<<<<<< HEAD
+=======
+=======
+    // GROUP SUBJECTS BY YEAR LEVEL
+    const grouped = {};
+
+    subjects.forEach(sub => {
+        if(!grouped[sub.grade_level]){
+            grouped[sub.grade_level] = [];
+        }
+        grouped[sub.grade_level].push(sub);
+    });
+
+    // LOOP PER YEAR LEVEL
+    for(const year in grouped){
+
+        // YEAR HEADER
+        body += `
+            <tr class="bg-indigo-50 font-bold year-header" data-year="${year}">
+                <td colspan="6" class="border px-3 py-2">
+                    ${year}
+                </td>
+            </tr>
+        `;
+
+        grouped[year].forEach(sub => {
+
+            body += `<tr class="subject-row" data-year="${year}">
+                <td class="border px-3 py-2">${sub.name}</td>`;
+
+            for(let q=1;q<=4;q++){
+                const val = student.grades?.[sub.id]?.[q] ?? '';
+
+                body += `
+                    <td class="border text-center">
+                        <input type="number"
+                            class="grade-input w-16 text-center border rounded"
+                            data-subject="${sub.id}"
+                            data-quarter="${q}"
+                            data-year="${year}"
+                            value="${val}">
+                    </td>`;
+            }
+
+            body += `
+                <td class="border text-center bg-indigo-50 subject-final">—</td>
+            </tr>`;
+        });
+
+        // YEAR LEVEL FOOTER (AVERAGE)
+        body += `
+            <tr class="bg-gray-100 font-semibold year-footer" data-year="${year}">
+                <td class="border px-3 py-2">Year Level Average</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="1">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="2">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="3">—</td>
+                <td class="border text-center year-q" data-year="${year}" data-quarter="4">—</td>
+                <td class="border text-center bg-indigo-100 year-final" data-year="${year}">—</td>
+            </tr>
+        `;
+    }
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     document.getElementById('report-body').innerHTML = body;
 
     calculateAll();
@@ -631,17 +952,33 @@ function openReportCard(id){
 }
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 /* ================= CLOSE ================= */
 
 function closeReportCard(){
 
     const modal = document.getElementById('reportModal');
 
+<<<<<<< HEAD
+=======
+=======
+/* ================= CLOSE MODAL ================= */
+function closeReportCard(){
+    const modal = document.getElementById('reportModal');
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     modal.classList.add('hidden');
     modal.classList.remove('flex');
 }
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 /* ================= CALCULATE ================= */
 
 function calculateAll(){
@@ -702,10 +1039,77 @@ function calculateAll(){
             ? (finalQuarters.reduce((a,b)=>a+b,0)/finalQuarters.length).toFixed(2)
             : '—';
 
+<<<<<<< HEAD
+=======
+=======
+/* ================= CALCULATE PER YEAR ================= */
+function calculateAll(){
+
+    const years = [...document.querySelectorAll('.year-header')]
+                    .map(row => row.dataset.year);
+
+    years.forEach(year => {
+
+        let quarterTotals = {1:[],2:[],3:[],4:[]};
+
+        document.querySelectorAll(`.subject-row[data-year="${year}"]`)
+            .forEach(row => {
+
+                let subjectGrades = [];
+
+                row.querySelectorAll('.grade-input').forEach(input => {
+
+                    const q = input.dataset.quarter;
+                    const v = parseFloat(input.value);
+
+                    if(!isNaN(v)){
+                        subjectGrades.push(v);
+                        quarterTotals[q].push(v);
+                    }
+                });
+
+                const finalCell = row.querySelector('.subject-final');
+
+                finalCell.textContent =
+                    subjectGrades.length
+                        ? (subjectGrades.reduce((a,b)=>a+b,0)/subjectGrades.length).toFixed(2)
+                        : '—';
+            });
+
+        // QUARTER AVERAGE
+        let overall = [];
+
+        for(let q=1;q<=4;q++){
+
+            const avg = quarterTotals[q].length
+                ? (quarterTotals[q].reduce((a,b)=>a+b,0)/quarterTotals[q].length).toFixed(2)
+                : '—';
+
+            document.querySelector(
+                `.year-q[data-year="${year}"][data-quarter="${q}"]`
+            ).textContent = avg;
+
+            if(avg !== '—') overall.push(parseFloat(avg));
+        }
+
+        // FINAL AVERAGE
+        document.querySelector(
+            `.year-final[data-year="${year}"]`
+        ).textContent =
+            overall.length
+                ? (overall.reduce((a,b)=>a+b,0)/overall.length).toFixed(2)
+                : '—';
+    });
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 }
 
 
 /* AUTO RECALCULATE */
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 document.addEventListener('input', e=>{
 
@@ -713,11 +1117,27 @@ document.addEventListener('input', e=>{
         calculateAll();
     }
 
+<<<<<<< HEAD
+=======
+=======
+document.addEventListener('input', e=>{
+    if(e.target.classList.contains('grade-input')){
+        calculateAll();
+    }
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 });
 
 
 /* ================= SAVE ================= */
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 function saveModalGrades(){
 
     let grades = {};
@@ -730,7 +1150,14 @@ function saveModalGrades(){
         if(!grades[subject]) grades[subject] = {};
 
         grades[subject][quarter] = input.value;
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     });
 
     fetch("{{ route('teacher.grades.modal.save') }}",{
@@ -750,11 +1177,27 @@ function saveModalGrades(){
         closeReportCard();
         location.reload();
     });
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 }
 
 </script>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <!-- PROFILE MODAL -->
 <div id="profileModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">

@@ -309,6 +309,10 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 @php
     $quarters = [1,2,3,4];
 
@@ -322,6 +326,31 @@
 </h3>
           
 
+<<<<<<< HEAD
+=======
+=======
+
+        @php
+            $quarters = [1,2,3,4];
+
+            $allSubjectsByGrade = \App\Models\Subject::orderByRaw(
+                "FIELD(grade_level, 'Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6')"
+            )->get()->groupBy('grade_level');
+
+            $currentYear = $section->year_level;
+
+            if($allSubjectsByGrade->has($currentYear)){
+                $currentSubjects = $allSubjectsByGrade->pull($currentYear);
+                $allSubjectsByGrade = collect([$currentYear => $currentSubjects])->merge($allSubjectsByGrade);
+            }
+        @endphp
+
+        @foreach($allSubjectsByGrade as $grade => $subjects)
+            <h3 class="text-lg font-semibold text-indigo-700 mt-6 mb-3">
+                {{ $grade }}
+            </h3>
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
             <table class="min-w-full border text-sm rounded-lg overflow-hidden shadow-sm mb-6">
                 <thead class="bg-indigo-100 text-gray-700">
@@ -429,7 +458,15 @@
                 </tbody>
             </table>
 
+<<<<<<< HEAD
     
+=======
+<<<<<<< HEAD
+    
+=======
+        @endforeach
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
     </div>
 </div>

@@ -838,7 +838,49 @@ document.addEventListener('DOMContentLoaded', function () {
 </body>
 
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+<!--@if(session('success'))
+<div x-data="{ 
+        show: true, 
+        seconds: 3,
+        startCountdown() {
+            let timer = setInterval(() => {
+                if (this.seconds > 0) {
+                    this.seconds--;
+                } else {
+                    this.show = false;
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+    }"
+    x-init="startCountdown()"
+    x-show="show"
+    x-transition
+    class="fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg z-50 w-80">
+
+    <div class="flex justify-between items-start gap-4">
+        <div>
+            <p class="font-semibold">✅ Success</p>
+            <p class="text-sm mt-1">{{ session('success') }}</p>
+            <p class="text-xs mt-2 opacity-80">
+                Closing in <span x-text="seconds"></span> seconds...
+            </p>
+        </div>
+
+        <button @click="show = false" class="text-white font-bold text-lg leading-none">
+            ✕
+        </button>
+    </div>
+</div>
+@endif-->
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 
 </html>

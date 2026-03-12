@@ -10,7 +10,14 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "doctrine/dbal": "^4.4",
         "laravel/framework": "^12.0",
+<<<<<<< HEAD
         "laravel/socialite": "^5.25",
+=======
+<<<<<<< HEAD
+        "laravel/socialite": "^5.25",
+=======
+>>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
+>>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^1.1",
         "phpoffice/phpword": "^1.4",

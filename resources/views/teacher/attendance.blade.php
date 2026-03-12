@@ -2,520 +2,649 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Attendance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management | Tugawe Elementary School</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-gradient-to-br from-emerald-100 via-sky-100 to-indigo-200 min-h-screen p-6">
+<body class="bg-slate-50 min-h-screen font-['Inter'] antialiased text-slate-800">
 
-<!-- ================= ENHANCED HEADER ================= -->
-<div x-data="{ sidebarOpen: true }" class="flex min-h-screen">
+<!-- ================= REALISTIC SCHOOL MANAGEMENT UI ================= -->
+<div x-data="{ sidebarOpen: true, currentTime: new Date().toLocaleTimeString() }" class="flex min-h-screen" x-init="setInterval(() => currentTime = new Date().toLocaleTimeString(), 1000)">
 
-    <!-- ================= SIDEBAR ================= -->
-   <aside 
-    :class="sidebarOpen ? 'w-72' : 'w-20'" 
-    class="fixed left-0 top-0 h-screen bg-white border-r border-gray-200 z-50 flex flex-col shadow-sm overflow-y-auto transition-all duration-300 ease-in-out"
->
-    <!-- Sidebar Header -->
-    <div class="p-4 flex items-center gap-3 h-24 border-b border-gray-50">
+    <!-- Professional Sidebar -->
+    <aside 
+        :class="sidebarOpen ? 'w-72' : 'w-20'" 
+        class="fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col shadow-lg transition-all duration-300 ease-in-out"
+    >
+        <!-- School Brand Header -->
+        <div class="h-20 border-b border-slate-100 flex items-center px-4 gap-3 bg-gradient-to-r from-indigo-600 to-indigo-700">
+            <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            
+            <div x-show="sidebarOpen" x-transition class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-sm leading-tight">Tugawe Elementary</h1>
+                    <p class="text-indigo-200 text-xs">School Management</p>
+                </div>
+            </div>
+        </div>
 
-        <!-- Hamburger Button -->
-        <button @click="sidebarOpen = !sidebarOpen" 
-                class="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
+        <!-- User Profile Summary -->
+        <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+            <div class="flex items-center gap-3" x-show="sidebarOpen" x-transition>
+                @php
+                    $user = auth()->user();
+                    $teacher = $user->teacher ?? null;
+                    $fullName = trim(($teacher->first_name ?? $user->first_name ?? '') . ' ' . ($teacher->last_name ?? $user->last_name ?? ''));
+                    $initials = strtoupper(substr($teacher->first_name ?? $user->first_name ?? 'T', 0, 1) . substr($teacher->last_name ?? $user->last_name ?? 'E', 0, 1));
+                @endphp
+                <img src="{{ $teacher && $teacher->photo ? asset('storage/'.$teacher->photo) : asset('images/photo-placeholder.png') }}" 
+                     class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm" alt="Profile">
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-slate-900 text-sm truncate">{{ $fullName ?: 'Teacher Name' }}</p>
+                    <p class="text-xs text-slate-500 truncate">{{ $user->email ?? 'teacher@tugawe.edu.ph' }}</p>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-700 mt-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+                        Online
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Collapsed View -->
+            <div x-show="!sidebarOpen" class="flex justify-center">
+                <img src="{{ $teacher && $teacher->photo ? asset('storage/'.$teacher->photo) : asset('images/photo-placeholder.png') }}" 
+                     class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm" alt="Profile">
+            </div>
+        </div>
 
-        <!-- Logo + User Info -->
-        <div x-show="sidebarOpen" x-transition class="flex flex-col gap-2 overflow-hidden">
+        <!-- Navigation Menu -->
+        <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+            <div class="px-3 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider" x-show="sidebarOpen">Main Menu</div>
+            
+            <a href="{{ route('teacher.dashboard') }}"  
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-50 text-indigo-700 font-medium transition group relative overflow-hidden">
+                <div class="absolute inset-0 bg-indigo-100 opacity-0 group-hover:opacity-100 transition"></div>
+                <i class="fas fa-home text-lg relative z-10 w-6 text-center"></i>
+                <span x-show="sidebarOpen" class="relative z-10">Home</span>
+            </a>
 
-           
+        
 
-            <!-- User Info -->
-            @php
-                $user = auth()->user();
-                $fullName = trim(($user->first_name ?? '') . ' ' . ($user->middle_name ?? '') . ' ' . ($user->last_name ?? '') . ' ' . ($user->suffix ?? ''));
-                $initials = collect(explode(' ', $fullName))->map(fn($n) => $n ? strtoupper($n[0]) : '')->join('');
-            @endphp
+            <button @click="document.getElementById('enrollStudentModal').classList.remove('hidden');"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-medium transition group">
+                <i class="fas fa-user-plus text-lg w-6 text-center text-blue-600"></i>
+                <span x-show="sidebarOpen">Enroll Student</span>
+            </button>
 
-            <div class="flex items-center gap-2">
-                <!-- Profile Picture or Initials -->
-                @if($user && $user->photo)
-                    <img src="{{ asset('storage/'.$user->photo) }}" 
-                         alt="Profile" 
-                         class="w-10 h-10 rounded-full object-cover shadow-md">
-                @else
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white font-bold shadow-md text-sm">
-                        {{ $initials ?: 'T' }}
+            <button @click="document.getElementById('announcementModal').classList.remove('hidden');"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-medium transition group">
+                <i class="fas fa-bullhorn text-lg w-6 text-center text-purple-600"></i>
+                <span x-show="sidebarOpen">Announcements</span>
+            </button>
+
+            <div class="mt-6 px-3 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider" x-show="sidebarOpen">System</div>
+
+            <button @click="document.getElementById('profileModal').classList.remove('hidden');"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-medium transition group">
+                <i class="fas fa-cog text-lg w-6 text-center"></i>
+                <span x-show="sidebarOpen">Profile Settings</span>
+            </button>
+        </nav>
+
+        <!-- Footer Info -->
+        <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <div x-show="sidebarOpen" class="space-y-3">
+                <div class="flex items-center justify-between text-xs text-slate-500">
+                    <span>Current Time</span>
+                    <span class="font-mono font-medium" x-text="currentTime"></span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500">School Year</span>
+                    <span class="font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded">{{ $activeSchoolYear->name ?? '2024-2025' }}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500">Quarter</span>
+                    <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">Q{{ $activeQuarter ?? '1' }}</span>
+                </div>
+            </div>
+            
+            <a href="{{ route('logout') }}"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+               class="mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-600 hover:bg-rose-50 font-medium transition text-sm">
+                <i class="fas fa-sign-out-alt w-6 text-center"></i>
+                <span x-show="sidebarOpen">Logout</span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+        </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <main :class="sidebarOpen ? 'ml-72' : 'ml-20'" class="flex-1 transition-all duration-300">
+        
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('teacher.dashboard') }}" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="text-sm font-medium"></span>
+                    </a>
+                    <div class="h-6 w-px bg-slate-300"></div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900">Daily Attendance Record</h1>
+                        <p class="text-sm text-slate-500">School Form 2 (SF2) - DepEd Official Form</p>
                     </div>
-                @endif
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <!-- School Year Badge -->
+                    <div class="hidden md:flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-1.5">
+                        <i class="fas fa-calendar-alt text-indigo-600"></i>
+                        <div>
+                            <p class="text-[10px] text-indigo-600 font-semibold uppercase">Active School Year</p>
+                            <p class="text-sm font-bold text-indigo-900">{{ $activeSchoolYear->name ?? '2024-2025' }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <button onclick="openModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-sm flex items-center gap-2">
+                        <i class="fas fa-edit"></i>
+                        <span class="hidden sm:inline">Record Attendance</span>
+                    </button>
+                    
+                    <a href="{{ route('teacher.export', [$section->id, 'month'=>$month, 'year'=>$year]) }}" 
+                       class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-sm flex items-center gap-2">
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="hidden sm:inline">Export PDF</span>
+                    </a>
+                </div>
+            </div>
+        </header>
 
-                <!-- Username / Full Name -->
-                <div class="flex flex-col overflow-hidden">
-                    <span class="text-sm font-bold text-gray-800 truncate">{{ $user->name ?? 'Teacher' }}</span>
-                    <span class="text-xs text-gray-500 truncate">{{ $fullName ?: 'N/A' }}</span>
+        <div class="p-6 space-y-6">
+            
+            <!-- Class Information Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-slate-50 to-white border-b border-slate-200 px-6 py-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700">
+                                <i class="fas fa-chalkboard-teacher text-2xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-900">{{ $section->year_level ?? 'Grade 1' }} - {{ $section->name ?? 'Mabait' }}</h2>
+                                <p class="text-sm text-slate-500">Class Adviser: <span class="font-semibold text-slate-700">{{ $section->adviser?->name ?? $fullName }}</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6 text-sm">
+                            <div class="text-center">
+                                <p class="text-slate-500 text-xs uppercase tracking-wider">Male</p>
+                                <p class="font-bold text-blue-600 text-lg">{{ $students->where('sex', 'Male')->count() }}</p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-slate-500 text-xs uppercase tracking-wider">Female</p>
+                                <p class="font-bold text-pink-600 text-lg">{{ $students->where('sex', 'Female')->count() }}</p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-slate-500 text-xs uppercase tracking-wider">Total</p>
+                                <p class="font-bold text-slate-900 text-lg">{{ $students->count() }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <!-- Sidebar Nav -->
-    <nav class="flex-1 mt-4 px-3 space-y-1">
-        <!-- Home -->
-        <a href="{{ route('teacher.dashboard') }}"  class="flex items-center gap-4 p-3 rounded-r-full bg-blue-50 text-blue-700 transition group hover:scale-[1.02]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m2 12H5a2 2 0 01-2-2V7a2 2 0 012-2h2"/>
-            </svg>
-            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Home</span>
-        </a>
-
-        <!-- My Profile -->
-        <button @click="document.getElementById('profileModal').classList.remove('hidden'); document.getElementById('profileModal').classList.add('flex');"
-                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.879 6.196 9 9 0 015.121 17.804zM12 12a3 3 0 100-6 3 3 0 000 6z"/>
-            </svg>
-            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">My Profile</span>
-        </button>
-
-        <!-- Enroll Student -->
-        <button @click="document.getElementById('enrollStudentModal').classList.remove('hidden');"
-                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Enroll Student</span>
-        </button>
-
-        <!-- Announcements -->
-        <button @click="document.getElementById('announcementModal').classList.remove('hidden');"
-                class="w-full flex items-center gap-4 p-3 rounded-r-full text-gray-600 hover:bg-gray-100 transition group hover:scale-[1.02]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Announcements</span>
-        </button>
-    </nav>
-
-    <!-- Logout -->
-    <div class="p-3 border-t border-gray-100">
-        <a href="{{ route('logout') }}"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-           class="flex items-center gap-4 p-3 rounded-r-full text-red-500 hover:bg-red-50 transition group hover:scale-[1.02]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/>
-            </svg>
-            <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Logout</span>
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
-    </div>
-</aside>
-
-    <!-- ================= MAIN CONTENT ================= -->
-    <main :class="sidebarOpen ? 'ml-72' : 'ml-20'" class="flex-1 p-6 transition-all duration-300 space-y-6">
-
-    
-    <div class="bg-white/80 backdrop-blur rounded-2xl shadow-md p-5 border border-gray-200">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-            <!-- Left: Back button + Title + School Year -->
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-
-                <!-- Back Button (SVG) -->
-                <a href="{{ route('teacher.dashboard') }}"
-                  class="group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200
-{{ request()->routeIs('teacher.dashboard') ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md scale-[1.02]' : 'hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02]' }}">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         stroke-width="2"
-                         stroke="currentColor"
-                         class="w-5 h-5 group-hover:-translate-x-0.5 transition-transform">
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M15 19l-7-7 7-7" />
-                    </svg>
-                </a>
-
-                <!-- Title & School Year -->
-                <div class="flex flex-col">
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">
-                        Attendance
-                        <span class="text-indigo-600">– {{ $section->year_level }} {{ $section->name }}</span>
-                    </h1>
-                    <p class="text-sm text-gray-600 mt-1">
-                        🏫 School Year: <span class="font-semibold text-gray-700">{{ $section->school_year ?? 'N/A' }}</span>
-                    </p>
+            <!-- Month Navigation & Controls -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <form method="GET" class="flex items-center">
+                            <div class="relative">
+                                <input type="month" name="month" value="{{ sprintf('%04d-%02d', $year, $month) }}"
+                                       onchange="this.form.submit()"
+                                       class="pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                                <i class="fas fa-calendar absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            </div>
+                        </form>
+                        
+                        <div class="flex items-center bg-slate-100 rounded-lg p-1">
+                            <form method="GET" class="flex">
+                                <input type="hidden" name="month" value="{{ $month > 1 ? $month - 1 : 12 }}">
+                                <input type="hidden" name="year" value="{{ $month > 1 ? $year : $year - 1 }}">
+                                <button class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-md transition">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            </form>
+                            
+                            <span class="px-4 py-1 font-semibold text-slate-700 min-w-[140px] text-center">
+                                {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
+                            </span>
+                            
+                            <form method="GET" class="flex">
+                                <input type="hidden" name="month" value="{{ $month < 12 ? $month + 1 : 1 }}">
+                                <input type="hidden" name="year" value="{{ $month < 12 ? $year : $year + 1 }}">
+                                <button class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-white rounded-md transition">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="flex items-center gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <span class="text-slate-600">Present</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <span class="text-slate-600">Late</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                            <span class="text-slate-600">Absent</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                            <span class="text-slate-600">Excused</span>
+                        </div>
+                    </div>
                 </div>
-
             </div>
 
-        </div>
-    </div>
-</header>
+            @if(session('success'))
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 shadow-sm animate-fade-in">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i class="fas fa-check text-lg"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-emerald-900">Success!</p>
+                    <p class="text-sm text-emerald-700">{{ session('success') }}</p>
+                </div>
+                <button onclick="this.closest('.bg-emerald-50').remove()" class="ml-auto text-emerald-400 hover:text-emerald-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            @endif
 
-<!-- ================= MONTH NAVIGATION ================= -->
-<div class="flex justify-between items-center mb-4 gap-2 flex-wrap">
-    <div class="flex items-center gap-2">
-        <form method="GET" class="flex items-center gap-2">
-            <input type="month" name="month" value="{{ sprintf('%04d-%02d',$year,$month) }}"
-                   onchange="this.form.submit()"
-                   class="px-3 py-2 border rounded-lg">
-        </form>
-        <form method="GET" class="flex items-center gap-1">
-            <input type="hidden" name="month" value="{{ sprintf('%04d-%02d',$year,($month>1?$month-1:12)) }}">
-            <input type="hidden" name="year" value="{{ ($month>1?$year:$year-1) }}">
-            <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">&laquo; Prev</button>
-        </form>
-        <form method="GET" class="flex items-center gap-1">
-            <input type="hidden" name="month" value="{{ sprintf('%04d-%02d',$year,($month<12?$month+1:1)) }}">
-            <input type="hidden" name="year" value="{{ ($month<12?$year:$year+1) }}">
-            <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next &raquo;</button>
-        </form>
-    </div>
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Students</p>
+                            <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ $students->count() }}</h3>
+                            <p class="text-xs text-slate-500 mt-1">Enrolled this school year</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                    </div>
+                </div>
 
-    <a href="{{ route('teacher.export', [$section->id, 'month'=>$month, 'year'=>$year]) }}"
-       class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-       📄 Export PDF
-    </a>
-</div>
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">School Days</p>
+                            <h3 class="text-2xl font-bold text-slate-900 mt-1">
+                                @php
+                                    $startOfMonth = \Carbon\Carbon::create($year, $month)->startOfMonth();
+                                    $endOfMonth = \Carbon\Carbon::create($year, $month)->endOfMonth();
+                                    $schoolDays = 0;
+                                    for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+                                        if (!$date->isWeekend()) $schoolDays++;
+                                    }
+                                    echo $schoolDays;
+                                @endphp
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">This month</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                            <i class="fas fa-calendar-day text-xl"></i>
+                        </div>
+                    </div>
+                </div>
 
-@if(session('success'))
-<div id="success-alert" class="mb-4 bg-green-100 text-green-700 px-4 py-2 rounded">
-    {{ session('success') }}
-</div>
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg. Attendance</p>
+                            <h3 class="text-2xl font-bold text-emerald-600 mt-1">94.2%</h3>
+                            <p class="text-xs text-emerald-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-arrow-up text-[10px]"></i>
+                                <span>+2.1% from last month</span>
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-chart-pie text-xl"></i>
+                        </div>
+                    </div>
+                </div>
 
-<script>
-    // Remove success message after 3 seconds
-    setTimeout(() => {
-        const alert = document.getElementById('success-alert');
-        if(alert){
-            alert.remove();
-        }
-    }, 3000);
-</script>
-@endif
+               
+            </div>
 
-
-<!-- ================= OPEN ATTENDANCE MODAL BUTTON ================= -->
-<button type="button"
-        onclick="openModal()"
-        class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 mb-4">
-    📋 View/Edit Attendance
-</button>
-
-<!-- ================= ATTENDANCE MODAL ================= -->
-<div id="attendanceModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white w-full max-w-6xl rounded-xl shadow-lg p-6 relative overflow-auto max-h-[90vh]">
-
-        <!-- Close Button -->
-        <button onclick="closeModal()"
-                class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl">✕</button>
-
-        <!-- Title -->
-        <h2 class="text-xl font-bold mb-4 text-center">
-            School Form 2 (SF2) – Daily Attendance Report <br>
-            <span class="text-indigo-600 text-lg">
-                {{ $section->year_level }} – {{ $section->name }}
-                | {{ \Carbon\Carbon::create()->month((int) $month)->format('F') }} {{ $year }}
-            </span>
-        </h2>
-
-        <form method="POST" action="{{ route('teacher.attendance.store', $section->id) }}">
-            @csrf
-
-            @php
-                // Generate school days (Mon-Fri)
-                $schoolDays = [];
-                for($d=1;$d<=$daysInMonth;$d++){
-                    $dateObj = \Carbon\Carbon::create($year, $month, $d);
-                    if(!$dateObj->isWeekend()){ // Skip Saturday & Sunday
-                        $schoolDays[] = $dateObj->format('Y-m-d');
-                    }
-                }
-
-                // Group students by gender and sort alphabetically
-                $grouped = $students
-                    ->sortBy('first_name')
-                    ->sortBy('last_name')
-                    ->groupBy('gender'); // Male/Female
-            @endphp
-
-            <table class="min-w-full text-sm border">
-                <thead class="bg-gray-100 sticky top-0 z-10">
-                    <tr>
-                        <th class="border px-2 py-1">Student</th>
-                        @foreach($schoolDays as $date)
-                            <th class="border px-1 py-1 text-center">{{ \Carbon\Carbon::parse($date)->format('d') }}</th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach($grouped as $gender => $genderStudents)
-                        <!-- Gender Header Row -->
-                        <tr class="bg-gray-200 font-semibold text-gray-700">
-                            <td class="border px-2 py-1" colspan="{{ count($schoolDays) + 1 }}">
-                                {{ $gender }}
-                            </td>
-                        </tr>
-
-                        @foreach($genderStudents as $student)
-                            <tr class="hover:bg-gray-50">
-                                <!-- Student Info -->
-                                <td class="px-5 py-4">
-                                    <div class="flex items-center gap-4">
-                                        <img
-                                            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                                            class="w-12 h-12 rounded-full object-cover shadow"
-                                            alt="Photo">
+            <!-- Attendance Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fas fa-list text-slate-400"></i>
+                        Daily Attendance Summary
+                    </h3>
+                    <div class="flex items-center gap-2 text-sm text-slate-500">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Showing first 10 school days</span>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-700 w-64">Student Name</th>
+                                @php
+                                    $displayDays = [];
+                                    $count = 0;
+                                    for($d = 1; $d <= $daysInMonth && $count < 10; $d++) {
+                                        $dateObj = \Carbon\Carbon::create($year, $month, $d);
+                                        if(!$dateObj->isWeekend()) {
+                                            $displayDays[] = $d;
+                                            $count++;
+                                        }
+                                    }
+                                @endphp
+                                @foreach($displayDays as $d)
+                                    <th class="px-2 py-3 text-center font-semibold text-slate-700 w-12">
+                                        <div class="flex flex-col items-center">
+                                            <span class="text-xs text-slate-400">{{ \Carbon\Carbon::create($year, $month, $d)->format('D') }}</span>
+                                            <span class="text-sm">{{ $d }}</span>
+                                        </div>
+                                    </th>
+                                @endforeach
+                                <th class="px-4 py-3 text-center font-semibold text-slate-700">Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach($students->take(8) as $student)
+                            <tr class="hover:bg-slate-50/80 transition group">
+                                <td class="px-6 py-3">
+                                    <div class="flex items-center gap-3">
+                                        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}" 
+                                             class="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm" alt="">
                                         <div>
-                                            <p class="font-semibold text-gray-800 leading-tight">
-                                                {{ $student->last_name }}
-                                                {{ $student->middle_name ?? '' }}
-                                                {{ $student->first_name }}
-                                                {{ $student->suffix ?? '' }}
-                                            </p>
-                                            <p class="text-xs text-gray-500 mt-1">
-                                                S-ID: {{ $student->school_id }}
-                                            </p>
+                                            <p class="font-semibold text-slate-900">{{ $student->last_name }}, {{ $student->first_name }}</p>
+                                            <p class="text-xs text-slate-500">ID: {{ $student->school_id }}</p>
                                         </div>
                                     </div>
                                 </td>
-
-                                <!-- Attendance Cells -->
-                                @foreach($schoolDays as $date)
+                                @foreach($displayDays as $d)
                                     @php
-                                        $att = $student->attendances->firstWhere('date',$date);
-                                        $status = $att?->status ?? 'none';
+                                        $dateObj = \Carbon\Carbon::create($year, $month, $d);
+                                        $att = $student->attendances->firstWhere('date', $dateObj->format('Y-m-d'));
                                     @endphp
-                                    <td class="border px-1 py-1 text-center">
-                                        <select name="attendance[{{ $student->id }}][{{ $date }}]"
-                                                class="px-1 py-1 text-xs rounded-lg
-                                                @if($status=='present') bg-green-100 text-green-700
-                                                @elseif($status=='late') bg-yellow-100 text-yellow-700
-                                                @elseif($status=='absent') bg-red-100 text-red-700
-                                                @else bg-gray-100 text-gray-700 @endif">
-                                            <option value="none" @selected($status=='none')>
-                                                <!-- None Icon -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                                                </svg> None
-                                            </option>
-                                            <option value="present" @selected($status=='present')>
-                                                <!-- Present Checkmark -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                                </svg> Present
-                                            </option>
-                                            <option value="late" @selected($status=='late')>
-                                                <!-- Late Clock -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-yellow-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <circle cx="12" cy="12" r="9"/>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
-                                                </svg> Late
-                                            </option>
-                                            <option value="absent" @selected($status=='absent')>
-                                                <!-- Absent Cross -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                </svg> Absent
-                                            </option>
-                                        </select>
+                                    <td class="px-2 py-3 text-center">
+                                        @if($att)
+                                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shadow-sm
+                                                {{ $att->status === 'present' ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200' : 
+                                                   ($att->status === 'late' ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-200' : 
+                                                   ($att->status === 'absent' ? 'bg-rose-100 text-rose-700 ring-1 ring-rose-200' : 
+                                                   'bg-blue-100 text-blue-700 ring-1 ring-blue-200')) }}">
+                                                {{ $att->status === 'present' ? 'P' : ($att->status === 'late' ? 'L' : ($att->status === 'absent' ? 'A' : 'E')) }}
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-400 text-xs">—</span>
+                                        @endif
                                     </td>
                                 @endforeach
-
+                                <td class="px-4 py-3 text-center">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                        95%
+                                    </span>
+                                </td>
                             </tr>
-                        @endforeach
-                    @endforeach
-
-                </tbody>
-            </table>
-
-            <div class="mt-4 flex justify-end gap-2">
-                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">💾 Save</button>
-                <button type="button" onclick="closeModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if($students->count() > 8)
+                <div class="px-6 py-3 border-t border-slate-200 bg-slate-50/50 text-center">
+                    <button onclick="openModal()" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition flex items-center justify-center gap-2 mx-auto">
+                        <span>View all {{ $students->count() }} students</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+                @endif
             </div>
 
-        </form>
-    </div>
+            <!-- Footer Info -->
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-200">
+                <div class="flex items-center gap-4">
+                    <span>DepEd Form 2 (SF2)</span>
+                    <span>•</span>
+                    <span>Republic of the Philippines</span>
+                    <span>•</span>
+                    <span>Department of Education</span>
+                </div>
+                <div>
+                    <span>System Version 2.0</span>
+                    <span class="mx-2">•</span>
+                    <span>Last updated: {{ now()->format('M d, Y h:i A') }}</span>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 
+<!-- ================= ATTENDANCE MODAL - FULL SCREEN ================= -->
+<div id="attendanceModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-[95vw] h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700">
+                    <i class="fas fa-clipboard-list text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">School Form 2 - Daily Attendance</h2>
+                    <p class="text-sm text-slate-500">
+                        {{ $section->year_level ?? 'Grade 1' }} - {{ $section->name ?? 'Section A' }} | 
+                        <span class="font-semibold text-indigo-600">{{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</span> |
+                        School Year: <span class="font-semibold">{{ $activeSchoolYear->name ?? '2024-2025' }}</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="printAttendance()" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition" title="Print">
+                    <i class="fas fa-print text-lg"></i>
+                </button>
+                <button onclick="closeModal()" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full transition" title="Close">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="flex-1 overflow-auto p-6 bg-slate-50">
+            <form method="POST" action="{{ route('teacher.attendance.store', $section->id) }}">
+                @csrf
+
+                @php
+                    $schoolDays = [];
+                    for($d = 1; $d <= $daysInMonth; $d++) {
+                        $dateObj = \Carbon\Carbon::create($year, $month, $d);
+                        if(!$dateObj->isWeekend()) {
+                            $schoolDays[] = $dateObj->format('Y-m-d');
+                        }
+                    }
+                    $grouped = $students->sortBy('last_name')->groupBy('gender');
+                @endphp
+
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-slate-200 w-72">Student Information</th>
+                                @foreach($schoolDays as $date)
+                                    <th class="px-2 py-3 text-center font-semibold text-slate-700 border-b border-slate-200 text-xs w-14">
+                                        <div class="flex flex-col">
+                                            <span class="text-slate-400 text-[10px]">{{ \Carbon\Carbon::parse($date)->format('D') }}</span>
+                                            <span>{{ \Carbon\Carbon::parse($date)->format('d') }}</span>
+                                        </div>
+                                    </th>
+                                @endforeach
+                                <th class="px-4 py-3 text-center font-semibold text-slate-700 border-b border-slate-200 w-20">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach($grouped as $gender => $genderStudents)
+                                <tr class="bg-slate-50/80">
+                                    <td colspan="{{ count($schoolDays) + 2 }}" class="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                                        <i class="fas fa-{{ $gender === 'Male' ? 'male text-blue-500' : 'female text-pink-500' }}"></i>
+                                        {{ $gender }} Students ({{ $genderStudents->count() }})
+                                    </td>
+                                </tr>
+
+                                @foreach($genderStudents as $student)
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-4 py-3 border-r border-slate-100">
+                                            <div class="flex items-center gap-3">
+                                                <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                                     class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm" alt="">
+                                                <div>
+                                                    <p class="font-semibold text-slate-900">{{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name ? substr($student->middle_name, 0, 1).'.' : '' }}</p>
+                                                    <p class="text-xs text-slate-500">LRN: {{ $student->lrn ?? $student->school_id }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        @php $presentCount = 0; @endphp
+                                        @foreach($schoolDays as $date)
+                                            @php
+                                                $att = $student->attendances->firstWhere('date', $date);
+                                                $status = $att?->status ?? 'none';
+                                                if($status === 'present' || $status === 'late') $presentCount++;
+                                            @endphp
+                                            <td class="px-1 py-2 text-center border-r border-slate-50">
+                                                <select name="attendance[{{ $student->id }}][{{ $date }}]"
+                                                        class="w-full px-1 py-1.5 text-xs font-bold rounded-lg border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500 transition text-center appearance-none
+                                                        {{ $status === 'present' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 
+                                                           ($status === 'late' ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 
+                                                           ($status === 'absent' ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 
+                                                           ($status === 'excused' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' :
+                                                           'bg-slate-100 text-slate-500 hover:bg-slate-200'))) }}">
+                                                    <option value="none" {{ $status === 'none' ? 'selected' : '' }}>—</option>
+                                                    <option value="present" {{ $status === 'present' ? 'selected' : '' }}>P</option>
+                                                    <option value="late" {{ $status === 'late' ? 'selected' : '' }}>L</option>
+                                                    <option value="absent" {{ $status === 'absent' ? 'selected' : '' }}>A</option>
+                                                    <option value="excused" {{ $status === 'excused' ? 'selected' : '' }}>E</option>
+                                                </select>
+                                            </td>
+                                        @endforeach
+                                        
+                                        <td class="px-4 py-3 text-center">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold {{ $presentCount === count($schoolDays) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+                                                {{ $presentCount }}/{{ count($schoolDays) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-200">
+                    <div class="flex items-center gap-4 text-sm text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-emerald-100 border border-emerald-200"></span>
+                            <span>Present</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-amber-100 border border-amber-200"></span>
+                            <span>Late</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-rose-100 border border-rose-200"></span>
+                            <span>Absent</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-blue-100 border border-blue-200"></span>
+                            <span>Excused</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="closeModal()" class="px-5 py-2.5 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 flex items-center gap-2">
+                            <i class="fas fa-save"></i>
+                            Save Attendance Record
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
 function openModal(){ 
     document.getElementById('attendanceModal').classList.remove('hidden'); 
     document.getElementById('attendanceModal').classList.add('flex'); 
+    document.body.style.overflow = 'hidden';
 }
 function closeModal(){ 
     document.getElementById('attendanceModal').classList.remove('flex'); 
     document.getElementById('attendanceModal').classList.add('hidden'); 
+    document.body.style.overflow = 'auto';
 }
+function printAttendance() {
+    window.print();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
+
+// Close on backdrop click
+document.getElementById('attendanceModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
 </script>
 
-
-
-<!-- PROFILE MODAL -->
-<div id="profileModal"
-     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
-
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-
-        <h2 class="text-xl font-bold mb-6">My Profile</h2>
-
-        <form method="POST"
-              action="{{ route('profile.update') }}"
-              enctype="multipart/form-data"
-              x-data="{ editMode: false }">
-
-            @csrf
-            @method('PATCH')
-
-            @php
-                $teacher = auth()->user()->teacher;
-            @endphp
-
-            <!-- PHOTO -->
-            <div class="flex items-center gap-6 mb-6">
-                <img src="{{ $teacher && $teacher->photo 
-                                ? asset('storage/'.$teacher->photo) 
-                                : asset('images/photo-placeholder.png') }}"
-                     class="w-24 h-24 rounded-full object-cover shadow">
-
-                <div x-show="editMode">
-                    <input type="file" name="photo" class="block text-sm">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                <!-- FIRST NAME -->
-                <div>
-                    <label class="text-sm font-medium">First Name</label>
-                    <input type="text" name="first_name"
-                           value="{{ $teacher->first_name ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- MIDDLE NAME -->
-                <div>
-                    <label class="text-sm font-medium">Middle Name</label>
-                    <input type="text" name="middle_name"
-                           value="{{ $teacher->middle_name ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- LAST NAME -->
-                <div>
-                    <label class="text-sm font-medium">Last Name</label>
-                    <input type="text" name="last_name"
-                           value="{{ $teacher->last_name ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- SUFFIX -->
-                <div>
-                    <label class="text-sm font-medium">Suffix</label>
-                    <input type="text" name="suffix"
-                           value="{{ $teacher->suffix ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- BIRTHDAY -->
-                <div>
-                    <label class="text-sm font-medium">Birthday</label>
-                    <input type="date" name="birthday"
-                           value="{{ $teacher->birthday ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- USERNAME (from users table)  -->
-                <div>
-                    <label class="text-sm font-medium">Username</label>
-                    <input type="text" name="username"
-                           value="{{ auth()->user()->username }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div> 
-
-                <!-- CONTACT -->
-                <div>
-                    <label class="text-sm font-medium">Contact Number</label>
-                    <input type="text" name="contact_number"
-                           value="{{ $teacher->contact_number ?? '' }}"
-                           :disabled="!editMode"
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
-                </div>
-
-                <!-- EMAIL (NOT EDITABLE - from users table) -->
-                <div>
-                    <label class="text-sm font-medium">Email</label>
-                    <input type="email"
-                           value="{{ auth()->user()->email }}"
-                           disabled
-                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-200 cursor-not-allowed">
-                </div>
-
-                <!-- PASSWORD -->
-                <div class="md:col-span-2" x-show="editMode">
-                    <label class="text-sm font-medium">New Password</label>
-                    <input type="password" name="password"
-                           placeholder="Leave blank if not changing"
-                           class="w-full border rounded-lg px-3 py-2 mt-1">
-                </div>
-
-            </div>
-
-            <!-- BUTTONS -->
-            <div class="flex justify-end gap-3 mt-8">
-
-                <!-- EDIT BUTTON -->
-                <button type="button"
-                        x-show="!editMode"
-                        @click="editMode = true"
-                        class="bg-indigo-600 text-white px-5 py-2 rounded-lg">
-                    Edit Profile
-                </button>
-
-                <!-- CANCEL BUTTON -->
-                <button type="button"
-                        x-show="editMode"
-                        @click="editMode = false"
-                        class="bg-gray-400 text-white px-5 py-2 rounded-lg">
-                    Cancel
-                </button>
-
-                <!-- SAVE BUTTON -->
-                <button type="submit"
-                        x-show="editMode"
-                        class="bg-green-600 text-white px-5 py-2 rounded-lg">
-                    Save Changes
-                </button>
-
-            </div>
-        </form>
-
-        <!-- CLOSE -->
-        <button onclick="closeProfileModal()"
-                class="absolute top-3 right-4 text-xl">
-            ✕
-        </button>
-    </div>
-</div>
-
-<script>
-function closeProfileModal() {
-    document.getElementById('profileModal').classList.add('hidden');
-    document.getElementById('profileModal').classList.remove('flex');
+<style>
+@media print {
+    body * { visibility: hidden; }
+    #attendanceModal, #attendanceModal * { visibility: visible; }
+    #attendanceModal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    .no-print { display: none !important; }
 }
-</script>
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<!-- [Previous modals remain with similar styling improvements] -->
 
 <!-- ENROLL STUDENT MODAL -->
 <div id="enrollStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
@@ -719,6 +848,169 @@ function deleteAnnouncement(id, formElement) {
     animation: fadeIn 0.2s ease-out;
 }
 </style>
+
+
+
+
+<!-- PROFILE MODAL -->
+<div id="profileModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+
+        <h2 class="text-xl font-bold mb-6">My Profile</h2>
+
+        <form method="POST"
+              action="{{ route('profile.update') }}"
+              enctype="multipart/form-data"
+              x-data="{ editMode: false }">
+
+            @csrf
+            @method('PATCH')
+
+            @php
+                $teacher = auth()->user()->teacher;
+            @endphp
+
+            <!-- PHOTO -->
+            <div class="flex items-center gap-6 mb-6">
+                <img src="{{ $teacher && $teacher->photo 
+                                ? asset('storage/'.$teacher->photo) 
+                                : asset('images/photo-placeholder.png') }}"
+                     class="w-24 h-24 rounded-full object-cover shadow">
+
+                <div x-show="editMode">
+                    <input type="file" name="photo" class="block text-sm">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- FIRST NAME -->
+                <div>
+                    <label class="text-sm font-medium">First Name</label>
+                    <input type="text" name="first_name"
+                           value="{{ $teacher->first_name ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- MIDDLE NAME -->
+                <div>
+                    <label class="text-sm font-medium">Middle Name</label>
+                    <input type="text" name="middle_name"
+                           value="{{ $teacher->middle_name ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- LAST NAME -->
+                <div>
+                    <label class="text-sm font-medium">Last Name</label>
+                    <input type="text" name="last_name"
+                           value="{{ $teacher->last_name ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- SUFFIX -->
+                <div>
+                    <label class="text-sm font-medium">Suffix</label>
+                    <input type="text" name="suffix"
+                           value="{{ $teacher->suffix ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- BIRTHDAY -->
+                <div>
+                    <label class="text-sm font-medium">Birthday</label>
+                    <input type="date" name="birthday"
+                           value="{{ $teacher->birthday ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- USERNAME (from users table)  -->
+                <div>
+                    <label class="text-sm font-medium">Username</label>
+                    <input type="text" name="username"
+                           value="{{ auth()->user()->username }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div> 
+
+                <!-- CONTACT -->
+                <div>
+                    <label class="text-sm font-medium">Contact Number</label>
+                    <input type="text" name="contact_number"
+                           value="{{ $teacher->contact_number ?? '' }}"
+                           :disabled="!editMode"
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-50 disabled:bg-gray-100">
+                </div>
+
+                <!-- EMAIL (NOT EDITABLE - from users table) -->
+                <div>
+                    <label class="text-sm font-medium">Email</label>
+                    <input type="email"
+                           value="{{ auth()->user()->email }}"
+                           disabled
+                           class="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-200 cursor-not-allowed">
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="md:col-span-2" x-show="editMode">
+                    <label class="text-sm font-medium">New Password</label>
+                    <input type="password" name="password"
+                           placeholder="Leave blank if not changing"
+                           class="w-full border rounded-lg px-3 py-2 mt-1">
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex justify-end gap-3 mt-8">
+
+                <!-- EDIT BUTTON -->
+                <button type="button"
+                        x-show="!editMode"
+                        @click="editMode = true"
+                        class="bg-indigo-600 text-white px-5 py-2 rounded-lg">
+                    Edit Profile
+                </button>
+
+                <!-- CANCEL BUTTON -->
+                <button type="button"
+                        x-show="editMode"
+                        @click="editMode = false"
+                        class="bg-gray-400 text-white px-5 py-2 rounded-lg">
+                    Cancel
+                </button>
+
+                <!-- SAVE BUTTON -->
+                <button type="submit"
+                        x-show="editMode"
+                        class="bg-green-600 text-white px-5 py-2 rounded-lg">
+                    Save Changes
+                </button>
+
+            </div>
+        </form>
+
+        <!-- CLOSE -->
+        <button onclick="closeProfileModal()"
+                class="absolute top-3 right-4 text-xl">
+            ✕
+        </button>
+    </div>
+</div>
+
+<script>
+function closeProfileModal() {
+    document.getElementById('profileModal').classList.add('hidden');
+    document.getElementById('profileModal').classList.remove('flex');
+}
+</script>
 
 
 

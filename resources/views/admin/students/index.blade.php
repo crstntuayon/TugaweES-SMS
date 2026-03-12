@@ -364,7 +364,7 @@ h-screen sticky top-0 z-50"
 
             <div class="flex items-center gap-4">
                 <div class="relative">
-                    <img src="{{ asset('images/logo.jpg') }}"
+                    <img src="{{ asset('images/logo.png') }}"
                          class="h-14 w-14 rounded-2xl shadow-lg ring-4 ring-indigo-100 object-cover">
                     <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-3 border-white shadow-sm flex items-center justify-center">
                         <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">

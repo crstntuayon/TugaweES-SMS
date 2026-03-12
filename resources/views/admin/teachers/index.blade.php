@@ -367,7 +367,7 @@ h-screen sticky top-0 z-50"
                     </a>
 
                     <div class="relative">
-                        <img src="{{ asset('images/logo.jpg') }}"
+                        <img src="{{ asset('images/logo.png') }}"
                              class="h-14 w-14 rounded-2xl shadow-lg ring-4 ring-emerald-100 object-cover"
                              alt="School Logo">
                         <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-3 border-white shadow-sm flex items-center justify-center">
@@ -785,7 +785,7 @@ function renderTeacherDocument() {
                     <p class="text-xs">Division of Negros Oriental</p>
                 </div>
 
-                <img src="{{ asset('images/logo.jpg') }}" class="h-14 w-auto">
+                <img src="{{ asset('images/logo.png') }}" class="h-14 w-auto">
             </div>
 
             <!-- Teacher Photo (Top Right Vertical Rectangle) -->

@@ -17,6 +17,11 @@ class Student extends Model
         'section_id', 'lrn', 'address', 'photo', 'school_id', 'user_id', 'school_year_id', 'grade_level'
     ];
 
+
+    protected $casts = [
+    'date_of_birth' => 'date', // or 'birthday' => 'date' depending on your column name
+    // ... other casts
+];
     public function section()
     {
         return $this->belongsTo(Section::class);

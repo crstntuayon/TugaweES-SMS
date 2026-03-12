@@ -332,7 +332,7 @@ viewBox="0 0 24 24">
             </a>
 
             <!-- Logo -->
-            <img src="{{ asset('images/logo.jpg') }}"
+            <img src="{{ asset('images/logo.png') }}"
                  class="h-16 w-16 rounded-full shadow-lg ring-4 ring-indigo-200"
                  alt="School Logo">
 

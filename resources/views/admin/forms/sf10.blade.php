@@ -117,7 +117,7 @@
             <strong>Learner Permanent Academic Record (SF10-ES)</strong><br><br>
             <strong>TUGAWE ELEMENTARY SCHOOL</strong>
         </div>
-        <img src="{{ asset('images/logo.jpg') }}" alt="School Logo">
+        <img src="{{ asset('images/logo.png') }}" alt="School Logo">
     </div>
 
     @php

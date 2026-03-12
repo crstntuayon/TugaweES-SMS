@@ -345,7 +345,7 @@
             <div class="flex justify-between items-center h-20">
                 <a href="#" class="flex items-center gap-3 group">
                     <div class="relative">
-                        <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-12 w-12 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-12 rounded-xl object-cover shadow-lg group-hover:scale-105 transition-transform">
                         <div class="absolute inset-0 bg-teal-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                     <div class="hidden sm:block">
@@ -439,101 +439,326 @@
                     </div>
                 </div>
 
-                <!-- Hero Image/Illustration Area -->
-                <div class="relative hidden lg:block">
-                    <div class="relative z-10 bg-white p-4 rounded-3xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
-                        <div class="aspect-[4/3] bg-gradient-to-br from-teal-50 to-orange-50 rounded-2xl overflow-hidden relative">
-                            <img src="{{ asset('images/logo.jpg') }}" alt="School Campus" class="w-full h-full object-cover opacity-90">
-                            <div class="absolute inset-0 bg-gradient-to-t from-teal-900/20 to-transparent"></div>
-                        </div>
+                <!-- Hero Image/Illustration Area - Alpine.js Slider -->
+<div class="relative hidden lg:block" x-data="imageSlider()" x-init="startAutoPlay()">
+    <div class="relative z-10 bg-white p-4 rounded-3xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+        <div class="aspect-[4/3] bg-gradient-to-br from-teal-50 to-orange-50 rounded-2xl overflow-hidden relative">
+            
+            <!-- Slider Container -->
+            <div class="relative w-full h-full group">
+                
+                <!-- Slides -->
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div x-show="currentSlide === index"
+                         x-transition:enter="transition ease-out duration-700"
+                         x-transition:enter-start="opacity-0 transform scale-105"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-500"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="absolute inset-0">
+                        <img :src="slide" class="w-full h-full object-cover" alt="School Photo">
                     </div>
-                    <!-- Floating Card -->
-                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 z-20 max-w-xs animate-bounce" style="animation-duration: 3s;">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold text-slate-900">DepEd Certified</p>
-                                <p class="text-xs text-slate-500">Excellence in Education</p>
-                            </div>
-                        </div>
-                    </div>
+                </template>
+                
+                <!-- Gradient Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-teal-900/20 to-transparent pointer-events-none"></div>
+                
+                <!-- Navigation Arrows -->
+                <button @click="prevSlide()" 
+                        class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                
+                <button @click="nextSlide()" 
+                        class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                
+                <!-- Dots Indicator -->
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    <template x-for="(slide, index) in slides" :key="index">
+                        <button @click="goToSlide(index)"
+                                :class="currentSlide === index ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'"
+                                class="h-2 rounded-full transition-all duration-300 w-2"></button>
+                    </template>
                 </div>
+                
+                <!-- Slide Counter -->
+                <div class="absolute top-4 right-4 bg-black/30 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
+                    <span x-text="currentSlide + 1"></span> / <span x-text="slides.length"></span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Floating Card -->
+    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 z-20 max-w-xs animate-bounce" style="animation-duration: 3s;">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-slate-900">DepEd Certified</p>
+                <p class="text-xs text-slate-500">Excellence in Education</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this script -->
+<script>
+function imageSlider() {
+    return {
+        slides: [
+            '{{ asset("images/tes1.jpg") }}',
+            '{{ asset("images/tes2.jpg") }}',
+            '{{ asset("images/tes3.jpg") }}',
+            '{{ asset("images/tes4.jpg") }}',
+            '{{ asset("images/tes5.jpg") }}'
+        ],
+        currentSlide: 0,
+        autoPlayInterval: null,
+        
+        nextSlide() {
+            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+            this.resetAutoPlay();
+        },
+        
+        prevSlide() {
+            this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+            this.resetAutoPlay();
+        },
+        
+        goToSlide(index) {
+            this.currentSlide = index;
+            this.resetAutoPlay();
+        },
+        
+        startAutoPlay() {
+            this.autoPlayInterval = setInterval(() => {
+                this.nextSlide();
+            }, 5000); // Change every 5 seconds
+        },
+        
+        resetAutoPlay() {
+            clearInterval(this.autoPlayInterval);
+            this.startAutoPlay();
+        }
+    }
+}
+</script>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-teal-50/50 to-transparent"></div>
-        
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="order-2 lg:order-1 relative">
-                    <div class="aspect-[4/3] bg-gradient-to-br from-teal-100 to-orange-100 rounded-3xl overflow-hidden shadow-2xl relative group">
-                        <img src="{{ asset('images/logo.jpg') }}" alt="School Campus" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-teal-900/30 to-transparent"></div>
+   <!-- About Section -->
+<section id="about" class="py-24 bg-white relative overflow-hidden">
+    
+    <!-- Subtle Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#0d9488 1px, transparent 1px); background-size: 32px 32px;"></div>
+    
+    <!-- Gradient Blobs -->
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-100/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            
+            <!-- Logo Section - Large & Clean -->
+            <div class="order-2 lg:order-1 relative flex flex-col items-center">
+                
+                <!-- Main Logo Container -->
+                <div class="relative group">
+                    
+                    <!-- Glow Effect Behind Logo -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-teal-400/20 to-orange-400/20 rounded-full blur-3xl scale-150 group-hover:scale-175 transition-transform duration-700"></div>
+                    
+                    <!-- Logo Circle Frame -->
+                    <div class="relative w-80 h-80 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem] rounded-full bg-white shadow-2xl flex items-center justify-center
+                                border-8 border-white group-hover:shadow-3xl transition-all duration-500">
+                        
+                        <!-- Inner Ring -->
+                        <div class="absolute inset-4 rounded-full border-2 border-dashed border-teal-200/60 animate-spin-slow" style="animation-duration: 20s;"></div>
+                        
+                        <!-- Logo Image - No Background, Bigger -->
+                        <div class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 p-4">
+                            <img src="{{ asset('images/logo.png') }}" 
+                                 alt="Tugawe Elementary School Logo" 
+                                 class="w-full h-full object-contain drop-shadow-2xl
+                                        group-hover:scale-105 group-hover:-rotate-2 transition-all duration-700 ease-out">
+                        </div>
+                        
+                        <!-- Shine Sweep -->
+                        <div class="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                        </div>
                     </div>
                     
-                    <!-- Mission Card -->
-                    <div class="absolute -bottom-8 -right-8 bg-white p-8 rounded-2xl shadow-2xl border border-slate-100 max-w-sm z-10">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/30">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- Floating Elements Around Logo -->
+                    <div class="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl rotate-12 shadow-lg flex items-center justify-center text-white font-bold text-xl animate-bounce" style="animation-duration: 3s;">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="absolute -bottom-2 -left-6 bg-white px-4 py-3 rounded-xl shadow-xl border border-slate-100">
+                        <p class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">Est. 2004</p>
+                    </div>
+                </div>
+                
+                <!-- School Name Below Logo -->
+                <div class="mt-8 text-center">
+                    <h3 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                        TUGAWE ELEMENTARY SCHOOL
+                    </h3>
+                    <p class="text-slate-500 font-medium mt-1">Brgy. Tugawe, Dauin, Negros Oriental</p>
+                    
+                    <!-- Decorative Line -->
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <div class="h-1 w-12 bg-teal-500 rounded-full"></div>
+                        <div class="h-1 w-3 bg-orange-500 rounded-full"></div>
+                        <div class="h-1 w-3 bg-yellow-500 rounded-full"></div>
+                        <div class="h-1 w-12 bg-teal-500 rounded-full"></div>
+                    </div>
+                </div>
+                
+                <!-- Mission Card - Bottom Right -->
+                <div class="absolute -bottom-4 right-0 lg:right-[-2rem] bg-white/95 backdrop-blur p-6 rounded-2xl shadow-2xl border border-slate-100 max-w-xs
+                            hover:-translate-y-2 hover:shadow-3xl transition-all duration-500 group/card">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-lg shadow-teal-500/30 shrink-0
+                                    group-hover/card:scale-110 transition-transform duration-500">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                         </div>
-                        <p class="text-lg font-bold text-slate-900 mb-2">Our Mission</p>
-                        <p class="text-slate-600 leading-relaxed">
-                            To provide quality basic education that is accessible to all learners in our community.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="order-1 lg:order-2">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 mb-4">
-                        <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">About Our School</span>
-                    </div>
-                    
-                    <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 text-balance leading-tight">
-                        Dedicated to nurturing <span class="text-teal-600">young minds</span> in the heart of Dauin
-                    </h2>
-                    
-                    <div class="prose prose-slate text-slate-600 text-lg leading-relaxed space-y-4">
-                        <p>
-                            Tugawe Elementary School is a public educational institution under the Department of Education, 
-                            serving the elementary education needs of Barangay Tugawe and neighboring communities in Dauin, Negros Oriental.
-                        </p>
-                        <p>
-                            Our school is committed to providing accessible, quality basic education that develops 
-                            academically competent, socially responsible, and morally upright individuals.
-                        </p>
-                    </div>
-                    
-                    <div class="mt-10 grid grid-cols-2 gap-6">
-                        <div class="stat-card">
-                            <p class="text-sm text-slate-500 mb-1 font-medium">School ID</p>
-                            <p class="text-xl font-bold text-slate-900">120231</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-sm text-slate-500 mb-1 font-medium">District</p>
-                            <p class="text-xl font-bold text-slate-900">Dauin District</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-sm text-slate-500 mb-1 font-medium">Division</p>
-                            <p class="text-xl font-bold text-slate-900">Negros Oriental</p>
-                        </div>
-                        <div class="stat-card">
-                            <p class="text-sm text-slate-500 mb-1 font-medium">Region</p>
-                            <p class="text-xl font-bold text-slate-900">VII - Central Visayas</p>
+                        <div>
+                            <p class="text-lg font-bold text-slate-900 mb-1">Our Mission</p>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Provide quality basic education accessible to all learners.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- Text Content Section -->
+            <div class="order-1 lg:order-2 space-y-8">
+                
+                <!-- Section Label -->
+                <div class="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-teal-50 border border-teal-100">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
+                    </span>
+                    <span class="text-sm font-bold text-teal-700 uppercase tracking-wider">About Our School</span>
+                </div>
+                
+                <!-- Heading -->
+                <div class="space-y-4">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.1]">
+                        Nurturing 
+                        <span class="relative inline-block">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-teal-400">young minds</span>
+                            <svg class="absolute -bottom-2 left-0 w-full h-4 text-teal-200" viewBox="0 0 300 12" preserveAspectRatio="none">
+                                <path d="M0 8 Q 75 0 150 8 T 300 8" stroke="currentColor" stroke-width="6" fill="none" opacity="0.6"/>
+                            </svg>
+                        </span>
+                        for a brighter tomorrow
+                    </h2>
+                    <p class="text-xl text-slate-600 leading-relaxed max-w-lg">
+                        A premier public elementary institution committed to academic excellence and holistic development.
+                    </p>
+                </div>
+                
+                <!-- Description -->
+                <div class="prose prose-slate text-slate-600 leading-relaxed space-y-4 text-lg">
+                    <p>
+                        <span class="text-5xl font-black text-teal-600 float-left mr-3 mt-[-8px]">T</span>
+                        ugawe Elementary School stands as a beacon of quality education in Barangay Tugawe, serving the Dauin district and neighboring communities across Negros Oriental.
+                    </p>
+                    <p>
+                        Under the Department of Education, we are dedicated to molding <strong class="text-slate-800">academically competent</strong>, <strong class="text-slate-800">socially responsible</strong>, and <strong class="text-slate-800">morally upright</strong> individuals ready to face future challenges.
+                    </p>
+                </div>
+                
+                <!-- Stats Grid - Modern Cards -->
+                <div class="grid grid-cols-2 gap-4 pt-4">
+                    <div class="group p-5 rounded-2xl bg-slate-50 hover:bg-white border border-transparent hover:border-teal-100 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center group-hover:bg-teal-500 transition-colors duration-300">
+                                <svg class="w-6 h-6 text-teal-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black text-slate-900 group-hover:text-teal-600 transition-colors">120231</p>
+                        <p class="text-sm text-slate-500 font-medium uppercase tracking-wide mt-1">School ID</p>
+                    </div>
+                    
+                    <div class="group p-5 rounded-2xl bg-slate-50 hover:bg-white border border-transparent hover:border-orange-100 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300">
+                                <svg class="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">Dauin</p>
+                        <p class="text-sm text-slate-500 font-medium uppercase tracking-wide mt-1">District</p>
+                    </div>
+                    
+                    <div class="group p-5 rounded-2xl bg-slate-50 hover:bg-white border border-transparent hover:border-blue-100 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300">
+                                <svg class="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors">Negros Oriental</p>
+                        <p class="text-sm text-slate-500 font-medium uppercase tracking-wide mt-1">Division</p>
+                    </div>
+                    
+                    <div class="group p-5 rounded-2xl bg-slate-50 hover:bg-white border border-transparent hover:border-purple-100 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center group-hover:bg-purple-500 transition-colors duration-300">
+                                <svg class="w-6 h-6 text-purple-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-black text-slate-900 group-hover:text-purple-600 transition-colors">Region VII</p>
+                        <p class="text-sm text-slate-500 font-medium uppercase tracking-wide mt-1">Central Visayas</p>
+                    </div>
+                </div>
+                
+               
+            </div>
         </div>
-    </section>
+    </div>
+    
+    <!-- Custom Styles -->
+    <style>
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+    </style>
+</section>
 
     <!-- Announcements Section -->
     <section id="announcements" class="py-24 bg-slate-50 relative">
@@ -773,7 +998,7 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex items-center gap-4">
-                    <img src="{{ asset('images/logo.jpg') }}" class="h-10 w-10 rounded-lg object-cover opacity-80 ring-2 ring-teal-500/30">
+                    <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 rounded-lg object-cover opacity-80 ring-2 ring-teal-500/30">
                     <div>
                         <span class="text-white font-bold block">Tugawe Elementary School</span>
                         <span class="text-xs">Excellence in Education</span>
@@ -800,7 +1025,7 @@
             <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div class="flex items-center gap-3">
                     <div class="relative">
-                        <img src="{{ asset('images/logo.jpg') }}" class="h-10 w-10 rounded-xl object-cover shadow-md ring-2 ring-teal-100">
+                        <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 rounded-xl object-cover shadow-md ring-2 ring-teal-100">
                         <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-teal-500 rounded-full border-2 border-white"></div>
                     </div>
                     <div>

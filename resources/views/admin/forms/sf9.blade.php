@@ -41,7 +41,7 @@
             <h2 class="font-semibold text-sm">Department of Education</h2>
             <h3 class="font-bold mt-1 text-xl">STUDENT REPORT CARD (SF9)</h3>
         </div>
-        <img src="{{ asset('images/logo.jpg') }}" class="w-20 h-20 object-contain">
+        <img src="{{ asset('images/logo.png') }}" class="w-20 h-20 object-contain">
     </div>
 
     <!-- STUDENT INFO -->

@@ -347,7 +347,7 @@ viewBox="0 0 24 24">
             </svg>
         </a>
 
-            <img src="{{ asset('images/logo.jpg') }}"
+            <img src="{{ asset('images/logo.png') }}"
                  class="h-16 w-16 rounded-2xl shadow-md ring-4 ring-indigo-100"
                  alt="School Logo">
 

@@ -14,10 +14,6 @@
 
 <!-- SIDEBAR -->
 <aside
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 x-data="{ sidebarOpen: true, activeDropdown: null }"
 class="bg-white/90 backdrop-blur-2xl shadow-2xl shadow-indigo-500/5 border-r border-gray-200/80 
 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
@@ -52,54 +48,10 @@ h-screen sticky top-0 z-50"
             <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
         </svg>
     </button>
-<<<<<<< HEAD
-=======
-=======
-x-data="{ sidebarOpen: true }"
-class="bg-white/80 backdrop-blur-xl shadow-2xl border-r border-gray-200 
-flex flex-col transition-all duration-300 ease-in-out
-h-screen sticky top-0"
-:class="sidebarOpen ? 'w-64' : 'w-20'"
->
-
-<!-- HEADER -->
-<div class="flex items-center justify-between p-4 border-b">
-
-<span
-class="font-bold text-gray-800 text-lg tracking-wide"
-x-show="sidebarOpen"
-x-transition>
-Admin Panel
-</span>
-
-<button
-@click="sidebarOpen = !sidebarOpen"
-class="p-2 rounded-lg hover:bg-indigo-50 hover:scale-110 transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-6 h-6 text-gray-700"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path stroke-linecap="round"
-stroke-linejoin="round"
-d="M4 6h16M4 12h16M4 18h16"/>
-
-</svg>
-</button>
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 </div>
 
 
 <!-- USER PROFILE -->
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <div class="p-5 border-b border-gray-100">
     @php
     $first = auth()->user()->first_name;
@@ -135,60 +87,10 @@ d="M4 6h16M4 12h16M4 18h16"/>
             </span>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-=======
-<div class="p-4 border-b">
-
-@php
-$first = auth()->user()->first_name;
-$last = auth()->user()->last_name;
-$initials = strtoupper(substr($first,0,1) . substr($last,0,1));
-@endphp
-
-<div class="flex items-center gap-3">
-
-<div class="relative">
-
-<!-- Avatar -->
-<div class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-indigo-700 text-white font-bold shadow-md">
-{{ $initials }}
-</div>
-
-<!-- Online indicator -->
-<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-
-</div>
-
-<div x-show="sidebarOpen" x-transition>
-
-<p class="text-sm font-semibold text-gray-800 leading-tight">
-
-{{ auth()->user()->first_name }}
-{{ auth()->user()->middle_name }}
-{{ auth()->user()->last_name }}
-{{ auth()->user()->suffix }}
-
-</p>
-
-<p class="text-xs text-gray-500 truncate">
-{{ auth()->user()->email }}
-</p>
-
-</div>
-
-</div>
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 </div>
 
 
 <!-- NAVIGATION -->
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <div class="flex flex-col gap-1 p-4 flex-1 overflow-y-auto scrollbar-thin">
     
     <!-- Section Label -->
@@ -404,199 +306,10 @@ $initials = strtoupper(substr($first,0,1) . substr($last,0,1));
             </form>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-=======
-<div class="flex flex-col gap-2 p-3 flex-1 text-gray-600">
-
-
-<!-- Dashboard -->
-<a href="{{ route('admin.dashboard') }}"
-class="group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200
-{{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md scale-[1.02]' : 'hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02]' }}">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3h8v6h-8zM3 21h8v-6H3z"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Dashboard</span>
-
-</a>
-
-
-<!-- Profile -->
-<a href="{{ route('profile.edit') }}"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<circle cx="12" cy="7" r="4"/>
-<path d="M5.5 21a7.5 7.5 0 0 1 13 0"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Profile</span>
-
-</a>
-
-
-<!-- Manage Users -->
-<button onclick="openManageUsersModal()"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition w-full text-left">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
-<path d="M7 21v-2a4 4 0 0 1 3-3.87"/>
-<circle cx="12" cy="7" r="4"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Manage Users</span>
-
-</button>
-
-
-<!-- Create Admin -->
-<button onclick="openAddAdminModal()"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-green-50 hover:text-green-600 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M12 5v14M5 12h14"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Create Admin</span>
-
-</button>
-
-
-<!-- Reports -->
-<a href="{{ route('admin.reports') }}"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-purple-50 hover:text-purple-600 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M3 3v18h18"/>
-<path d="M7 15l4-4 4 4 5-5"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Reports</span>
-
-</a>
-
-
-<!-- Graduation -->
-<a href="{{ route('admin.students.graduation') }}"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-yellow-50 hover:text-yellow-600 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M22 10L12 5 2 10l10 5 10-5z"/>
-<path d="M6 12v5a6 3 0 0 0 12 0v-5"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Graduation</span>
-
-</a>
-
-
-<!-- Issue School IDs -->
-<button onclick="openSectionModal()"
-class="group flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5 group-hover:scale-110 transition"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<rect x="3" y="6" width="18" height="12" rx="2"/>
-<path d="M7 10h6M7 14h4"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Issue School IDs</span>
-
-</button>
-
-
-<!-- SCHOOL YEAR -->
-<div class="bg-gray-50 p-3 rounded-xl mt-3 shadow-inner" x-show="sidebarOpen">
-
-<span class="text-xs font-semibold text-gray-500">
-ACTIVE SCHOOL YEAR
-</span>
-
-<form action="{{ route('admin.schoolyears.activate') }}" method="POST">
-@csrf
-
-<select
-name="school_year"
-onchange="this.form.submit()"
-class="w-full border mt-2 px-2 py-1 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
-
-@foreach($schoolYears as $year)
-
-<option value="{{ $year->id }}"
-{{ $year->is_active ? 'selected' : '' }}>
-{{ $year->name }}
-</option>
-
-@endforeach
-
-</select>
-
-</form>
-
-</div>
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 </div>
 
 
 <!-- LOGOUT -->
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <div class="p-4 border-t border-gray-100 mt-auto">
     <a href="{{ route('logout') }}"
     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -627,46 +340,10 @@ class="w-full border mt-2 px-2 py-1 rounded-lg text-sm focus:ring-2 focus:ring-i
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
         @csrf
     </form>
-<<<<<<< HEAD
-=======
-=======
-<div class="p-3 border-t">
-
-<a href="{{ route('logout') }}"
-onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-class="flex items-center gap-3 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 hover:scale-[1.02] transition">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-class="w-5 h-5"
-fill="none"
-stroke="currentColor"
-stroke-width="2"
-viewBox="0 0 24 24">
-
-<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-<path d="M16 17l5-5-5-5"/>
-<path d="M21 12H9"/>
-
-</svg>
-
-<span x-show="sidebarOpen">Logout</span>
-
-</a>
-
-<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-@csrf
-</form>
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 </div>
 
 </aside>
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 <main class="flex-1 p-8 space-y-8 overflow-y-auto h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-indigo-50/30">
 
     <!-- ENHANCED HEADER -->
@@ -983,197 +660,10 @@ viewBox="0 0 24 24">
     }
     to {
         opacity: 1;
-<<<<<<< HEAD
-=======
-=======
-<main class="flex-1 p-6 space-y-6 overflow-y-auto h-screen">
-
-    <!-- HEADER -->
-   <header class="bg-white shadow-sm border rounded-xl px-6 py-4 flex items-center justify-between">
-
-    <!-- LEFT -->
-    <div class="flex items-center gap-4">
-
-        <a href="{{ route('admin.dashboard') }}"
-           class="p-2 rounded-lg hover:bg-indigo-100 transition">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="h-5 w-5 text-gray-700"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 19l-7-7 7-7"/>
-            </svg>
-        </a>
-
-        <img src="{{ asset('images/logo.jpg') }}"
-             class="h-12 w-12 rounded-full shadow ring-2 ring-indigo-200">
-
-        <div>
-            <h1 class="text-xl font-bold text-gray-800">
-                Student Management
-            </h1>
-            <p class="text-xs text-gray-500">
-                Tugawe Elementary School
-            </p>
-        </div>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div class="flex items-center gap-3">
-
-        <input type="text"
-               id="studentSearch"
-               placeholder="Search student..."
-               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-64">
-
-        <button onclick="openAddStudentModal()"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow">
-            + Add Student
-        </button>
-
-    </div>
-
-</header>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('success'))
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    Swal.fire({
-        title: 'Success!',
-        text: "{{ session('success') }}",
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#6366f1'
-    });
-});
-</script>
-@endif
-
-<!-- STUDENTS GRID -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
-@foreach($students->sortBy('last_name') as $student)
-
-@php
-    $enrollment = $student->enrollments()->where('school_year_id', $activeYear->id)->first();
-    $status = $enrollment->status ?? 'N/A';
-
-    $statusColor = match($status) {
-        'enrolled' => 'bg-green-100 text-green-700',
-        'unenrolled' => 'bg-red-100 text-red-700',
-        'promoted' => 'bg-blue-100 text-blue-700',
-        'retained' => 'bg-yellow-100 text-yellow-700',
-        'transferred' => 'bg-purple-100 text-purple-700',
-        default => 'bg-gray-100 text-gray-700',
-    };
-@endphp
-
-<!-- CARD -->
-<div class="group bg-white rounded-2xl shadow-md border hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-5 relative student-row"
-     data-search="{{ strtolower($student->first_name.' '.$student->middle_name.' '.$student->last_name.' '.$student->school_id) }}">
-
-    <!-- STUDENT PHOTO -->
-    <div class="flex justify-center mb-4">
-        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-             class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg group-hover:scale-105 transition">
-    </div>
-
-    <!-- NAME -->
-    <div class="text-center">
-        <p class="font-bold text-gray-800 text-lg leading-tight">
-            {{ $student->last_name }}, {{ $student->first_name }}
-        </p>
-
-        <p class="text-xs text-gray-500">
-            {{ $student->middle_name }} {{ $student->suffix }}
-        </p>
-
-        <p class="text-xs text-gray-400 mt-1">
-            S-ID: {{ $student->school_id }}
-        </p>
-    </div>
-
-    <!-- SECTION -->
-    <div class="text-center mt-3">
-        <p class="text-sm text-gray-600">
-            Section: <span class="font-medium">{{ $enrollment->section->name ?? 'N/A' }}</span>
-        </p>
-    </div>
-
-    <!-- STATUS -->
-    <div class="flex justify-center mt-3">
-        <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $statusColor }}">
-            {{ ucfirst($status) }}
-        </span>
-    </div>
-
-    <!-- ACTION BUTTON -->
-    <div class="flex justify-center mt-4 relative">
-
-        <button onclick="toggleFormDropdown({{ $student->id }})"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-lg text-xs shadow transition">
-            School Forms
-        </button>
-
-        <!-- DROPDOWN -->
-        <div id="formDropdown{{ $student->id }}"
-             class="hidden absolute top-10 w-40 bg-white border rounded-xl shadow-xl overflow-hidden z-50 animate-fadeIn">
-
-            <a href="{{ route('admin.sf9.show', $student->id) }}"
-               class="block px-4 py-2 text-sm hover:bg-indigo-50">
-                SF9
-            </a>
-
-            <a href="{{ route('admin.sf10.show', $student->id) }}"
-               class="block px-4 py-2 text-sm hover:bg-indigo-50">
-                SF10
-            </a>
-
-            <button onclick="openEditStudentModal(this)"
-                    data-id="{{ $student->id }}"
-                    data-first="{{ $student->first_name }}"
-                    data-middle="{{ $student->middle_name ?? '' }}"
-                    data-last="{{ $student->last_name }}"
-                    data-suffix="{{ $student->suffix ?? '' }}"
-                    data-birthday="{{ $student->birthday }}"
-                    data-email="{{ $student->email }}"
-                    data-contact="{{ $student->contact_number ?? '' }}"
-                    data-sex="{{ $student->sex ?? '' }}"
-                    data-address="{{ $student->address ?? '' }}"
-                    data-photo="{{ $student->photo ?? '' }}"
-                    class="block w-full text-left px-4 py-2 text-sm hover:bg-indigo-50">
-                Update Student
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-@endforeach
-</div>
-<style>
-@keyframes fadeIn {
-    from {
-        opacity:0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity:1;
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
         transform: translateY(0);
     }
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 @keyframes dropdown {
     from {
         opacity: 0;
@@ -1263,16 +753,6 @@ document.addEventListener('click', function(e) {
 });
 </script>
 
-<<<<<<< HEAD
-=======
-=======
-.animate-fadeIn{
-    animation: fadeIn .2s ease-in-out;
-}
-</style>
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
 
 

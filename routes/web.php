@@ -349,13 +349,7 @@ Route::middleware(['auth'])->prefix('student')->name('student.')->group(function
 
 });
 
-Route::prefix('student')->middleware(['auth', 'role:student'])->group(function () {
-    Route::get('sms', [App\Http\Controllers\Student\StudentController::class, 'sms'])->name('student.sms');
-    Route::get('curriculum', [App\Http\Controllers\Student\StudentController::class, 'curriculum'])->name('student.curriculum');
-    Route::get('loadslip', [App\Http\Controllers\Student\StudentController::class, 'loadslip'])->name('student.loadslip');
-   
 
-});
 
 
     // Activate School Year
@@ -464,10 +458,6 @@ Route::put('/sections/{section}/unenroll-all', [App\Http\Controllers\Teacher\Das
     Route::post('/admin/students/{student}/update-status', [App\Http\Controllers\Admin\GraduationController::class, 'updateStatus']);
   
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 // MARCH 12, 2026
 // Social Authentication Routes
 Route::prefix('auth')->group(function () {
@@ -479,10 +469,4 @@ Route::prefix('auth')->group(function () {
         ->name('social.callback')
         ->where('provider', 'google|facebook');
 });
-<<<<<<< HEAD
-=======
-=======
-
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 require __DIR__.'/auth.php';

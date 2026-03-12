@@ -35,10 +35,6 @@ return [
         ],
     ],
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
     'google' => [
     'client_id' => env('GOOGLE_CLIENT_ID'),
     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
@@ -51,9 +47,4 @@ return [
     'redirect' => env('FACEBOOK_REDIRECT_URI'),
 ],
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 ];

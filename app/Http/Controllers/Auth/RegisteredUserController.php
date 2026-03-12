@@ -38,15 +38,7 @@ class RegisteredUserController extends Controller
         'suffix'          => 'nullable|string|max:10',
         'birthday'        => 'required|date',
         'sex'             => 'required|in:Male,Female',
-<<<<<<< HEAD
         'email'           => 'required|email|unique:users,email',
-=======
-<<<<<<< HEAD
-        'email'           => 'required|email|unique:users,email',
-=======
-        'email'           => 'nullable|email|unique:users,email',
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
         'username'        => 'nullable|string|unique:users,username|max:50',
         'password'        => ['required','confirmed', Password::min(8)],
         'contact_number'  => 'nullable|string|max:50',
@@ -62,15 +54,7 @@ class RegisteredUserController extends Controller
         }
 
         // Auto-generate email if empty
-<<<<<<< HEAD
        // $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
-=======
-<<<<<<< HEAD
-       // $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
-=======
-        $email = $validated['email'] ?? strtolower($validated['lrn']) . '@student.school';
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
 
         // Auto-generate username if empty
         $username = $validated['username'] ?? strtolower(substr($validated['first_name'],0,1) . $validated['last_name'] . rand(100,999));
@@ -87,15 +71,7 @@ class RegisteredUserController extends Controller
             'suffix'      => $validated['suffix'],
             'birthday'    => $validated['birthday'],
             'username'    => $username,
-<<<<<<< HEAD
             'email' => $validated['email'],
-=======
-<<<<<<< HEAD
-            'email' => $validated['email'],
-=======
-            'email'       => $email,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
             'password'    => Hash::make($validated['password']),
             'role_id'     => $studentRole->id,
         ]);
@@ -109,15 +85,7 @@ class RegisteredUserController extends Controller
             'suffix'         => $validated['suffix'],
             'birthday'       => $validated['birthday'],
             'sex'            => $validated['sex'],
-<<<<<<< HEAD
             'email' => $validated['email'],
-=======
-<<<<<<< HEAD
-            'email' => $validated['email'],
-=======
-            'email'          => $email,
->>>>>>> 613e1229c52f180efb9f6039d1dc4243eba34df1
->>>>>>> 7945d1551f9510fadfced8469c757ebd7da4a99a
             'contact_number' => $validated['contact_number'] ?? null,
             'address'        => $validated['address'] ?? null,
             'photo'          => $validated['photo'] ?? null,

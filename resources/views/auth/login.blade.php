@@ -611,7 +611,7 @@ function imageSlider() {
                     </div>
                     
                     <div class="absolute -bottom-2 -left-6 bg-white px-4 py-3 rounded-xl shadow-xl border border-slate-100">
-                        <p class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">Est. 2004</p>
+                        <p class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600"></p>
                     </div>
                 </div>
                 

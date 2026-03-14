@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 12, 2026 at 02:27 PM
+-- Generation Time: Mar 14, 2026 at 01:35 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -148,7 +148,8 @@ CREATE TABLE `enrollments` (
 --
 
 INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
-(4, 171, 1, 55, 'enrolled', '2026-03-12 02:22:41', '2026-03-12 02:22:41');
+(4, 171, 1, 55, 'enrolled', '2026-03-12 02:22:41', '2026-03-12 02:22:41'),
+(5, 165, 1, 55, 'enrolled', '2026-03-12 18:39:49', '2026-03-12 18:39:49');
 
 -- --------------------------------------------------------
 
@@ -182,6 +183,20 @@ CREATE TABLE `grades` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `grades`
+--
+
+INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `component`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
+(13, 171, 93, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
+(14, 171, 94, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
+(15, 171, 95, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
+(16, 171, 96, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
+(17, 171, 93, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
+(18, 171, 94, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
+(19, 171, 95, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
+(20, 171, 96, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25');
 
 -- --------------------------------------------------------
 
@@ -333,7 +348,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (84, '2026_03_01_141005_add_graduation_year_to_students_table', 72),
 (85, '2026_03_11_154124_create_messages_table', 72),
 (86, '2026_03_11_193109_add_social_login_to_users_table', 73),
-(87, '2026_03_12_123619_add_target_fields_to_announcements_table', 74);
+(87, '2026_03_12_123619_add_target_fields_to_announcements_table', 74),
+(88, '2026_03_13_131535_add_columns_to_teachers_table', 75);
 
 -- --------------------------------------------------------
 
@@ -424,7 +440,10 @@ INSERT INTO `sections` (`id`, `name`, `year_level`, `teacher_id`, `created_at`, 
 (55, 'SAMPAGUITA', 'Kindergarten', 42, '2026-02-23 17:39:40', '2026-02-23 18:04:41', 40, 1),
 (56, 'ROSAL', 'Grade 1', 42, '2026-02-23 18:06:38', '2026-02-23 18:06:46', 40, 1),
 (57, 'MABINI', 'Grade 2', NULL, '2026-03-11 17:15:19', '2026-03-11 17:15:19', 40, 1),
-(58, 'ANGELES', 'Grade 3', NULL, '2026-03-11 17:15:41', '2026-03-11 17:15:41', 40, 1);
+(58, 'ANGELES', 'Grade 3', NULL, '2026-03-11 17:15:41', '2026-03-11 17:15:41', 40, 1),
+(59, 'ALAMA', 'G1,G2', NULL, '2026-03-13 04:12:26', '2026-03-13 04:12:26', 40, 1),
+(60, 'RUBIA', 'G1,G2', NULL, '2026-03-13 04:12:26', '2026-03-13 04:12:26', 40, 1),
+(61, 'BARTOLOME', 'GRADE 1', NULL, '2026-03-13 04:31:00', '2026-03-13 04:31:00', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -469,6 +488,13 @@ CREATE TABLE `section_teacher` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `section_teacher`
+--
+
+INSERT INTO `section_teacher` (`id`, `teacher_id`, `section_id`, `created_at`, `updated_at`) VALUES
+(3, 16, 61, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -489,7 +515,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1UdHJ9puploS4keii76FsnBF4MEhQjsuDvJjkSMm', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNzBibHV3WmQxbkFFbVNOdzNUODJmaE4xYWVZbjFVVjVyR2NteEFSMiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773325586);
+('pP5Z8T8jZv2rVKTvUfl7ZfWOMYlby7Tc8WFQslYe', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRGdtUUlUek1JRXpEb3owb0pZMTE3eXJFaWh3UkcweVJheXVpNTJrTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773451955);
 
 -- --------------------------------------------------------
 
@@ -632,8 +658,16 @@ CREATE TABLE `teachers` (
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `suffix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birthday` date DEFAULT NULL,
+  `sex` enum('Male','Female') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `contact_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `school` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `division` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `grade_levels` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `section_names` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `employee_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_hired` date DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -647,18 +681,20 @@ CREATE TABLE `teachers` (
   `female_enrollment` int NOT NULL DEFAULT '0',
   `prepared_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `conforme` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `approved_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `approved_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `teaching_load` json DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `teachers`
 --
 
-INSERT INTO `teachers` (`id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `email`, `contact_number`, `employee_id`, `date_hired`, `photo`, `advisory_section_id`, `created_at`, `updated_at`, `position`, `years_experience`, `grade_experience`, `male_enrollment`, `female_enrollment`, `prepared_by`, `conforme`, `approved_by`) VALUES
-(3, 42, 'Juan', 'De La', 'Cruz', 'Jr.', '1995-01-02', 'juandelacruz@gmail.com', '09759264665', NULL, NULL, 'teachers/vfBy76oKfAqrV4qt3iNPb13ODfAqDd5vTxr8wrQ1.jpg', NULL, '2026-02-10 23:50:01', '2026-03-12 05:07:47', 'Principal I', 4, '1', 14, 13, 'Mae Harriet M. De la Pena, EdD', 'Alelyn D. Nocete', 'Beda Jovenciana D. Agor, EdD'),
-(14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(15, 173, 'Jerome', 'Valdez', 'Ponce', NULL, '1999-01-12', 'jeromeponce@gmail.com', NULL, NULL, NULL, 'teachers/BKwFoTYcTTA1noA3wCp5WmJC8y6EdVXYB3fqD7r6.jpg', NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', NULL, 0, NULL, 0, 0, NULL, NULL, NULL),
-(16, 174, 'Margarette', 'Mondragon', 'Bartolome', NULL, '2000-02-19', 'mondragonmarga@gmail.com', NULL, NULL, NULL, 'teachers/a6i8tV7zSS1FdfUhSPWr531tKzaUJK3jcWXNnrTA.jpg', NULL, '2026-03-11 17:18:53', '2026-03-11 17:18:53', NULL, 0, NULL, 0, 0, NULL, NULL, NULL);
+INSERT INTO `teachers` (`id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `sex`, `email`, `contact_number`, `address`, `school`, `district`, `division`, `region`, `grade_levels`, `section_names`, `employee_id`, `date_hired`, `photo`, `advisory_section_id`, `created_at`, `updated_at`, `position`, `years_experience`, `grade_experience`, `male_enrollment`, `female_enrollment`, `prepared_by`, `conforme`, `approved_by`, `teaching_load`) VALUES
+(3, 42, 'Juan', 'De La', 'Cruz', 'Jr.', '1995-01-02', NULL, 'juandelacruz@gmail.com', '09759264665', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '11111', NULL, 'teachers/vfBy76oKfAqrV4qt3iNPb13ODfAqDd5vTxr8wrQ1.jpg', NULL, '2026-02-10 23:50:01', '2026-03-13 04:59:55', 'Principal I', 4, '1', 11, 12, 'Mae Harriet M. De la Pena, EdD', 'Alelyn D. Nocete', 'Beda Jovenciana D. Agor, EdD', NULL),
+(14, 167, 'Teacher', NULL, 'Cruz', NULL, '1991-10-10', NULL, 'teacher@tugaweES.edu.ph', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'teachers/jfCAZii52Fw8DNkycp0lA6AnLOKNV6Q42jzEHQoy.jpg', NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', NULL, 0, NULL, 0, 0, NULL, NULL, NULL, NULL),
+(15, 173, 'Jerome', 'Valdez', 'Ponce', NULL, '1999-01-12', NULL, 'jeromeponce@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'teachers/BKwFoTYcTTA1noA3wCp5WmJC8y6EdVXYB3fqD7r6.jpg', NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', NULL, 0, NULL, 0, 0, NULL, NULL, NULL, NULL),
+(16, 174, 'Margarette', 'Mondragon', 'Bartolome', NULL, '2000-02-19', NULL, 'mondragonmarga@gmail.com', '+639636084589', 'LIBJO, DAUIN, NEGROS ORIENTAL, PHILIPPINES', NULL, NULL, NULL, NULL, NULL, NULL, '120231000', NULL, 'teachers/JUmVcRIEWZE8Wocr2wStiRiY9qI7UZH6J2cZdfdQ.jpg', NULL, '2026-03-11 17:18:53', '2026-03-13 06:48:16', 'Teacher I', 9, '1', 13, 20, 'Mae Harriet M. De la Pena, EdD', 'Margarette Mondragon Bartolome', 'Beda Jovenciana D. Agor, EdD', NULL),
+(21, 180, 'Juanne', 'Jones', 'Salas', 'PhD', '1990-12-12', 'Female', 'juannejones@gmail.com', '09636084577', 'Libjo, Dauin, Negros Oriental, 6217, Philippines', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'teachers/F8OuS7pWF1PZ46bsF9XfpygY16Wwjhq7JcvtJIxQ.jpg', NULL, '2026-03-13 06:40:23', '2026-03-13 06:40:23', NULL, 0, NULL, 0, 0, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -676,6 +712,13 @@ CREATE TABLE `teaching_loads` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `teaching_loads`
+--
+
+INSERT INTO `teaching_loads` (`id`, `teacher_id`, `session`, `time`, `minutes`, `subject`, `created_at`, `updated_at`) VALUES
+(14, 16, 'Morning', '8:00-9:00 AM', 60, 'MAPEH 1', '2026-03-13 06:48:16', '2026-03-13 06:48:16');
 
 -- --------------------------------------------------------
 
@@ -710,7 +753,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `google_id`, `facebook_id`, `avatar`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'REmWPJocnwezMde6jqmEHVqS9ylqZzjvi6inpfu10CfQjH2WOe4QvWTOLqJp', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
+(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'kuwLJU1HvC355Y8jNS6xRKRP7KrWu6xGWq9zHPDa86QOMhU4ZJ8GEcfl1hVE', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
 (2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', NULL, NULL, NULL, 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
 (42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, NULL, NULL, NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 5, NULL),
 (165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, NULL, NULL, NULL, '2026-02-23 04:21:36', '2026-03-11 13:56:15', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 4, NULL),
@@ -719,7 +762,8 @@ INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, 
 (172, 4, 'noimebaldomartalorete@gmail.com', NULL, '$2y$12$tfhx3MPyNJEaGZhVmAW10OhChE9kdslq0pXKFTzGEzDeFZbgpTTbu', NULL, NULL, NULL, NULL, '2026-03-11 17:09:34', '2026-03-11 17:09:34', 'Noime', 'Talorete', 'Baldomar', NULL, '2003-06-11', 'evarocksredhell', 0, NULL),
 (173, 2, 'jeromeponce@gmail.com', NULL, '$2y$12$Rn4zdkRZTP47hgqDYhFXdeEp79j65FshRqwMjPAM9fwT/pt15DUM6', NULL, NULL, NULL, NULL, '2026-03-11 17:17:30', '2026-03-11 17:17:30', 'Jerome', 'Valdez', 'Ponce', NULL, NULL, 'romeponce89', 0, NULL),
 (174, 2, 'mondragonmarga@gmail.com', NULL, '$2y$12$Rforz9fj.KayUrbXNRtxkuSs9GzCwj1T3g5EEebOm8aSx.sAv6rxC', NULL, NULL, NULL, NULL, '2026-03-11 17:18:53', '2026-03-11 17:18:53', 'Margarette', 'Mondragon', 'Bartolome', NULL, NULL, 'marga112', 0, NULL),
-(175, 4, 'cresttuayon07@gmail.com', NULL, '$2y$12$tvuBk.2swcATs5DKGZ32F.XCvMRsIUBdjVH4RkDd5DHOBpg5jozgS', NULL, NULL, NULL, NULL, '2026-03-11 17:21:57', '2026-03-12 06:22:35', 'Cres', 'Bajado', 'Tuayon', NULL, '2004-01-07', 'ctuayon540', 1, NULL);
+(175, 4, 'cresttuayon07@gmail.com', NULL, '$2y$12$tvuBk.2swcATs5DKGZ32F.XCvMRsIUBdjVH4RkDd5DHOBpg5jozgS', NULL, NULL, NULL, NULL, '2026-03-11 17:21:57', '2026-03-12 06:22:35', 'Cres', 'Bajado', 'Tuayon', NULL, '2004-01-07', 'ctuayon540', 1, NULL),
+(180, 2, 'juannejones@gmail.com', NULL, '$2y$12$VHXAdeVDqKmnn/niw0T.oul4CnloZ31y3ATePZh.yRBOnNSwzo8Ne', NULL, NULL, NULL, NULL, '2026-03-13 06:40:23', '2026-03-13 06:40:23', 'Juanne', 'Jones', 'Salas', 'PhD', NULL, 'juanne23', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -987,7 +1031,7 @@ ALTER TABLE `attendance_records`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -999,7 +1043,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1017,7 +1061,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1035,7 +1079,7 @@ ALTER TABLE `school_years`
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `section_student`
@@ -1053,7 +1097,7 @@ ALTER TABLE `section_subject`
 -- AUTO_INCREMENT for table `section_teacher`
 --
 ALTER TABLE `section_teacher`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -1077,19 +1121,19 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `teaching_loads`
 --
 ALTER TABLE `teaching_loads`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `year_levels`

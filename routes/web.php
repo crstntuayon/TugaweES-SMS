@@ -360,8 +360,9 @@ Route::middleware(['auth'])->prefix('student')->name('student.')->group(function
 
     
 // routes/web.php
-Route::put('/admin/teachers/{teacher}/program', [App\Http\Controllers\Admin\TeacherController::class, 'updateProgram'])->name('admin.teachers.program.update');
-
+Route::post('/admin/teachers/{teacher}/program', [App\Http\Controllers\Admin\TeacherController::class, 'updateProgram'])
+    ->name('admin.teachers.program');
+    
 Route::get('/admin/user-search',
     [AdminUserController::class, 'liveSearch']
 )->name('admin.user.search');
@@ -469,4 +470,30 @@ Route::prefix('auth')->group(function () {
         ->name('social.callback')
         ->where('provider', 'google|facebook');
 });
+
+
+// MARCH 14, 2O26
+use App\Http\Controllers\Teacher\SFController;
+
+Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function () {
+
+    Route::prefix('school-forms')->name('school-forms.')->group(function () {
+
+        Route::get('/sf1/{student}', [SFController::class, 'sf1'])->name('sf1');
+        Route::get('/sf2/{student}', [SFController::class, 'sf2'])->name('sf2');
+        Route::get('/sf3/{student}', [SFController::class, 'sf3'])->name('sf3');
+        Route::get('/sf4/{student}', [SFController::class, 'sf4'])->name('sf4');
+        Route::get('/sf5/{student}', [SFController::class, 'sf5'])->name('sf5');
+        Route::get('/sf6/{student}', [SFController::class, 'sf6'])->name('sf6');
+        Route::get('/sf7/{student}', [SFController::class, 'sf7'])->name('sf7');
+        Route::get('/sf8/{student}', [SFController::class, 'sf8'])->name('sf8');
+        Route::get('/sf9/{student}', [SFController::class, 'sf9'])->name('sf9');
+        Route::get('/sf10/{student}', [SFController::class, 'sf10'])->name('sf10');
+
+
+    });
+
+});
+
+
 require __DIR__.'/auth.php';

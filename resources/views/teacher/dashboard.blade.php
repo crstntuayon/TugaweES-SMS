@@ -127,32 +127,30 @@
     </aside>
 
 
-    <div class="flex-1 transition-all duration-300" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
-        
-        <header class="h-50 bg-white border-b border-gray-200 flex items-center px-8 sticky top-0 z-40">
-            <div x-show="sidebarOpen" class="px-6 py-6 border-b border-gray-50 bg-gray-50/50">
+   <div class="flex-1 transition-all duration-300" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
+    
+    <header class="h-50 bg-white border-b border-gray-200 flex items-center px-8 sticky top-0 z-40">
+        <div x-show="sidebarOpen" class="px-6 py-6 border-b border-gray-50 bg-gray-50/50">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" class="h-10 w-10 rounded-full ring-2 ring-emerald-300 shadow-sm">
                 <div class="overflow-hidden">
                     <p class="text-sm font-bold text-gray-800 truncate">
-    {{ auth()->user()->first_name }}
-    @if(auth()->user()->middle_name)
-        {{ auth()->user()->middle_name }}
-    @endif
-    {{ auth()->user()->last_name }}
-    @if(auth()->user()->suffix)
-        {{ auth()->user()->suffix }}
-    @endif
-</p>
+                        {{ auth()->user()->first_name }}
+                        @if(auth()->user()->middle_name)
+                            {{ auth()->user()->middle_name }}
+                        @endif
+                        {{ auth()->user()->last_name }}
+                        @if(auth()->user()->suffix)
+                            {{ auth()->user()->suffix }}
+                        @endif
+                    </p>
                     <p class="text-xs text-gray-500 truncate">Tugawe Elementary School</p>
                 </div>
             </div>
         </div>
-        
-            
-        </header>
+    </header>
 
-       @if($sections->isEmpty())
+    @if($sections->isEmpty())
         <div class="bg-white rounded-3xl shadow-xl p-10 text-center">
             <div class="text-gray-500 text-lg font-medium">
                 You are not assigned to any section yet.
@@ -167,7 +165,6 @@
 
             <!-- SECTION HEADER -->
             <div class="bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-600 text-white p-6 flex flex-col md:flex-row md:justify-between md:items-center">
-
                 <div>
                     <h2 class="text-2xl font-bold tracking-wide">
                         {{ $section->year_level }} - {{ $section->name }}
@@ -192,217 +189,370 @@
 
             <!-- STATS CARDS -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 bg-gray-50">
+                <div class="bg-white rounded-2xl shadow-sm p-5 text-center relative">
+                    <p class="text-sm text-gray-500">Total Students</p>
+                    <p class="text-3xl font-bold text-gray-800">
+                        {{ $section->students->count() }}
+                    </p>
 
-               <div class="bg-white rounded-2xl shadow-sm p-5 text-center relative">
-    <p class="text-sm text-gray-500">Total Students</p>
-    <p class="text-3xl font-bold text-gray-800">
-        {{ $section->students->count() }}
-    </p>
-
-    <!-- Unenroll All Button -->
-    <form action="{{ route('teacher.sections.unenrollAll', $section->id) }}" method="POST"
-          onsubmit="return confirm('Are you sure you want to unenroll all students in this section?')"
-          class="mt-3">
-        @csrf
-        @method('PUT')
-        <button type="submit"
-                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm shadow">
-            Unenroll All
-        </button>
-    </form>
-</div>
-
-              
+                    <!-- Unenroll All Button -->
+                    <form action="{{ route('teacher.sections.unenrollAll', $section->id) }}" method="POST"
+                          onsubmit="return confirm('Are you sure you want to unenroll all students in this section?')"
+                          class="mt-3">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm shadow transition-all duration-200 hover:shadow-lg">
+                            Unenroll All
+                        </button>
+                    </form>
+                </div>
             </div>
 
-       <!-- STUDENTS (SIDE BY SIDE) -->
-<div class="p-6">
+            <!-- STUDENTS (SIDE BY SIDE) -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {{-- ================= MALE STUDENTS ================= --}}
+                    <div class="bg-white rounded-2xl border border-blue-100 shadow-sm flex flex-col">
+                        <!-- Card Header -->
+                        <div class="bg-blue-50 px-6 py-4 border-b border-blue-100 rounded-t-2xl">
+                            <h3 class="text-lg font-bold text-blue-700 flex justify-between">
+                                <span>Male Students</span>
+                                <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                                    {{ $section->students->where('sex','Male')->count() }}
+                                </span>
+                            </h3>
+                        </div>
 
-        {{-- ================= MALE STUDENTS ================= --}}
-        <div class="bg-white rounded-2xl border border-blue-100 shadow-sm flex flex-col">
+                        <!-- Table -->
+                        <div class="overflow-auto flex-1">
+                            <table class="min-w-full text-sm">
+                                <tbody class="divide-y">
 
-            <!-- Card Header -->
-            <div class="bg-blue-50 px-6 py-4 border-b border-blue-100 rounded-t-2xl">
-                <h3 class="text-lg font-bold text-blue-700 flex justify-between">
-                    <span>Male Students</span>
-                    <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-                        {{ $section->students->where('sex','Male')->count() }}
-                    </span>
-                </h3>
+                                    @php
+                                        $maleStudents = $section->students
+                                            ->where('sex', 'Male')
+                                            ->sortBy(function($student) {
+                                                return $student->last_name . ' ' . $student->first_name;
+                                            });
+                                    @endphp
+
+                                    @forelse($maleStudents as $index => $student)
+                                        <tr class="hover:bg-blue-50/70 transition-colors duration-200 group">
+
+                                            <td class="px-4 py-4 text-gray-500 w-10 font-medium">
+                                                {{ $index + 1 }}
+                                            </td>
+
+                                            <td class="px-4 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <img
+                                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                                        class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200">
+
+                                                    <div>
+                                                        <p class="font-semibold text-gray-800 text-sm">
+                                                            {{ $student->last_name }},
+                                                            {{ $student->first_name }}
+                                                            {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
+                                                            {{ $student->suffix ? ' '.$student->suffix : '' }}
+                                                        </p>
+                                                        <p class="text-xs text-gray-400 font-mono tracking-wide">
+                                                            {{ $student->school_id }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <!-- ACTION DROPDOWN -->
+                                            <td class="px-4 py-4 text-right">
+                                                <div class="relative" x-data="{ open: false }">
+                                                    <button 
+                                                        @click="open = !open" 
+                                                        @click.away="open = false"
+                                                        class="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1">
+                                                        <span>Actions</span>
+                                                        <svg class="w-3 h-3 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Dropdown Menu -->
+                                                    <div 
+                                                        x-show="open" 
+                                                        x-transition:enter="transition ease-out duration-200"
+                                                        x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                                        x-transition:leave="transition ease-in duration-150"
+                                                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                                        x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                                                        class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden max-h-96 overflow-y-auto"
+                                                        style="display: none;">
+                                                        
+                                                        <!-- SF Forms Group -->
+                                                        <div class="bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider sticky top-0 z-10">
+                                                            School Forms (SF1-SF10)
+                                                        </div>
+                                                        
+                                                        <div class="grid grid-cols-1 gap-0.5 p-1">
+                                                            <!-- SF1-SF5 -->
+                                                            <a href="{{ route('teacher.school-forms.sf1', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                                                                <span class="truncate">SF1 - School Register</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf2', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                                                                <span class="truncate">SF2 - Daily Attendance</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf3', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                                                                <span class="truncate">SF3 - Books Issued/Returned</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf4', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                                                                <span class="truncate">SF4 - Monthly Attendance</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf5', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
+                                                                <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
+                                                            </a>
+                                                            
+                                                            <!-- SF6-SF10 -->
+                                                            <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
+                                                                <span class="truncate">SF6 - Summarized Report</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
+                                                                <span class="truncate">SF7 - School Personnel</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf8', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">8</span>
+                                                                <span class="truncate">SF8 - Health/Nutrition</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf9', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">9</span>
+                                                                <span class="truncate">SF9 - Progress Report Card</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf10', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">10</span>
+                                                                <span class="truncate">SF10 - Permanent Academic Record</span>
+                                                            </a>
+                                                        </div>
+
+                                                        <!-- Divider -->
+                                                        <div class="border-t border-gray-100 my-1"></div>
+
+                                                        <!-- Unenroll Action -->
+                                                        <div class="p-1">
+                                                            <form action="{{ route('teacher.students.unenroll', $student->id) }}" method="POST" onsubmit="return confirm('Unenroll {{ $student->first_name }} {{ $student->last_name }}? This action cannot be undone.')">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150 text-left">
+                                                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                                                    </svg>
+                                                                    <span>Unenroll Student</span>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center py-8 text-gray-400">
+                                                <div class="flex flex-col items-center gap-2">
+                                                    <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                                    </svg>
+                                                    <span>No male students enrolled</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {{-- ================= FEMALE STUDENTS ================= --}}
+                    <div class="bg-white rounded-2xl border border-pink-100 shadow-sm flex flex-col">
+                        <!-- Card Header -->
+                        <div class="bg-pink-50 px-6 py-4 border-b border-pink-100 rounded-t-2xl">
+                            <h3 class="text-lg font-bold text-pink-700 flex justify-between">
+                                <span>Female Students</span>
+                                <span class="text-sm bg-pink-100 text-pink-700 px-3 py-1 rounded-full">
+                                    {{ $section->students->where('sex','Female')->count() }}
+                                </span>
+                            </h3>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-auto flex-1">
+                            <table class="min-w-full text-sm">
+                                <tbody class="divide-y">
+
+                                    @php
+                                        $femaleStudents = $section->students
+                                            ->where('sex', 'Female')
+                                            ->sortBy(function($student) {
+                                                return $student->last_name . ' ' . $student->first_name;
+                                            });
+                                    @endphp
+
+                                    @forelse($femaleStudents as $index => $student)
+                                        <tr class="hover:bg-pink-50/70 transition-colors duration-200 group">
+
+                                            <td class="px-4 py-4 text-gray-500 w-10 font-medium">
+                                                {{ $index + 1 }}
+                                            </td>
+
+                                            <td class="px-4 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <img
+                                                        src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
+                                                        class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform duration-200">
+
+                                                    <div>
+                                                        <p class="font-semibold text-gray-800 text-sm">
+                                                            {{ $student->last_name }},
+                                                            {{ $student->first_name }}
+                                                            {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
+                                                            {{ $student->suffix ? ' '.$student->suffix : '' }}
+                                                        </p>
+                                                        <p class="text-xs text-gray-400 font-mono tracking-wide">
+                                                            {{ $student->school_id }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <!-- ACTION DROPDOWN -->
+                                            <td class="px-4 py-4 text-right">
+                                                <div class="relative" x-data="{ open: false }">
+                                                    <button 
+                                                        @click="open = !open" 
+                                                        @click.away="open = false"
+                                                        class="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1">
+                                                        <span>Actions</span>
+                                                        <svg class="w-3 h-3 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Dropdown Menu -->
+                                                    <div 
+                                                        x-show="open" 
+                                                        x-transition:enter="transition ease-out duration-200"
+                                                        x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                                        x-transition:leave="transition ease-in duration-150"
+                                                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                                        x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                                                        class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden max-h-96 overflow-y-auto"
+                                                        style="display: none;">
+                                                        
+                                                          <!-- SF Forms Group -->
+                                                        <div class="bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider sticky top-0 z-10">
+                                                            School Forms (SF1-SF10)
+                                                        </div>
+                                                        
+                                                        <div class="grid grid-cols-1 gap-0.5 p-1">
+                                                            <!-- SF1-SF5 -->
+                                                            <a href="{{ route('teacher.school-forms.sf1', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                                                                <span class="truncate">SF1 - School Register</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf2', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                                                                <span class="truncate">SF2 - Daily Attendance</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf3', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                                                                <span class="truncate">SF3 - Books Issued/Returned</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf4', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                                                                <span class="truncate">SF4 - Monthly Attendance</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf5', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
+                                                                <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
+                                                            </a>
+                                                            
+                                                            <!-- SF6-SF10 -->
+                                                            <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
+                                                                <span class="truncate">SF6 - Summarized Report</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
+                                                                <span class="truncate">SF7 - School Personnel</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf8', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">8</span>
+                                                                <span class="truncate">SF8 - Health/Nutrition</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf9', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">9</span>
+                                                                <span class="truncate">SF9 - Progress Report Card</span>
+                                                            </a>
+                                                            <a href="{{ route('teacher.school-forms.sf10', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">10</span>
+                                                                <span class="truncate">SF10 - Permanent Academic Record</span>
+                                                            </a>
+                                                        </div>
+                                                        
+                                                        <!-- Divider -->
+                                                        <div class="border-t border-gray-100 my-1"></div>
+
+                                                        <!-- Unenroll Action -->
+                                                        <div class="p-1">
+                                                            <form action="{{ route('teacher.students.unenroll', $student->id) }}" method="POST" onsubmit="return confirm('Unenroll {{ $student->first_name }} {{ $student->last_name }}? This action cannot be undone.')">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150 text-left">
+                                                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                                                    </svg>
+                                                                    <span>Unenroll Student</span>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center py-8 text-gray-400">
+                                                <div class="flex flex-col items-center gap-2">
+                                                    <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                                    </svg>
+                                                    <span>No female students enrolled</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-
-            <!-- Table -->
-            <div class="overflow-auto flex-1">
-                <table class="min-w-full text-sm">
-                    <tbody class="divide-y">
-
-                       @php
-    $maleStudents = $section->students
-        ->where('sex', 'Male')
-        ->sortBy(function($student) {
-            return $student->last_name . ' ' . $student->first_name;
-        });
-@endphp
-
-                        @forelse($maleStudents as $index => $student)
-                            <tr class="hover:bg-blue-50 transition">
-
-                                <td class="px-4 py-4 text-gray-500 w-10">
-                                    {{ $index + 1 }}
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex items-center gap-3">
-
-                                        <img
-                                            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                                            class="w-10 h-10 rounded-full object-cover border shadow-sm">
-
-                                        <div>
-                                            <p class="font-semibold text-gray-800 text-sm">
-                                                {{ $student->last_name }},
-                                                {{ $student->first_name }}
-                                                {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
-                                                {{ $student->suffix ? ' '.$student->suffix : '' }}
-                                            </p>
-                                            <p class="text-xs text-gray-400">
-                                                {{ $student->school_id }}
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4 text-right">
-                                    <form action="{{ route('teacher.students.unenroll', $student->id) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Unenroll this student?')">
-                                        @csrf
-                                        @method('PUT')
-                                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs shadow">
-                                            Unenroll
-                                        </button>
-                                    </form>
-                                </td>
-
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center py-6 text-gray-400">
-                                    No male students
-                                </td>
-                            </tr>
-                        @endforelse
-
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-
-
-        {{-- ================= FEMALE STUDENTS ================= --}}
-        <div class="bg-white rounded-2xl border border-pink-100 shadow-sm flex flex-col">
-
-            <!-- Card Header -->
-            <div class="bg-pink-50 px-6 py-4 border-b border-pink-100 rounded-t-2xl">
-                <h3 class="text-lg font-bold text-pink-700 flex justify-between">
-                    <span>Female Students</span>
-                    <span class="text-sm bg-pink-100 text-pink-700 px-3 py-1 rounded-full">
-                        {{ $section->students->where('sex','Female')->count() }}
-                    </span>
-                </h3>
-            </div>
-
-            <!-- Table -->
-            <div class="overflow-auto flex-1">
-                <table class="min-w-full text-sm">
-                    <tbody class="divide-y">
-
-                       @php
-    $femaleStudents = $section->students
-        ->where('sex', 'Female')
-        ->sortBy(function($student) {
-            return $student->last_name . ' ' . $student->first_name;
-        });
-@endphp
-                        @forelse($femaleStudents as $index => $student)
-                            <tr class="hover:bg-pink-50 transition">
-
-                                <td class="px-4 py-4 text-gray-500 w-10">
-                                    {{ $index + 1 }}
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <div class="flex items-center gap-3">
-
-                                        <img
-                                            src="{{ $student->photo ? asset('storage/'.$student->photo) : asset('images/photo-placeholder.png') }}"
-                                            class="w-10 h-10 rounded-full object-cover border shadow-sm">
-
-                                        <div>
-                                            <p class="font-semibold text-gray-800 text-sm">
-                                                {{ $student->last_name }},
-                                                {{ $student->first_name }}
-                                                {{ $student->middle_name ? ' '.$student->middle_name[0].'.' : '' }}
-                                                {{ $student->suffix ? ' '.$student->suffix : '' }}
-                                            </p>
-                                            <p class="text-xs text-gray-400">
-                                                {{ $student->school_id }}
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                </td>
-
-                                <td class="px-4 py-4 text-right">
-                                    <form action="{{ route('teacher.students.unenroll', $student->id) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Unenroll this student?')">
-                                        @csrf
-                                        @method('PUT')
-                                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs shadow">
-                                            Unenroll
-                                        </button>
-                                    </form>
-                                </td>
-
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center py-6 text-gray-400">
-                                    No female students
-                                </td>
-                            </tr>
-                        @endforelse
-
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
 
         @endforeach
     </div>
-    </div>
 </div>
-
-
-
-
-
-<main class="max-w-7xl mx-auto space-y-12 px-4">
-
-    
-</main>
 
 
 

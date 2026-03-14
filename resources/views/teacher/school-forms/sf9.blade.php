@@ -344,7 +344,7 @@
         <span>↩️</span> Reset
     </button>
     
-    <a href="{{ route('admin.students.index') }}" class="btn btn-secondary" style="text-decoration: none;">
+    <a href="{{ route('teacher.dashboard') }}" class="btn btn-secondary" style="text-decoration: none;">
         <span>←</span> Back
     </a>
     
@@ -352,6 +352,19 @@
         Auto-saves to browser
     </div>
 </div>
+
+<!-- Mobile Hamburger Menu -->
+<div class="hamburger-menu no-print">
+    <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+    <div id="mobileDropdown" class="dropdown-content">
+        <button onclick="toggleEditMode()">✏️ Edit Mode</button>
+        <button onclick="window.print()">🖨️ Print</button>
+        <button onclick="saveData()">💾 Save</button>
+        <button onclick="resetForm()">↩️ Reset</button>
+        <a href="{{ route('teacher.dashboard') }}">← Back</a>
+    </div>
+</div>
+
 
 <!-- Paper Info -->
 <div class="paper-info no-print">
@@ -594,25 +607,25 @@
                 <tr>
                     <td style="text-align: left; padding-left: 6px;">{{ $subject->name }}</td>
                     <td style="text-align: center; font-weight: {{ $q1 ? 'bold' : 'normal' }}; color: {{ $q1 ? ($q1 >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
-                        {{ $q1 ?? '-' }}
+                        {{ $q1 ?? '' }}
                     </td>
                     <td style="text-align: center; font-weight: {{ $q2 ? 'bold' : 'normal' }}; color: {{ $q2 ? ($q2 >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
-                        {{ $q2 ?? '-' }}
+                        {{ $q2 ?? '' }}
                     </td>
                     <td style="text-align: center; font-weight: {{ $q3 ? 'bold' : 'normal' }}; color: {{ $q3 ? ($q3 >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
-                        {{ $q3 ?? '-' }}
+                        {{ $q3 ?? '' }}
                     </td>
                     <td style="text-align: center; font-weight: {{ $q4 ? 'bold' : 'normal' }}; color: {{ $q4 ? ($q4 >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
-                        {{ $q4 ?? '-' }}
+                        {{ $q4 ?? '' }}
                     </td>
                     <td style="text-align: center; font-weight: bold; font-size: 9pt; color: {{ $final ? ($final >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
-                        {{ $final ? round($final) : '-' }}
+                        {{ $final ? round($final) : '' }}
                     </td>
                     <td style="text-align: center; font-weight: {{ $final ? 'bold' : 'normal' }}; color: {{ $final ? ($final >= 75 ? '#059669' : '#dc2626') : '#9ca3af' }};">
                         @if($final !== null)
                             {{ $final >= 75 ? 'Passed' : 'Failed' }}
                         @else
-                            -
+                            
                         @endif
                     </td>
                 </tr>

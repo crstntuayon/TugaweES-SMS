@@ -33,7 +33,10 @@ class Teacher extends Model
     'female_enrollment',
     'prepared_by',
     'conforme',
-    'approved_by'
+    'approved_by',
+
+
+     'address', 'sex',
 
         ];
 

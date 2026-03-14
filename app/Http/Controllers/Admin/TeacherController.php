@@ -59,10 +59,17 @@ public function store(Request $request)
         'last_name' => 'required|string|max:255',
         'suffix' => 'nullable|string|max:50',
         'birthday' => 'required|date',
+          'sex' => 'required|in:male,female',  // or 'Male,Female' - must match form values!
         'email' => 'required|email|unique:users,email',
         'username' => 'required|unique:users,username',
         'password' => 'required|confirmed|min:6',
         'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+       'street_address' => 'required|string',
+    'city' => 'required|string',
+    'state_province' => 'required|string',
+    'postal_code' => 'required|string',
+    'country' => 'required|string',
+        'contact_number' => 'required|string|max:20', 
     ]);
 
     DB::transaction(function () use ($request, $validated) {
@@ -74,6 +81,15 @@ public function store(Request $request)
             $photoPath = $request->file('photo')
                 ->store('teachers', 'public');
         }
+
+          // Combine address fields
+        $fullAddress = implode(', ', [
+            $validated['street_address'],
+            $validated['city'],
+            $validated['state_province'],
+            $validated['postal_code'],
+            $validated['country']
+        ]);
 
         // CREATE USER (role_id = 3 → Teacher)
         $user = User::create([
@@ -96,8 +112,11 @@ public function store(Request $request)
             'last_name' => $validated['last_name'],
             'suffix' => $validated['suffix'],
             'birthday' => $validated['birthday'],
+              'sex' => $validated['sex'], 
+                'contact_number' => $validated['contact_number'], // ADD THIS
             'email' => $validated['email'],
             'photo' => $photoPath,
+             'address' => $fullAddress,  
         ]);
     });
 
@@ -228,80 +247,136 @@ public function store(Request $request)
 public function updateProgram(Request $request, Teacher $teacher)
 {
     $data = $request->validate([
-        'position' => 'nullable|string|max:255',
+        // Personal Info - ADD THESE NEW FIELDS
+        'first_name' => 'nullable|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'last_name' => 'nullable|string|max:255',
+        'suffix' => 'nullable|string|max:50',
+        'employee_id' => 'nullable|string|max:255',
+        'birthdate' => 'nullable|date',           // NEW
+        'sex' => 'nullable|string|in:Male,Female', // NEW
+        'contact_number' => 'nullable|string|max:255',
+        'address' => 'nullable|string|max:500',    // NEW
+        
+        // Assignment - ADD THESE
+        'school' => 'nullable|string|max:255',
+        'district' => 'nullable|string|max:255',
+        'division' => 'nullable|string|max:255',
+        'region' => 'nullable|string|max:255',     // NEW
+        'grade_levels' => 'nullable|string|max:255',
+        'section_names' => 'nullable|string|max:255',
         'years_experience' => 'nullable|numeric',
         'grade_experience' => 'nullable|string|max:255',
         'male_enrollment' => 'nullable|numeric',
         'female_enrollment' => 'nullable|numeric',
+        
+        // Signatures
+        'position' => 'nullable|string|max:255',
         'prepared_by' => 'nullable|string|max:255',
         'conforme' => 'nullable|string|max:255',
         'approved_by' => 'nullable|string|max:255',
 
-        'teaching_load' => 'nullable|array',
-        'teaching_load.*.id' => 'nullable|exists:teaching_loads,id',
-        'teaching_load.*.time' => 'required|string',
-        'teaching_load.*.minutes' => 'required|numeric',
-        'teaching_load.*.subject' => 'required|string',
+        // Teaching Load - ADD THESE FIELDS
+        'teaching_load' => 'nullable|string',
+        'teaching_load.*.time' => 'nullable|string',
+        'teaching_load.*.minutes' => 'nullable|numeric',
+        'teaching_load.*.subject' => 'nullable|string',
+        'teaching_load.*.grade_section' => 'nullable|string',  // NEW
+        'teaching_load.*.remarks' => 'nullable|string',         // NEW
+        
+        // Photo
+        'photo' => 'nullable|image|max:2048',
     ]);
 
-    // Update teacher information
+    // Handle photo upload
+    if ($request->hasFile('photo')) {
+        if ($teacher->photo) {
+            Storage::disk('public')->delete($teacher->photo);
+        }
+        $path = $request->file('photo')->store('teachers', 'public');
+        $teacher->photo = $path;
+    }
+
+    // Parse teaching load from JSON
+    $teachingLoad = [];
+    if (!empty($data['teaching_load'])) {
+        $teachingLoad = json_decode($data['teaching_load'], true) ?? [];
+    }
+
+    // UPDATE ALL FIELDS - Make sure your database has these columns!
     $teacher->update([
-        'position' => $data['position'] ?? $teacher->position,
+        // Personal Info
+        'first_name' => $data['first_name'] ?? $teacher->first_name,
+        'middle_name' => $data['middle_name'] ?? $teacher->middle_name,
+        'last_name' => $data['last_name'] ?? $teacher->last_name,
+        'suffix' => $data['suffix'] ?? $teacher->suffix,
+        'employee_id' => $data['employee_id'] ?? $teacher->employee_id,
+        'birthday' => $data['birthday'] ?? $teacher->birthday,           // NEW
+        'sex' => $data['sex'] ?? $teacher->sex,                             // NEW
+        'contact_number' => $data['contact_number'] ?? $teacher->contact_number,
+        'address' => $data['address'] ?? $teacher->address,                 // NEW
+        
+        // Assignment
+        'school' => $data['school'] ?? $teacher->school,
+        'district' => $data['district'] ?? $teacher->district,
+        'division' => $data['division'] ?? $teacher->division,
+        'region' => $data['region'] ?? $teacher->region,                    // NEW
         'years_experience' => $data['years_experience'] ?? $teacher->years_experience,
         'grade_experience' => $data['grade_experience'] ?? $teacher->grade_experience,
         'male_enrollment' => $data['male_enrollment'] ?? $teacher->male_enrollment,
         'female_enrollment' => $data['female_enrollment'] ?? $teacher->female_enrollment,
+        
+        // Position & Signatures
+        'position' => $data['position'] ?? $teacher->position,
         'prepared_by' => $data['prepared_by'] ?? $teacher->prepared_by,
         'conforme' => $data['conforme'] ?? $teacher->conforme,
         'approved_by' => $data['approved_by'] ?? $teacher->approved_by,
     ]);
 
-    // Collect IDs that are still present
-    $existingIds = collect($data['teaching_load'] ?? [])
-        ->pluck('id')
-        ->filter()
-        ->toArray();
-
-    // 🔴 DELETE rows removed from UI
-    $teacher->teachingLoad()
-        ->whereNotIn('id', $existingIds)
-        ->delete();
-
-    // Update or Create rows
-    foreach ($data['teaching_load'] ?? [] as $load) {
-
-        if (!empty($load['id'])) {
-
-            TeachingLoad::where('id', $load['id'])
-                ->where('teacher_id', $teacher->id)
-                ->update([
-                    'time' => $load['time'],
-                    'minutes' => $load['minutes'],
-                    'subject' => $load['subject'],
-                ]);
-
-        } else {
-
+    // Handle teaching load with ALL fields
+    if (!empty($teachingLoad)) {
+        // Clear existing and recreate (simpler approach)
+        $teacher->teachingLoad()->delete();
+        
+        foreach ($teachingLoad as $load) {
+            if (empty($load['time']) && empty($load['subject'])) continue;
+            
             $teacher->teachingLoad()->create([
-                'time' => $load['time'],
-                'minutes' => $load['minutes'],
-                'subject' => $load['subject'],
+                'time' => $load['time'] ?? '',
+                'minutes' => $load['minutes'] ?? 0,
+                'subject' => $load['subject'] ?? '',
+                'grade_section' => $load['grade_section'] ?? '',  // NEW
+                'remarks' => $load['remarks'] ?? '',              // NEW
             ]);
         }
     }
 
-// Reload updated relations
-$teacher->load(['sections', 'teachingLoad']);
+    // Handle sections
+    if (!empty($data['section_names'])) {
+        $sectionNames = array_map('trim', explode(',', $data['section_names']));
+        $sectionIds = [];
+        
+        foreach ($sectionNames as $sectionName) {
+            if (empty($sectionName)) continue;
+            
+            $section = \App\Models\Section::firstOrCreate(
+                ['name' => $sectionName, 'school_year_id' => $activeSchoolYear->id ?? 1],
+                ['year_level' => $data['grade_levels'] ?? 'Grade 1']
+            );
+            $sectionIds[] = $section->id;
+        }
+        
+        $teacher->sections()->sync($sectionIds);
+    }
 
-return response()->json([
-    'success' => true,
-    'teacher' => [
-        ...$teacher->toArray(),
-        'teaching_load' => $teacher->teachingLoad
-    ]
-]);
+    $teacher->load(['sections', 'teachingLoad']);
 
+    return response()->json([
+        'success' => true,
+        'teacher' => $teacher
+    ]);
 }
+
 
 }
     

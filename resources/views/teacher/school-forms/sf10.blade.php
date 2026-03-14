@@ -473,7 +473,7 @@
         <span>↩️</span> Reset
     </button>
     
-    <a href="{{ route('admin.students.index') }}" class="btn btn-secondary" style="text-decoration: none;">
+    <a href="{{ route('teacher.dashboard') }}" class="btn btn-secondary" style="text-decoration: none;">
         <span>←</span> Back
     </a>
     
@@ -490,9 +490,38 @@
         <button onclick="window.print()">🖨️ Print</button>
         <button onclick="saveData()">💾 Save</button>
         <button onclick="resetForm()">↩️ Reset</button>
-        <a href="{{ route('admin.students.index') }}">← Back</a>
+        <a href="{{ route('teacher.dashboard') }}">← Back</a>
     </div>
 </div>
+
+<!-- Paper Info -->
+<div class="paper-info no-print">
+    <div>Detected Paper: <span class="detected-size" id="detectedPaper">A4</span></div>
+    <div style="font-size: 7pt; color: #666; margin-top: 4px;">
+        Layout auto-adjusts to fit any paper size
+    </div>
+</div> 
+<style>
+     /* Paper size indicator */
+        .paper-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 9pt;
+            z-index: 1000;
+            max-width: 250px;
+        }
+
+        .paper-info .detected-size {
+            font-weight: bold;
+            color: #059669;
+        }
+</style>
+
 
 @php
     $quarters = [1, 2, 3, 4];

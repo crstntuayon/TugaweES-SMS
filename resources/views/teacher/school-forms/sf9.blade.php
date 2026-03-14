@@ -315,6 +315,66 @@
             font-weight: bold;
             color: #059669;
         }
+        /* Hamburger menu for mobile */
+        .hamburger-menu {
+            display: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .toolbar {
+                display: none;
+            }
+            
+            .hamburger-menu {
+                display: block;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+            
+            .hamburger-btn {
+                background: #2563eb;
+                color: white;
+                border: none;
+                padding: 10px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14pt;
+            }
+            
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background: white;
+                min-width: 200px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            
+            .dropdown-content.show {
+                display: block;
+            }
+            
+            .dropdown-content button, .dropdown-content a {
+                display: block;
+                width: 100%;
+                padding: 12px;
+                border: none;
+                background: none;
+                text-align: left;
+                cursor: pointer;
+                font-size: 10pt;
+                color: #374151;
+                text-decoration: none;
+            }
+            
+            .dropdown-content button:hover, .dropdown-content a:hover {
+                background: #f3f4f6;
+            }
+}
     </style>
 </head>
 <body>

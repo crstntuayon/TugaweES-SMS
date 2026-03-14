@@ -490,6 +490,8 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
         Route::get('/sf9/{student}', [SFController::class, 'sf9'])->name('sf9');
         Route::get('/sf10/{student}', [SFController::class, 'sf10'])->name('sf10');
 
+        
+
 
     });
 

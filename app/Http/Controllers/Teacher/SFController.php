@@ -8,15 +8,32 @@ use App\Models\Subject;
 use App\Models\Grade;
 use App\Models\Enrollment;
 use App\Models\SchoolYear;
+use App\Models\Section;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SFController extends Controller
 {
-    public function sf1($student)
-    {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf1', compact('student'));
-    }
+   public function sf1($section)
+{
+    $students = Student::where('school_year_id', 1)
+        ->orderBy('last_name')
+        ->orderBy('first_name')
+        ->get();
+
+    $maleStudents = $students->where('sex', 'Male');
+    $femaleStudents = $students->where('sex', 'Female');
+
+    $school = auth()->user()->school;
+
+    return view('teacher.school-forms.sf1', compact(
+        'students',
+        'maleStudents',
+        'femaleStudents',
+        'school'
+    ));
+}
 
     public function sf2($student)
     {

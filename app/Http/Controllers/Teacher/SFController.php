@@ -13,7 +13,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Attendance;
+use Carbon\Carbon;
 use App\Models\School;
+
+
 
 class SFController extends Controller
 {
@@ -121,6 +125,19 @@ public function sf2(Request $request, Section $section)
         'attendances'
     ));
 }
+
+public function selectSectionSF2()
+{
+     $teacher = Auth::user();
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $sections = Section::where('teacher_id', $teacher->id)
+            ->where('school_year_id', $activeSchoolYear?->id)
+            ->withCount('students')
+            ->get();
+
+   return view('teacher.school-forms.sf2-section-select', compact('sections', 'activeSchoolYear'));
+}
     /**
      * SF2 - Daily Attendance Report (PDF Export)
      */
@@ -216,30 +233,222 @@ public function sf3(Student $student)
     /**
      * SF4 - Monthly Attendance (View)
      */
-    public function sf4(Student $student)
+     public function sf4(Request $request)
     {
-        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        $selectedMonth = $request->get('month', now()->format('m'));
+        $selectedYear = $request->get('year', now()->format('Y'));
         
-        return view('teacher.school-forms.sf4', compact('student', 'activeSchoolYear'));
+        // Get school info
+        $school = School::first();
+        $activeSchoolYear = SchoolYear::where('is_active', 1)->first();
+        
+        // Get teacher's sections
+        $teacher = auth()->user();
+        $sections = Section::where('teacher_id', $teacher->id)
+            ->where('school_year_id', $activeSchoolYear?->id)
+            ->with('students')
+            ->get();
+        
+        // Calculate monthly data for each grade level
+        $monthlyData = [];
+        foreach ($sections as $section) {
+            $gradeLevel = 'Grade ' . $section->year_level;
+            
+            // Get students in this section
+            $students = $section->students;
+            $maleCount = $students->where('sex', 'Male')->count();
+            $femaleCount = $students->where('sex', 'Female')->count();
+            
+            // Get attendance data for the month
+            $attendanceStats = $this->calculateSectionAttendance(
+                $section, 
+                $selectedMonth, 
+                $selectedYear
+            );
+            
+            // Get dropout/transfer data (you'll need to adjust based on your actual data structure)
+            $dropoutStats = $this->calculateMovementStats(
+                $section,
+                $selectedMonth,
+                $selectedYear,
+                'dropout'
+            );
+            
+            $transferOutStats = $this->calculateMovementStats(
+                $section,
+                $selectedMonth,
+                $selectedYear,
+                'transfer_out'
+            );
+            
+            $transferInStats = $this->calculateMovementStats(
+                $section,
+                $selectedMonth,
+                $selectedYear,
+                'transfer_in'
+            );
+            
+            $monthlyData[] = [
+                'level' => $gradeLevel,
+                'section_name' => $section->name,
+                'adviser' => $teacher->full_name ?? $teacher->name,
+                'registered' => [
+                    'male' => $maleCount,
+                    'female' => $femaleCount,
+                    'total' => $maleCount + $femaleCount,
+                ],
+                'attendance' => $attendanceStats,
+                'dropout' => $dropoutStats,
+                'transfer_out' => $transferOutStats,
+                'transfer_in' => $transferInStats,
+            ];
+        }
+        
+        // Calculate totals
+        $totals = $this->calculateTotals($monthlyData);
+        
+        return view('teacher.school-forms.sf4', compact(
+            'school',
+            'activeSchoolYear',
+            'selectedMonth',
+            'selectedYear',
+            'monthlyData',
+            'totals'
+        ));
     }
 
     /**
-     * SF4 - Monthly Attendance (PDF Export)
+     * Calculate attendance statistics for a section
      */
-    public function sf4Export(Student $student)
-    {
-        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
-        
-        $pdf = PDF::loadView('teacher.school-forms.sf4-pdf', compact('student', 'activeSchoolYear'))
-            ->setPaper('legal', 'landscape')
-            ->setOption('margin-top', 0.5)
-            ->setOption('margin-bottom', 0.5);
-        
-        $filename = 'SF4_Monthly_Attendance_' . $student->last_name . '_' . $student->first_name . '.pdf';
-        
-        return $pdf->download($filename);
-    }
+   /**
+ * Calculate attendance statistics for a section
+ */
+private function calculateSectionAttendance($section, $month, $year)
+{
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $studentIds = $section->students->pluck('id');
     
+    // Get all attendance records for this section's students in the month
+    $attendances = Attendance::whereIn('student_id', $studentIds)
+        ->whereMonth('date', $month)
+        ->whereYear('date', $year)
+        ->get();
+    
+    $totalPresent = $attendances->where('status', 'P')->count();
+    $totalAbsent = $attendances->where('status', 'A')->count();
+    $totalTardy = $attendances->where('status', 'T')->count();
+    $totalRecords = $attendances->count();
+    
+    // Get school days array and count
+    $schoolDaysArray = $this->getSchoolDays($month, $year);
+    $schoolDaysCount = count($schoolDaysArray); // FIX: Get the count, not the array
+    
+    // Calculate average daily attendance
+    $averageDaily = $schoolDaysCount > 0 ? round($totalPresent / $schoolDaysCount, 1) : 0;
+    
+    // Calculate percentage
+    $studentCount = count($studentIds);
+    $totalPossible = $studentCount * $schoolDaysCount; // FIX: Use count here too
+    $percentage = $totalPossible > 0 ? round(($totalPresent / $totalPossible) * 100, 1) : 0;
+    
+    return [
+        'daily_average' => $averageDaily,
+        'percentage' => $percentage,
+    ];
+}
+
+    /**
+     * Calculate movement statistics (dropouts/transfers)
+     */
+    private function calculateMovementStats($section, $month, $year, $type)
+    {
+        // This is placeholder logic - adjust based on your actual database structure
+        // You might have a separate table for tracking dropouts/transfers
+        
+        $currentMonthCount = 0; // Query your database for current month
+        $previousCumulative = 0; // Query for cumulative before this month
+        
+        return [
+            'previous_male' => 0,
+            'previous_female' => 0,
+            'previous_total' => $previousCumulative,
+            'current_male' => 0,
+            'current_female' => 0,
+            'current_total' => $currentMonthCount,
+            'cumulative_male' => 0,
+            'cumulative_female' => 0,
+            'cumulative_total' => $previousCumulative + $currentMonthCount,
+        ];
+    }
+
+    /**
+     * Get school days (excluding weekends)
+     */
+    private function getSchoolDays($month, $year)
+    {
+        $schoolDays = [];
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $date = Carbon::create($year, $month, $day);
+            // Exclude weekends (0 = Sunday, 6 = Saturday)
+            if (!in_array($date->dayOfWeek, [0, 6])) {
+                $schoolDays[] = $day;
+            }
+        }
+        
+        return $schoolDays;
+    }
+
+    /**
+     * Calculate totals across all grade levels
+     */
+    private function calculateTotals($monthlyData)
+    {
+        $totals = [
+            'registered_male' => 0,
+            'registered_female' => 0,
+            'registered_total' => 0,
+            'attendance_daily' => 0,
+            'attendance_percentage' => 0,
+            'dropout_previous' => 0,
+            'dropout_current' => 0,
+            'dropout_cumulative' => 0,
+            'transfer_out_previous' => 0,
+            'transfer_out_current' => 0,
+            'transfer_out_cumulative' => 0,
+            'transfer_in_previous' => 0,
+            'transfer_in_current' => 0,
+            'transfer_in_cumulative' => 0,
+        ];
+        
+        foreach ($monthlyData as $data) {
+            $totals['registered_male'] += $data['registered']['male'];
+            $totals['registered_female'] += $data['registered']['female'];
+            $totals['registered_total'] += $data['registered']['total'];
+            
+            $totals['attendance_daily'] += $data['attendance']['daily_average'];
+            $totals['dropout_previous'] += $data['dropout']['previous_total'];
+            $totals['dropout_current'] += $data['dropout']['current_total'];
+            $totals['dropout_cumulative'] += $data['dropout']['cumulative_total'];
+            
+            $totals['transfer_out_previous'] += $data['transfer_out']['previous_total'];
+            $totals['transfer_out_current'] += $data['transfer_out']['current_total'];
+            $totals['transfer_out_cumulative'] += $data['transfer_out']['cumulative_total'];
+            
+            $totals['transfer_in_previous'] += $data['transfer_in']['previous_total'];
+            $totals['transfer_in_current'] += $data['transfer_in']['current_total'];
+            $totals['transfer_in_cumulative'] += $data['transfer_in']['cumulative_total'];
+        }
+        
+        // Average the attendance percentage
+        $count = count($monthlyData);
+        $totals['attendance_percentage'] = $count > 0 ? 
+            round(array_sum(array_column(array_column($monthlyData, 'attendance'), 'percentage')) / $count, 1) : 0;
+        
+        return $totals;
+    }
+
     /**
      * SF5 - Report on Promotion (View)
      */

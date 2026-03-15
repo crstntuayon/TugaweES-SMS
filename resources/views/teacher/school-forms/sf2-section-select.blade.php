@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Section - SF1 | School Register</title>
+    <title>Select Section - SF2 | Daily Attendance</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #e0e7ff;
-            --secondary: #ec4899;
-            --accent: #8b5cf6;
+            --primary: #059669;
+            --primary-dark: #047857;
+            --primary-light: #d1fae5;
+            --secondary: #10b981;
+            --accent: #34d399;
             --success: #10b981;
             --info: #0ea5e9;
             --warning: #f59e0b;
@@ -55,9 +55,9 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse 50% 30% at 50% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 50% 100%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -152,14 +152,14 @@
         }
 
         .hero-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 24px;
             padding: 48px;
             color: white;
             position: relative;
             overflow: hidden;
             box-shadow: 
-                0 20px 40px -10px rgba(79, 70, 229, 0.3),
+                0 20px 40px -10px rgba(5, 150, 105, 0.3),
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         }
 
@@ -181,7 +181,7 @@
             left: -5%;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -300,14 +300,14 @@
             font-size: 1.125rem;
         }
 
-        .stat-icon-box.blue {
+        .stat-icon-box.emerald {
             background: var(--primary-light);
             color: var(--primary);
         }
 
-        .stat-icon-box.pink {
-            background: #fce7f3;
-            color: var(--secondary);
+        .stat-icon-box.teal {
+            background: #ccfbf1;
+            color: #0d9488;
         }
 
         .stat-icon-box.green {
@@ -420,9 +420,9 @@
         .section-card:hover {
             transform: translateY(-4px) scale(1.01);
             box-shadow: 
-                0 20px 40px -12px rgba(79, 70, 229, 0.15),
-                0 0 0 1px rgba(79, 70, 229, 0.1);
-            border-color: rgba(79, 70, 229, 0.2);
+                0 20px 40px -12px rgba(5, 150, 105, 0.15),
+                0 0 0 1px rgba(5, 150, 105, 0.1);
+            border-color: rgba(5, 150, 105, 0.2);
         }
 
         .card-top {
@@ -458,7 +458,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 20px;
-            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.3);
         }
 
         .section-name {
@@ -610,7 +610,7 @@
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.3);
         }
 
         /* Footer */
@@ -724,17 +724,17 @@
     <header class="top-header">
         <div class="container">
             <nav class="nav-content">
-              
+               
                 
-                <div class="nav-center">
+                <div class="nav-center" style="text-align: center;">
                     <div class="breadcrumb">
                         <span>Teacher Portal</span>
                         <i class="fas fa-chevron-right"></i>
                         <span>School Forms</span>
                         <i class="fas fa-chevron-right"></i>
-                        <span style="color: var(--primary);">SF1</span>
+                        <span style="color: var(--primary);">SF2</span>
                     </div>
-                    <div class="page-title-nav">School Register</div>
+                    <div class="page-title-nav">Daily Attendance</div>
                 </div>
 
                 <div class="nav-right" style="width: 140px;">
@@ -752,11 +752,11 @@
                 <div class="hero-card">
                     <div class="hero-content">
                         <div class="hero-icon">
-                            <i class="fas fa-clipboard-list"></i>
+                            <i class="fas fa-calendar-check"></i>
                         </div>
                         <div class="hero-text">
                             <h1>Select Section</h1>
-                            <p>Choose a section to view and generate the School Register (SF1)</p>
+                            <p>Choose a section to record and manage daily learner attendance</p>
                             <div class="badge-group">
                                 @if($activeSchoolYear)
                                     <div class="badge">
@@ -794,7 +794,7 @@
                     </div>
                     <div class="stat-value">{{ $sections->sum(function($s) { return $s->students->count(); }) }}</div>
                 </div>
-               <div class="stat-card">
+                <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-label">Current Month</span>
                         <div class="stat-icon-box gray">
@@ -829,14 +829,14 @@
                             $femaleCount = $section->students->where('sex', 'Female')->count();
                             $totalCount = $maleCount + $femaleCount;
                         @endphp
-                        <a href="{{ route('teacher.school-forms.sf1', $section->id) }}" class="section-card">
+                        <a href="{{ route('teacher.school-forms.sf2', $section->id) }}" class="section-card">
                             <div class="card-top">
                                 <span class="card-badge">Grade {{ $section->year_level }}</span>
                                 <div class="section-icon-wrap">
                                     {{ substr($section->name, 0, 2) }}
                                 </div>
                                 <div class="section-name">
-                                    {{ $section->year_level }} - {{ $section->name }}
+                                    Grade {{ $section->year_level }} - {{ $section->name }}
                                 </div>
                                 <div class="section-meta">
                                     <i class="fas fa-user-graduate" style="margin-right: 6px;"></i>
@@ -865,7 +865,7 @@
                                     </div>
                                 </div>
                                 <div class="card-action">
-                                    <span class="action-text">View School Register</span>
+                                    <span class="action-text">Record Attendance</span>
                                     <div class="action-arrow">
                                         <i class="fas fa-arrow-right"></i>
                                     </div>
@@ -1082,12 +1082,12 @@
             <div class="footer-links">
                 <a href="#">Help Center</a>
                 <a href="#">DepEd Guidelines</a>
-                <a href="#">SF1 Manual</a>
+                <a href="#">SF2 Manual</a>
                 <a href="#">Support</a>
             </div>
             <p>
                 <i class="fas fa-shield-alt" style="margin-right: 8px; color: var(--primary);"></i>
-                School Form 1 (SF1) - School Register | DepEd Official Form
+                School Form 2 (SF2) - Daily Attendance Report of Learners | DepEd Official Form
             </p>
             <p style="margin-top: 8px; font-size: 0.8rem; opacity: 0.7;">
                 © 2024 School Management System. All rights reserved.

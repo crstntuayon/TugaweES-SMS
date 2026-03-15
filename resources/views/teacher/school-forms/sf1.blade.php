@@ -990,16 +990,8 @@
                         <i class="fas fa-rotate-left"></i>
                         <span>Reset</span>
                     </button>
-                    
-                    <button onclick="exportToExcel()" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i>
-                        <span>Export</span>
-                    </button>
                    
-                    <a href="{{ route('teacher.school-forms.sf1.select-section') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Back</span>
-                    </a>
+                    
                 </div>
 
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -1015,15 +1007,6 @@
                         <i class="fas fa-rotate-left"></i>
                         <span>Reset</span>
                     </button>
-                    <button onclick="exportToExcel(); toggleMobileMenu();" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i>
-                        <span>Export</span>
-                    </button>
-                    
-                    <a href="{{ route('teacher.school-forms.sf1.select-section') }}" class="btn btn-secondary" onclick="toggleMobileMenu()">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Back</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -1440,12 +1423,187 @@
         </div>
     </main>
 
-    <!-- Floating Action Buttons (Mobile) -->
-    <div class="floating-actions">
-        <button onclick="window.print()" class="fab fab-primary" title="Print">
-            <i class="fas fa-print"></i>
-        </button>
-    </div>
+   <!-- Floating Action Button Container -->
+<div class="fab-container">
+    <a href="{{ route('teacher.school-forms.sf1.select-section') }}" class="fab-button fab-back" title="Back to Dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span class="fab-tooltip">Back to Dashboard</span>
+    </a>
+    
+    <button onclick="window.print()" class="fab-button fab-print" title="Print SF1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span class="fab-tooltip">Print SF1</span>
+    </button>
+</div>
+
+<style>
+    /* CSS Variables (add to your existing :root) */
+    :root {
+        --primary: #1e3a8a;
+        --primary-dark: #1e40af;
+        --primary-light: #3b82f6;
+        --text: #0f172a;
+    }
+
+    /* Floating Action Button Container */
+    .fab-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        z-index: 1000;
+        align-items: flex-end;
+    }
+    
+    .fab-button {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .fab-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .fab-button:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .fab-button:hover::before {
+        opacity: 1;
+    }
+    
+    .fab-button:active {
+        transform: translateY(-2px) scale(0.98);
+    }
+    
+    .fab-button svg {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2.5;
+        transition: transform 0.3s;
+    }
+    
+    .fab-button:hover svg {
+        transform: scale(1.1);
+    }
+    
+    /* Back Button - White with subtle shadow */
+    .fab-back {
+        background: white;
+        color: var(--text);
+    }
+    
+    .fab-back:hover {
+        background: #f8fafc;
+        color: var(--primary);
+    }
+    
+    /* Print Button - Primary color */
+    .fab-print {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+    }
+    
+    .fab-print:hover {
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    }
+    
+    /* Tooltip for FAB buttons */
+    .fab-tooltip {
+        position: absolute;
+        right: 70px;
+        background: rgba(30, 41, 59, 0.9);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(10px);
+        transition: all 0.3s;
+        backdrop-filter: blur(8px);
+    }
+    
+    .fab-button:hover .fab-tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+    
+    /* Pulse animation for print button */
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3); }
+        50% { box-shadow: 0 4px 20px rgba(30, 58, 138, 0.5), 0 0 0 8px rgba(30, 58, 138, 0.1); }
+    }
+    
+    .fab-print {
+        animation: pulse 2s infinite;
+    }
+    
+    .fab-print:hover {
+        animation: none;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .fab-container {
+            bottom: 1.5rem;
+            right: 1.5rem;
+            gap: 0.75rem;
+        }
+        
+        .fab-button {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .fab-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .fab-tooltip {
+            display: none; /* Hide tooltips on mobile */
+        }
+    }
+
+    /* Print styles - hide FAB when printing */
+    @media print {
+        .fab-container {
+            display: none !important;
+        }
+    }
+</style>
 
     <!-- Reset Confirmation Modal -->
     <div class="modal-overlay" id="resetModal">

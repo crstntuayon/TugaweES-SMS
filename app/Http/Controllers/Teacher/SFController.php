@@ -15,67 +15,248 @@ use Illuminate\Support\Facades\Auth;
 
 class SFController extends Controller
 {
-   public function sf1($section)
+ public function sf1SectionSelect()
+    {
+        $teacher = Auth::user();
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $sections = Section::where('teacher_id', $teacher->id)
+            ->where('school_year_id', $activeSchoolYear?->id)
+            ->withCount('students')
+            ->get();
+        
+        return view('teacher.school-forms.sf1-section-select', compact('sections', 'activeSchoolYear'));
+    }
+
+    /**
+     * Display SF1 for a specific section
+     */
+    public function sf1($section)
+    {
+        $section = Section::with(['students', 'schoolYear'])->findOrFail($section);
+        
+        if ($section->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to this section.');
+        }
+        
+        $school = (object) [
+            'school_id' => '123456',
+            'name' => 'Tugawe Elementary School',
+            'region' => 'NIR - Negros Island Region',
+            'division' => 'Division of Negros Oriental',
+            'district' => 'Dauin District',
+            'principal' => ''
+        ];
+        
+        $activeSchoolYear = $section->schoolYear;
+        $adviser = $section->teacher?->full_name ?? Auth::user()->full_name;
+        
+        $students = $section->students()
+            ->orderBy('sex', 'desc')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+        
+        $maleStudents = $students->where('sex', 'Male');
+        $femaleStudents = $students->where('sex', 'Female');
+        
+        return view('teacher.school-forms.sf1', compact(
+            'section',
+            'school',
+            'activeSchoolYear',
+            'adviser',
+            'students',
+            'maleStudents',
+            'femaleStudents'
+        ));
+    }
+
+     /**
+     * SF2 - Daily Attendance Report (View)
+     */
+  /**
+ * SF2 - Daily Attendance Report (View)
+ */
+public function sf2(Request $request, Section $section)
 {
-    $students = Student::where('school_year_id', 1)
+    $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+    
+    // Get current year and month from request or default to current date
+    $year = $request->input('year', date('Y'));
+    $month = $request->input('month', date('m'));
+    
+    // If month is provided as "2024-01" format (from input type="month")
+    if ($request->has('month')) {
+        $monthValue = $request->input('month');
+        if (strlen($monthValue) == 7 && strpos($monthValue, '-') !== false) {
+            list($year, $month) = explode('-', $monthValue);
+        }
+    }
+    
+    // Get students
+    $studentIds = \App\Models\Enrollment::where('section_id', $section->id)
+        ->where('school_year_id', $activeSchoolYear->id)
+        ->pluck('student_id');
+    
+    $students = Student::whereIn('id', $studentIds)
         ->orderBy('last_name')
         ->orderBy('first_name')
         ->get();
-
-    $maleStudents = $students->where('sex', 'Male');
-    $femaleStudents = $students->where('sex', 'Female');
-
-    $school = auth()->user()->school;
-
-    return view('teacher.school-forms.sf1', compact(
-        'students',
-        'maleStudents',
-        'femaleStudents',
-        'school'
+    
+    // Get attendance data for the selected month/year
+    $attendances = \App\Models\Attendance::whereIn('student_id', $studentIds)
+        ->whereYear('date', $year)
+        ->whereMonth('date', $month)
+        ->get()
+        ->groupBy('student_id');
+            
+    return view('teacher.school-forms.sf2', compact(
+        'section', 
+        'students', 
+        'activeSchoolYear',
+        'year',
+        'month',
+        'attendances'
     ));
 }
-
-    public function sf2($student)
+    /**
+     * SF2 - Daily Attendance Report (PDF Export)
+     */
+  /**
+ * SF2 - Daily Attendance Report (PDF Export)
+ */
+public function sf2Export(Request $request, Section $section)
+{
+    $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+    
+    $month = $request->input('month', date('m'));
+    $year = $request->input('year', date('Y'));
+    
+    $studentIds = \App\Models\Enrollment::where('section_id', $section->id)
+        ->where('school_year_id', $activeSchoolYear->id)
+        ->pluck('student_id');
+    
+    $students = Student::whereIn('id', $studentIds)
+        ->with(['attendances' => function($query) use ($year, $month) {
+            $query->whereYear('date', $year)
+                  ->whereMonth('date', $month);
+        }])
+        ->orderBy('last_name')
+        ->orderBy('first_name')
+        ->get();
+    
+    // FIX: Use 'teacher.school-forms.sf2' instead of 'sf2-pdf'
+    $pdf = PDF::loadView('teacher.school-forms.sf2', compact('section', 'students', 'activeSchoolYear', 'month', 'year'))
+        ->setPaper('legal', 'landscape')
+        ->setOption('margin-top', 0.5)
+        ->setOption('margin-bottom', 0.5)
+        ->setOption('margin-left', 0.5)
+        ->setOption('margin-right', 0.5);
+    
+    $filename = 'SF2_Daily_Attendance_' . $section->name . '_' . $activeSchoolYear->name . '.pdf';
+    
+    return $pdf->download($filename);
+}
+    
+    /**
+     * SF3 - Books Issued/Returned (View)
+     */
+    public function sf3(Student $student)
     {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf2', compact('student'));
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        return view('teacher.school-forms.sf3', compact('student', 'activeSchoolYear'));
     }
 
-    public function sf3($student)
+    /**
+     * SF3 - Books Issued/Returned (PDF Export)
+     */
+    public function sf3Export(Student $student)
     {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf3', compact('student'));
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $pdf = PDF::loadView('teacher.school-forms.sf3-pdf', compact('student', 'activeSchoolYear'))
+            ->setPaper('legal', 'portrait')
+            ->setOption('margin-top', 0.5)
+            ->setOption('margin-bottom', 0.5);
+        
+        $filename = 'SF3_Books_' . $student->last_name . '_' . $student->first_name . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+    
+    /**
+     * SF4 - Monthly Attendance (View)
+     */
+    public function sf4(Student $student)
+    {
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        return view('teacher.school-forms.sf4', compact('student', 'activeSchoolYear'));
     }
 
-     public function sf4($student)
+    /**
+     * SF4 - Monthly Attendance (PDF Export)
+     */
+    public function sf4Export(Student $student)
     {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf4', compact('student'));
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $pdf = PDF::loadView('teacher.school-forms.sf4-pdf', compact('student', 'activeSchoolYear'))
+            ->setPaper('legal', 'landscape')
+            ->setOption('margin-top', 0.5)
+            ->setOption('margin-bottom', 0.5);
+        
+        $filename = 'SF4_Monthly_Attendance_' . $student->last_name . '_' . $student->first_name . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+    
+    /**
+     * SF5 - Report on Promotion (View)
+     */
+    public function sf5(Section $section)
+    {
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $students = $section->students()
+            ->wherePivot('school_year_id', $activeSchoolYear->id)
+            ->with(['grades' => function($query) use ($activeSchoolYear) {
+                $query->where('school_year_id', $activeSchoolYear->id);
+            }])
+            ->get();
+            
+        return view('teacher.school-forms.sf5', compact('section', 'students', 'activeSchoolYear'));
     }
 
-     public function sf5($student)
+    /**
+     * SF5 - Report on Promotion (PDF Export)
+     */
+    public function sf5Export(Section $section)
     {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf5', compact('student'));
+        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
+        
+        $students = $section->students()
+            ->wherePivot('school_year_id', $activeSchoolYear->id)
+            ->with(['grades' => function($query) use ($activeSchoolYear) {
+                $query->where('school_year_id', $activeSchoolYear->id);
+            }])
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+        
+        $pdf = PDF::loadView('teacher.school-forms.sf5-pdf', compact('section', 'students', 'activeSchoolYear'))
+            ->setPaper('legal', 'landscape')
+            ->setOption('margin-top', 0.5)
+            ->setOption('margin-bottom', 0.5);
+        
+        $filename = 'SF5_Report_on_Promotion_' . $section->name . '_' . $activeSchoolYear->name . '.pdf';
+        
+        return $pdf->download($filename);
     }
+    
+  
 
-     public function sf6($student)
-    {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf6', compact('student'));
-    }
-
-     public function sf7($student)
-    {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf7', compact('student'));
-    }
-
-     public function sf8($student)
-    {
-        $student = Student::findOrFail($student);
-        return view('teacher.school-forms.sf8', compact('student'));
-    }
 
      public function sf9($student)
     {

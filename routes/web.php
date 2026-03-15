@@ -479,11 +479,28 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
 
     Route::prefix('school-forms')->name('school-forms.')->group(function () {
 
-        Route::get('/sf1/{student}', [SFController::class, 'sf1'])->name('sf1');
-        Route::get('/sf2/{student}', [SFController::class, 'sf2'])->name('sf2');
+       // SF1 Routes
+        Route::get('/sf1', [SFController::class, 'sf1SectionSelect'])
+            ->name('sf1.select-section');
+        Route::get('/sf1/section/{section}', [SFController::class, 'sf1'])
+            ->name('sf1');
+  // SF2 - Daily Attendance
+        Route::get('/sf2/{section}', [SFController::class, 'sf2'])->name('sf2');
+        Route::get('/sf2/{section}/export', [SFController::class, 'sf2Export'])->name('sf2.export');
+        
+        // SF3 - Books Issued/Returned
         Route::get('/sf3/{student}', [SFController::class, 'sf3'])->name('sf3');
+        Route::get('/sf3/{student}/export', [SFController::class, 'sf3Export'])->name('sf3.export');
+        
+        // SF4 - Monthly Attendance  
         Route::get('/sf4/{student}', [SFController::class, 'sf4'])->name('sf4');
-        Route::get('/sf5/{student}', [SFController::class, 'sf5'])->name('sf5');
+        Route::get('/sf4/{student}/export', [SFController::class, 'sf4Export'])->name('sf4.export');
+        
+        // SF5 - Report on Promotion
+        Route::get('/sf5/{section}', [SFController::class, 'sf5'])->name('sf5');
+        Route::get('/sf5/{section}/export', [SFController::class, 'sf5Export'])->name('sf5.export');
+
+        
         Route::get('/sf6/{student}', [SFController::class, 'sf6'])->name('sf6');
         Route::get('/sf7/{student}', [SFController::class, 'sf7'])->name('sf7');
         Route::get('/sf8/{student}', [SFController::class, 'sf8'])->name('sf8');
@@ -497,5 +514,17 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
 
 });
 
+
+use App\Models\Section;
+
+Route::get('/api/sections', function () {
+    return Section::with('teacher')->get();
+});
+
+Route::get('/api/sections/{id}/students', function ($id) {
+
+    return \App\Models\Student::where('section_id', $id)->get();
+
+});
 
 require __DIR__.'/auth.php';

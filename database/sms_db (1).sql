@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 14, 2026 at 03:52 AM
+-- Generation Time: Mar 15, 2026 at 03:27 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -65,28 +65,38 @@ CREATE TABLE `attendances` (
 --
 
 INSERT INTO `attendances` (`id`, `student_id`, `section_id`, `date`, `status`, `created_at`, `updated_at`) VALUES
-(241, 171, 55, '2026-03-02', 'absent', '2026-03-12 05:07:14', '2026-03-12 05:39:27'),
-(242, 171, 55, '2026-03-03', 'present', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(243, 171, 55, '2026-03-04', 'present', '2026-03-12 05:07:14', '2026-03-12 05:09:01'),
-(244, 171, 55, '2026-03-05', 'present', '2026-03-12 05:07:14', '2026-03-12 05:09:28'),
-(245, 171, 55, '2026-03-06', 'present', '2026-03-12 05:07:14', '2026-03-12 05:09:01'),
-(246, 171, 55, '2026-03-09', 'present', '2026-03-12 05:07:14', '2026-03-12 05:09:28'),
-(247, 171, 55, '2026-03-10', 'present', '2026-03-12 05:07:14', '2026-03-12 05:09:28'),
-(248, 171, 55, '2026-03-11', 'present', '2026-03-12 05:07:14', '2026-03-12 05:14:10'),
-(249, 171, 55, '2026-03-12', 'present', '2026-03-12 05:07:14', '2026-03-12 05:14:38'),
-(250, 171, 55, '2026-03-13', 'present', '2026-03-12 05:07:14', '2026-03-12 05:14:38'),
 (251, 171, 55, '2026-03-16', 'present', '2026-03-12 05:07:14', '2026-03-12 05:14:38'),
 (252, 171, 55, '2026-03-17', 'present', '2026-03-12 05:07:14', '2026-03-12 05:14:38'),
-(253, 171, 55, '2026-03-18', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(254, 171, 55, '2026-03-19', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(255, 171, 55, '2026-03-20', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(256, 171, 55, '2026-03-23', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(257, 171, 55, '2026-03-24', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(258, 171, 55, '2026-03-25', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(259, 171, 55, '2026-03-26', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(260, 171, 55, '2026-03-27', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(261, 171, 55, '2026-03-30', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14'),
-(262, 171, 55, '2026-03-31', 'none', '2026-03-12 05:07:14', '2026-03-12 05:07:14');
+(273, 165, 55, '2026-03-16', 'present', '2026-03-14 15:27:47', '2026-03-14 16:02:25'),
+(274, 165, 55, '2026-03-17', 'absent', '2026-03-14 15:27:47', '2026-03-14 16:02:25'),
+(285, 165, 55, '2026-03-18', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(286, 165, 55, '2026-03-19', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(287, 165, 55, '2026-03-20', 'late', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(288, 165, 55, '2026-03-23', 'late', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(289, 165, 55, '2026-03-24', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(290, 165, 55, '2026-03-25', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(291, 165, 55, '2026-03-26', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(292, 165, 55, '2026-03-27', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(293, 165, 55, '2026-03-30', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(294, 165, 55, '2026-03-31', 'absent', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(295, 171, 55, '2026-03-18', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(296, 171, 55, '2026-03-19', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(297, 171, 55, '2026-03-20', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(298, 171, 55, '2026-03-23', 'late', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(299, 171, 55, '2026-03-24', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(300, 171, 55, '2026-03-25', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(301, 171, 55, '2026-03-26', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(302, 171, 55, '2026-03-27', 'present', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(303, 171, 55, '2026-03-30', 'late', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(304, 171, 55, '2026-03-31', 'absent', '2026-03-14 16:06:23', '2026-03-14 16:06:23'),
+(307, 171, 55, '2026-03-02', 'present', '2026-03-14 16:11:56', '2026-03-14 16:11:56'),
+(308, 171, 55, '2026-03-03', 'present', '2026-03-14 16:12:09', '2026-03-14 16:12:09'),
+(309, 171, 55, '2026-03-04', 'absent', '2026-03-14 16:12:09', '2026-03-14 16:12:09'),
+(310, 165, 55, '2026-03-02', 'absent', '2026-03-14 16:12:30', '2026-03-14 16:12:30'),
+(311, 165, 55, '2026-03-03', 'present', '2026-03-14 16:12:30', '2026-03-14 16:12:30'),
+(312, 165, 55, '2026-03-04', 'present', '2026-03-14 16:12:30', '2026-03-14 16:12:30'),
+(313, 165, 55, '2026-03-05', 'late', '2026-03-14 16:12:30', '2026-03-14 16:12:30'),
+(314, 171, 55, '2026-03-05', 'present', '2026-03-14 16:12:42', '2026-03-14 16:12:42');
 
 -- --------------------------------------------------------
 
@@ -149,7 +159,9 @@ CREATE TABLE `enrollments` (
 
 INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
 (4, 171, 1, 55, 'enrolled', '2026-03-12 02:22:41', '2026-03-12 02:22:41'),
-(5, 165, 1, 55, 'enrolled', '2026-03-12 18:39:49', '2026-03-12 18:39:49');
+(5, 165, 1, 55, 'enrolled', '2026-03-12 18:39:49', '2026-03-12 18:39:49'),
+(6, 166, 1, 56, 'enrolled', '2026-03-13 21:54:24', '2026-03-13 21:54:24'),
+(7, 170, 1, 56, 'enrolled', '2026-03-14 19:11:04', '2026-03-14 19:11:04');
 
 -- --------------------------------------------------------
 
@@ -441,9 +453,9 @@ INSERT INTO `sections` (`id`, `name`, `year_level`, `teacher_id`, `created_at`, 
 (56, 'ROSAL', 'Grade 1', 42, '2026-02-23 18:06:38', '2026-02-23 18:06:46', 40, 1),
 (57, 'MABINI', 'Grade 2', NULL, '2026-03-11 17:15:19', '2026-03-11 17:15:19', 40, 1),
 (58, 'ANGELES', 'Grade 3', NULL, '2026-03-11 17:15:41', '2026-03-11 17:15:41', 40, 1),
-(59, 'ALAMA', 'G1,G2', NULL, '2026-03-13 04:12:26', '2026-03-13 04:12:26', 40, 1),
-(60, 'RUBIA', 'G1,G2', NULL, '2026-03-13 04:12:26', '2026-03-13 04:12:26', 40, 1),
-(61, 'BARTOLOME', 'GRADE 1', NULL, '2026-03-13 04:31:00', '2026-03-13 04:31:00', 40, 1);
+(59, 'ALAMA', 'Grade 2', NULL, '2026-03-13 04:12:26', '2026-03-14 15:25:10', 40, 1),
+(60, 'RUBIA', 'Grade 4', NULL, '2026-03-13 04:12:26', '2026-03-14 15:25:24', 40, 1),
+(61, 'BARTOLOME', 'Grade 5', NULL, '2026-03-13 04:31:00', '2026-03-14 15:25:45', 40, 1);
 
 -- --------------------------------------------------------
 
@@ -515,7 +527,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('pP5Z8T8jZv2rVKTvUfl7ZfWOMYlby7Tc8WFQslYe', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRGdtUUlUek1JRXpEb3owb0pZMTE3eXJFaWh3UkcweVJheXVpNTJrTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773460310);
+('ZFiDq7vJ35en4Lk6g2kbX27ApxFyLYuytL4T5nRO', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidll0ckhDZHMyMGJKUHFhOVVQSzFwYXZNdGdkaE45bWdoRThTbUN0ciI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL3NjaG9vbC1mb3Jtcy9zZjMvMTcxIjtzOjU6InJvdXRlIjtzOjI0OiJ0ZWFjaGVyLnNjaG9vbC1mb3Jtcy5zZjMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773545071);
 
 -- --------------------------------------------------------
 
@@ -753,7 +765,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `google_id`, `facebook_id`, `avatar`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
-(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'kuwLJU1HvC355Y8jNS6xRKRP7KrWu6xGWq9zHPDa86QOMhU4ZJ8GEcfl1hVE', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
+(1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'D9xeRWqYdIfhUpKKbLlLYsxwOGaikxzKUGB0M8E0oWcltPkcaTdMOvyW6F1I', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
 (2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', NULL, NULL, NULL, 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
 (42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, NULL, NULL, NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 5, NULL),
 (165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, NULL, NULL, NULL, '2026-02-23 04:21:36', '2026-03-11 13:56:15', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 4, NULL),
@@ -1019,7 +1031,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `attendances`
 --
 ALTER TABLE `attendances`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=315;
 
 --
 -- AUTO_INCREMENT for table `attendance_records`
@@ -1031,7 +1043,7 @@ ALTER TABLE `attendance_records`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`

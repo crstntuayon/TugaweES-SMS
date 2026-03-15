@@ -262,22 +262,74 @@
                 </div>
             </div>
 
-            @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 shadow-sm animate-fade-in">
-                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                    <i class="fas fa-check text-lg"></i>
-                </div>
-                <div>
-                    <p class="font-semibold text-emerald-900">Success!</p>
-                    <p class="text-sm text-emerald-700">{{ session('success') }}</p>
-                </div>
-                <button onclick="this.closest('.bg-emerald-50').remove()" class="ml-auto text-emerald-400 hover:text-emerald-600">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            @endif
+          <!-- Toast Notification -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    
+    Toast.fire({
+        icon: 'success',
+        title: "{{ session('success') }}",
+        background: '#ffffff',
+        color: '#374151'
+    });
+});
+</script>
+@endif
 
-            <!-- Statistics Cards -->
+            <!-- FIXED: Statistics Cards with Accurate Calculations -->
+            @php
+                // Calculate school days for the month
+                $startOfMonth = \Carbon\Carbon::create($year, $month)->startOfMonth();
+                $endOfMonth = \Carbon\Carbon::create($year, $month)->endOfMonth();
+                $schoolDays = 0;
+                $schoolDaysArray = [];
+                for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+                    if (!$date->isWeekend()) {
+                        $schoolDays++;
+                        $schoolDaysArray[] = $date->format('Y-m-d');
+                    }
+                }
+
+                // Calculate average attendance across all students
+                $totalPresent = 0;
+                $totalRecorded = 0;
+                foreach($students as $student) {
+                    foreach($schoolDaysArray as $date) {
+                        $att = $student->attendances->firstWhere('date', $date);
+                        if($att && in_array($att->status, ['present', 'late', 'absent', 'excused'])) {
+                            $totalRecorded++;
+                            if(in_array($att->status, ['present', 'late'])) {
+                                $totalPresent++;
+                            }
+                        }
+                    }
+                }
+                $avgAttendance = $totalRecorded > 0 ? round(($totalPresent / $totalRecorded) * 100, 1) : 0;
+
+                // Count present today
+                $today = now()->format('Y-m-d');
+                $presentToday = 0;
+                foreach($students as $student) {
+                    $att = $student->attendances->firstWhere('date', $today);
+                    if($att && in_array($att->status, ['present', 'late'])) {
+                        $presentToday++;
+                    }
+                }
+            @endphp
+
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
                     <div class="flex items-start justify-between">
@@ -296,17 +348,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">School Days</p>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-1">
-                                @php
-                                    $startOfMonth = \Carbon\Carbon::create($year, $month)->startOfMonth();
-                                    $endOfMonth = \Carbon\Carbon::create($year, $month)->endOfMonth();
-                                    $schoolDays = 0;
-                                    for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
-                                        if (!$date->isWeekend()) $schoolDays++;
-                                    }
-                                    echo $schoolDays;
-                                @endphp
-                            </h3>
+                            <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ $schoolDays }}</h3>
                             <p class="text-xs text-slate-500 mt-1">This month</p>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
@@ -315,14 +357,16 @@
                     </div>
                 </div>
 
+                <!-- FIXED: Dynamic Average Attendance -->
                 <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg. Attendance</p>
-                            <h3 class="text-2xl font-bold text-emerald-600 mt-1">94.2%</h3>
-                            <p class="text-xs text-emerald-600 mt-1 flex items-center gap-1">
-                                <i class="fas fa-arrow-up text-[10px]"></i>
-                                <span>+2.1% from last month</span>
+                            <h3 class="text-2xl font-bold {{ $avgAttendance > 0 ? 'text-emerald-600' : 'text-slate-400' }} mt-1">
+                                {{ $avgAttendance > 0 ? $avgAttendance . '%' : '—' }}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">
+                                {{ $totalRecorded > 0 ? 'Based on recorded data' : 'No attendance recorded' }}
                             </p>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -331,10 +375,24 @@
                     </div>
                 </div>
 
-               
+                <!-- FIXED: Present Today -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Present Today</p>
+                            <h3 class="text-2xl font-bold text-blue-600 mt-1">
+                                {{ $presentToday > 0 ? $presentToday : '—' }}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">{{ now()->format('M d, Y') }}</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                            <i class="fas fa-check-circle text-xl"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Attendance Table -->
+            <!-- FIXED: Attendance Table with Accurate Rate Calculation -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
                     <h3 class="font-bold text-slate-900 flex items-center gap-2">
@@ -376,6 +434,22 @@
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @foreach($students->take(8) as $student)
+                            @php
+                                // Calculate actual attendance rate for this student
+                                $studentPresent = 0;
+                                $studentRecorded = 0;
+                                foreach($displayDays as $d) {
+                                    $dateObj = \Carbon\Carbon::create($year, $month, $d);
+                                    $att = $student->attendances->firstWhere('date', $dateObj->format('Y-m-d'));
+                                    if($att && in_array($att->status, ['present', 'late', 'absent', 'excused'])) {
+                                        $studentRecorded++;
+                                        if(in_array($att->status, ['present', 'late'])) {
+                                            $studentPresent++;
+                                        }
+                                    }
+                                }
+                                $studentRate = $studentRecorded > 0 ? round(($studentPresent / $studentRecorded) * 100) : 0;
+                            @endphp
                             <tr class="hover:bg-slate-50/80 transition group">
                                 <td class="px-6 py-3">
                                     <div class="flex items-center gap-3">
@@ -393,7 +467,7 @@
                                         $att = $student->attendances->firstWhere('date', $dateObj->format('Y-m-d'));
                                     @endphp
                                     <td class="px-2 py-3 text-center">
-                                        @if($att)
+                                        @if($att && in_array($att->status, ['present', 'late', 'absent', 'excused']))
                                             <span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shadow-sm
                                                 {{ $att->status === 'present' ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200' : 
                                                    ($att->status === 'late' ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-200' : 
@@ -402,14 +476,22 @@
                                                 {{ $att->status === 'present' ? 'P' : ($att->status === 'late' ? 'L' : ($att->status === 'absent' ? 'A' : 'E')) }}
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-400 text-xs">—</span>
+                                            <!-- FIXED: Blank when no attendance recorded -->
+                                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-50 text-slate-300 text-xs">—</span>
                                         @endif
                                     </td>
                                 @endforeach
                                 <td class="px-4 py-3 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                                        95%
-                                    </span>
+                                    @if($studentRecorded > 0)
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold 
+                                            {{ $studentRate >= 90 ? 'bg-emerald-100 text-emerald-800' : 
+                                               ($studentRate >= 75 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800') }}">
+                                            {{ $studentRate }}%
+                                        </span>
+                                    @else
+                                        <!-- FIXED: Blank when no attendance recorded -->
+                                        <span class="text-slate-400 text-xs">—</span>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -461,7 +543,7 @@
                     <p class="text-sm text-slate-500">
                         {{ $section->year_level ?? 'Grade 1' }} - {{ $section->name ?? 'Section A' }} | 
                         <span class="font-semibold text-indigo-600">{{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</span> |
-                        School Year: <span class="font-semibold">{{ $activeSchoolYear->name ?? '2024-2025' }}</span>
+                        School Year: <span class="font-semibold">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
                     </p>
                 </div>
             </div>
@@ -482,11 +564,11 @@
                 @csrf
 
                 @php
-                    $schoolDays = [];
+                    $modalSchoolDays = [];
                     for($d = 1; $d <= $daysInMonth; $d++) {
                         $dateObj = \Carbon\Carbon::create($year, $month, $d);
                         if(!$dateObj->isWeekend()) {
-                            $schoolDays[] = $dateObj->format('Y-m-d');
+                            $modalSchoolDays[] = $dateObj->format('Y-m-d');
                         }
                     }
                     $grouped = $students->sortBy('last_name')->groupBy('gender');
@@ -497,7 +579,7 @@
                         <thead class="bg-slate-100 sticky top-0 z-10">
                             <tr>
                                 <th class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-slate-200 w-72">Student Information</th>
-                                @foreach($schoolDays as $date)
+                                @foreach($modalSchoolDays as $date)
                                     <th class="px-2 py-3 text-center font-semibold text-slate-700 border-b border-slate-200 text-xs w-14">
                                         <div class="flex flex-col">
                                             <span class="text-slate-400 text-[10px]">{{ \Carbon\Carbon::parse($date)->format('D') }}</span>
@@ -511,7 +593,7 @@
                         <tbody class="divide-y divide-slate-100">
                             @foreach($grouped as $gender => $genderStudents)
                                 <tr class="bg-slate-50/80">
-                                    <td colspan="{{ count($schoolDays) + 2 }}" class="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                                    <td colspan="{{ count($modalSchoolDays) + 2 }}" class="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
                                         <i class="fas fa-{{ $gender === 'Male' ? 'male text-blue-500' : 'female text-pink-500' }}"></i>
                                         {{ $gender }} Students ({{ $genderStudents->count() }})
                                     </td>
@@ -530,14 +612,20 @@
                                             </div>
                                         </td>
 
-                                        @php $presentCount = 0; @endphp
-                                        @foreach($schoolDays as $date)
+                                        @php $presentCount = 0; $recordedCount = 0; @endphp
+                                        @foreach($modalSchoolDays as $date)
                                             @php
                                                 $att = $student->attendances->firstWhere('date', $date);
-                                                $status = $att?->status ?? 'none';
-                                                if($status === 'present' || $status === 'late') $presentCount++;
+                                                $status = $att?->status ?? null;
+                                                if($status && in_array($status, ['present', 'late', 'absent', 'excused'])) {
+                                                    $recordedCount++;
+                                                    if(in_array($status, ['present', 'late'])) {
+                                                        $presentCount++;
+                                                    }
+                                                }
                                             @endphp
                                             <td class="px-1 py-2 text-center border-r border-slate-50">
+                                                <!-- FIXED: Blank default option -->
                                                 <select name="attendance[{{ $student->id }}][{{ $date }}]"
                                                         class="w-full px-1 py-1.5 text-xs font-bold rounded-lg border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500 transition text-center appearance-none
                                                         {{ $status === 'present' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 
@@ -545,7 +633,7 @@
                                                            ($status === 'absent' ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 
                                                            ($status === 'excused' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' :
                                                            'bg-slate-100 text-slate-500 hover:bg-slate-200'))) }}">
-                                                    <option value="none" {{ $status === 'none' ? 'selected' : '' }}>—</option>
+                                                    <option value="" {{ !$status ? 'selected' : '' }}></option>
                                                     <option value="present" {{ $status === 'present' ? 'selected' : '' }}>P</option>
                                                     <option value="late" {{ $status === 'late' ? 'selected' : '' }}>L</option>
                                                     <option value="absent" {{ $status === 'absent' ? 'selected' : '' }}>A</option>
@@ -555,9 +643,13 @@
                                         @endforeach
                                         
                                         <td class="px-4 py-3 text-center">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold {{ $presentCount === count($schoolDays) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
-                                                {{ $presentCount }}/{{ count($schoolDays) }}
-                                            </span>
+                                            @if($recordedCount > 0)
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold {{ $presentCount === $recordedCount ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+                                                    {{ $presentCount }}/{{ $recordedCount }}
+                                                </span>
+                                            @else
+                                                <span class="text-slate-400 text-xs">—</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -643,8 +735,6 @@ document.getElementById('attendanceModal').addEventListener('click', function(e)
     to { opacity: 1; transform: translateY(0); }
 }
 </style>
-
-<!-- [Previous modals remain with similar styling improvements] -->
 
 <!-- ENROLL STUDENT MODAL -->
 <div id="enrollStudentModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 px-4">

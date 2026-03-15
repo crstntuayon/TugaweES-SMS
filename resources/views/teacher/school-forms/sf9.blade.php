@@ -560,11 +560,11 @@
                         <tr>
                             <td>
                                 <strong>School Year:</strong> 
-                                <span class="editable" data-field="school_year">{{ $activeSchoolYear->name ?? '2024-2025' }}</span>
+                                <span class="editable" data-field="school_year">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
                             </td>
                             <td>
                                 <strong>Grade Level:</strong> 
-                                <span class="editable" data-field="grade_level">{{ $section->year_level ?? 'Kindergarten' }}</span> &nbsp;&nbsp;
+                                <span class="editable" data-field="grade_level">{{ $section->year_level ?? 'N/A' }}</span> &nbsp;&nbsp;
                                 <strong>Section:</strong> 
                                 <span class="editable" data-field="section">{{ $section->name ?? '-' }}</span>
                             </td>

@@ -12,6 +12,8 @@ use App\Models\Section;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use App\Models\School;
 
 class SFController extends Controller
 {
@@ -158,15 +160,41 @@ public function sf2Export(Request $request, Section $section)
     return $pdf->download($filename);
 }
     
-    /**
-     * SF3 - Books Issued/Returned (View)
-     */
-    public function sf3(Student $student)
-    {
-        $activeSchoolYear = SchoolYear::where('is_active', true)->first();
-        
-        return view('teacher.school-forms.sf3', compact('student', 'activeSchoolYear'));
-    }
+/**
+ * SF3 - Books Issued and Returned Report
+ * Fixed to properly display section and grade level
+ */
+public function sf3(Student $student)
+{
+    $reportType = request('report_type', 'bosy');
+    
+    // Get student's books
+    $student->load('books');
+    
+    // Get the active school year
+    $activeSchoolYear = SchoolYear::where('is_active', 1)->first();
+    
+    // Get student's enrollment for the active school year - SAME AS SF10
+    $enrollment = Enrollment::where('student_id', $student->id)
+        ->where('school_year_id', $activeSchoolYear->id ?? 0)
+        ->first();
+
+    // Get section through enrollment - THIS IS THE KEY!
+    $section = $enrollment ? $enrollment->section : null;
+    
+    // Get school info
+    $school = School::first();
+    
+    return view('teacher.school-forms.sf3', compact(
+        'student',
+        'section',        // Now properly passed!
+        'enrollment',     // Optional, if you need it in the view
+        'activeSchoolYear',
+        'school',
+        'reportType'
+    ));
+}
+
 
     /**
      * SF3 - Books Issued/Returned (PDF Export)

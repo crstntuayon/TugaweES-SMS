@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Section extends Model
 {
@@ -77,4 +79,15 @@ class Section extends Model
         ->where('school_year_id', $schoolYearId)
         ->count() >= $this->capacity;
 } 
+
+
+//updated march 15, 2026 -- start
+    /**
+     * Get the school this section belongs to
+     */
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
+    }
+
 }

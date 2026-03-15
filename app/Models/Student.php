@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Enrollment;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+
 class Student extends Model
 {
 
@@ -33,6 +37,28 @@ class Student extends Model
     return $this->belongsToMany(\App\Models\Section::class, 'section_student')->withTimestamps();
 }
 
+
+//update march 15, 2025 -- start
+  public function books(): HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
+      /**
+     * Get count of books by status
+     */
+    public function booksCountByStatus(string $status): int
+    {
+        return $this->books()->where('status', $status)->count();
+    }
+
+    /**
+     * Check if student has any pending books
+     */
+    public function hasPendingBooks(): bool
+    {
+        return $this->books()->where('status', 'issued')->exists();
+    }
+    // end
 
     public function user()
     {

@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
 
      $this->call([
         RoleSeeder::class,
-       ElementarySubjectsSeeder::class,
+       //ElementarySubjectsSeeder::class,
+       BookSeeder::class,
        // TestUserSeeder::class,  // 👈 students here
     ]);
         // User::factory(10)->create();

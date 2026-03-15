@@ -499,10 +499,9 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
         Route::get('/sf4', [SFController::class, 'sf4'])->name('sf4');
         Route::get('/sf4/export', [SFController::class, 'sf4Export'])->name('sf4.export');
         
-        // SF5 - Report on Promotion
-        Route::get('/sf5/{section}', [SFController::class, 'sf5'])->name('sf5');
-        Route::get('/sf5/{section}/export', [SFController::class, 'sf5Export'])->name('sf5.export');
-
+       // SF5 - Report on Promotion (ADD THIS)
+   Route::get('/sf5', [SFController::class, 'sf5'])->name('sf5');
+        Route::get('/sf5/export', [SFController::class, 'sf5Export'])->name('sf5.export');
         
         Route::get('/sf6/{student}', [SFController::class, 'sf6'])->name('sf6');
         Route::get('/sf7/{student}', [SFController::class, 'sf7'])->name('sf7');

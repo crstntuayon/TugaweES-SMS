@@ -135,11 +135,11 @@
                 <span>Monthly Attendance</span>
             </a>
             
-            <a href="#" 
-               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF5</span>
-                <span>Report on Dropouts</span>
-            </a>
+<a href="{{ route('teacher.school-forms.sf5') }}"
+   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+    <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF5</span>
+    <span>Report on Promotion</span>
+</a>
             
             <a href="#" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
@@ -386,13 +386,14 @@
                                                             <!--<a href="{{ route('teacher.school-forms.sf4', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">4</span>
                                                                 <span class="truncate">SF4 - Monthly Attendance</span>
-                                                            </a> --> 
+                                                            </a> 
 
 
-                                                            <a href="{{ route('teacher.school-forms.sf5', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                            -- BOTH WORKING IN SIDEBAR AND IN MALE ACTION DROPDOWN --
+                                                           <a href="{{ route('teacher.school-forms.sf5', $section->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
-                                                            </a>
+                                                            </a> -->
                                                             
                                                             <!-- SF6-SF10 -->
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
@@ -556,13 +557,14 @@
                                                             <!-- <a href="{{ route('teacher.school-forms.sf4', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">4</span>
                                                                 <span class="truncate">SF4 - Monthly Attendance</span>
-                                                            </a> -->
+                                                            </a> 
 
-
-                                                            <a href="{{ route('teacher.school-forms.sf5', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
+                                                            
+                                                            -- BOTH WORKING IN SIDEBAR AND IN FEMALE ACTION DROPDOWN --
+                                                            <a href="{{ route('teacher.school-forms.sf5', $section->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
-                                                            </a>
+                                                            </a> -->
                                                             
                                                             <!-- SF6-SF10 -->
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">

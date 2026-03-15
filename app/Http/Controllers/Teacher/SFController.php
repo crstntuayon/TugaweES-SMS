@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use App\Models\School;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -449,22 +451,323 @@ private function calculateSectionAttendance($section, $month, $year)
         return $totals;
     }
 
-    /**
-     * SF5 - Report on Promotion (View)
-     */
-    public function sf5(Section $section)
+
+
+  public function sf5(Request $request)
     {
         $activeSchoolYear = SchoolYear::where('is_active', true)->first();
-        
-        $students = $section->students()
-            ->wherePivot('school_year_id', $activeSchoolYear->id)
-            ->with(['grades' => function($query) use ($activeSchoolYear) {
-                $query->where('school_year_id', $activeSchoolYear->id);
-            }])
+
+        if (!$activeSchoolYear) {
+            return back()->with('error', 'No active school year found.');
+        }
+
+        // Get teacher sections
+        $sections = Section::where('school_year_id', $activeSchoolYear->id)
+            ->where('teacher_id', auth()->id())
+            ->orderBy('year_level')
+            ->orderBy('name')
             ->get();
+
+        if ($sections->isEmpty()) {
+            return back()->with('error', 'No sections assigned to this teacher.');
+        }
+
+        $sectionId = $request->section_id ?? $sections->first()->id;
+        $currentSection = Section::with('teacher')->findOrFail($sectionId);
+        $currentYearLevel = $currentSection->year_level;
+        $school = auth()->user()->school ?? School::first();
+
+        // ============================================================
+        // CRITICAL: Get subjects that actually have grades in the database
+        // for this section/school year, not just default subjects
+        // ============================================================
+        
+        // First, get student IDs in this section
+        $studentIdsInSection = DB::table('enrollments')
+            ->where('section_id', $currentSection->id)
+            ->where('school_year_id', $activeSchoolYear->id)
+            ->pluck('student_id');
+
+        // Get actual subjects that have grades for these students
+        $subjectIdsWithGrades = Grade::whereIn('student_id', $studentIdsInSection)
+            ->where('school_year_id', $activeSchoolYear->id)
+            ->whereNotNull('subject_id')
+            ->distinct()
+            ->pluck('subject_id');
+
+        // Get subjects from database that match the year level AND have grades
+        $subjects = Subject::whereIn('id', $subjectIdsWithGrades)
+            ->orWhere(function($query) use ($currentYearLevel, $subjectIdsWithGrades) {
+                $query->where('grade_level', $currentYearLevel)
+                      ->whereNotIn('id', $subjectIdsWithGrades);
+            })
+            ->orderBy('name', 'asc')
+            ->get();
+
+        // If no subjects found with grades, fall back to defaults
+        if ($subjects->isEmpty()) {
+            $subjects = $this->getDefaultSubjectsForYearLevel($currentYearLevel);
+        }
+
+        // Build subject lookup by ID
+        $subjectById = $subjects->keyBy('id');
+        $subjectKeysById = [];
+        foreach ($subjects as $subject) {
+            $key = strtolower(str_replace(' ', '_', trim($subject->name)));
+            $subjectKeysById[$subject->id] = $key;
+        }
+
+        // ============================================================
+        // LOAD STUDENTS WITH GRADES - FILTER BY school_year_id
+        // ============================================================
+        
+        $students = Student::whereIn('id', $studentIdsInSection)
+            ->with(['grades' => function($query) use ($activeSchoolYear) {
+                $query->where('school_year_id', $activeSchoolYear->id)
+                      ->whereNotNull('subject_id')
+                      ->whereNotNull('quarter')
+                      ->whereIn('quarter', [1, 2, 3, 4])
+                      // CRITICAL: Only get FINAL quarterly grades, not components
+                      ->whereNull('component')
+                      ->with(['subject']);
+            }])
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        // Process students
+        $students = $students->map(function ($student) use ($subjects, $currentYearLevel, $subjectById, $subjectKeysById) {
             
-        return view('teacher.school-forms.sf5', compact('section', 'students', 'activeSchoolYear'));
+            $student->current_year_level = $currentYearLevel;
+            
+            // Initialize grades array with null for ALL subjects
+            $gradesArray = [];
+            foreach ($subjects as $subject) {
+                $key = strtolower(str_replace(' ', '_', trim($subject->name)));
+                $gradesArray[$key] = null;
+            }
+
+            $totalGenAve = 0;
+            $subjectCount = 0;
+            $failingSubjects = [];
+
+            // Group grades by subject_id
+            $gradesBySubject = $student->grades->groupBy('subject_id');
+
+            foreach ($gradesBySubject as $subjectId => $subjectGrades) {
+                
+                // Skip if subject not in our list
+                if (!isset($subjectById[$subjectId])) {
+                    continue;
+                }
+
+                $subject = $subjectById[$subjectId];
+                $subjectKey = $subjectKeysById[$subjectId] ?? strtolower(str_replace(' ', '_', trim($subject->name)));
+
+                // Calculate final grade from quarters (average of Q1-Q4)
+                $finalGrade = $this->calculateFinalGrade($subjectGrades);
+
+                if ($finalGrade !== null) {
+                    $gradesArray[$subjectKey] = round($finalGrade, 0);
+                    $totalGenAve += $finalGrade;
+                    $subjectCount++;
+                    
+                    if ($finalGrade < 75) {
+                        $failingSubjects[] = $subject->name;
+                    }
+                }
+            }
+
+            // Calculate General Average
+            $student->grades_array = $gradesArray;
+            $student->general_average = $subjectCount > 0 ? round($totalGenAve / $subjectCount, 2) : 0;
+
+            // Determine action taken
+            $failingCount = count($failingSubjects);
+            if ($student->general_average >= 75 && $failingCount === 0) {
+                $student->action_taken = 'Promoted';
+            } elseif ($student->general_average >= 75 && $failingCount > 0) {
+                $student->action_taken = 'Irregular';
+            } elseif ($student->general_average < 75 || $failingCount >= 3) {
+                $student->action_taken = 'Retained';
+            } else {
+                $student->action_taken = 'Deferred';
+            }
+
+            $student->incomplete_subjects = !empty($failingSubjects) ? implode(', ', $failingSubjects) : null;
+
+            return $student;
+        });
+
+        // Calculate totals
+        $totals = [
+            'promoted' => $students->where('action_taken', 'Promoted')->count(),
+            'irregular' => $students->where('action_taken', 'Irregular')->count(),
+            'retained' => $students->where('action_taken', 'Retained')->count(),
+            'deferred' => $students->where('action_taken', 'Deferred')->count(),
+            'average_gen_ave' => $students->avg('general_average') ?? 0,
+        ];
+
+        $teacherFullName = $this->getTeacherFullName($currentSection);
+
+        return view('teacher.school-forms.sf5', compact(
+            'currentSection', 
+            'sections',
+            'students', 
+            'activeSchoolYear', 
+            'school',
+            'totals',
+            'subjects',
+            'currentYearLevel',
+            'teacherFullName'
+        ));
     }
+
+    /**
+     * Calculate final grade from quarterly grades
+     * Your table has: quarter (1-4), grade (value), component (NULL for final)
+     */
+    private function calculateFinalGrade($subjectGrades)
+    {
+        $quarters = [];
+        
+        foreach ($subjectGrades as $grade) {
+            // Only process quarterly grades (component is NULL)
+            if ($grade->quarter >= 1 && $grade->quarter <= 4 && 
+                is_numeric($grade->grade) && 
+                empty($grade->component)) { // component is NULL or empty for final grades
+                
+                $quarters[$grade->quarter] = (float) $grade->grade;
+            }
+        }
+
+        if (empty($quarters)) {
+            return null;
+        }
+
+        // Average of available quarters
+        return array_sum($quarters) / count($quarters);
+    }
+
+    private function getTeacherFullName($section)
+    {
+        $teacher = User::find($section->teacher_id) ?? auth()->user();
+        
+        $name = $teacher->last_name . ', ' . $teacher->first_name;
+        if (!empty($teacher->middle_name)) {
+            $name .= ' ' . substr($teacher->middle_name, 0, 1) . '.';
+        }
+        if (!empty($teacher->suffix)) {
+            $name .= ' ' . $teacher->suffix;
+        }
+        
+        return $name;
+    }
+
+    private function getDefaultSubjectsForYearLevel($yearLevel)
+    {
+        $defaultSubjects = [
+            'Kinder' => [
+                ['name' => 'Mother Tongue', 'code' => 'MT'],
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+            ],
+            'Grade 1' => [
+                ['name' => 'Mother Tongue', 'code' => 'MT'],
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+            ],
+            'Grade 2' => [
+                ['name' => 'Mother Tongue', 'code' => 'MT'],
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+            ],
+            'Grade 3' => [
+                ['name' => 'Mother Tongue', 'code' => 'MT'],
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+            ],
+            'Grade 4' => [
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Science', 'code' => 'Sci'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+                ['name' => 'Edukasyong Pantahanan at Pangkabuhayan', 'code' => 'EPP'],
+            ],
+            'Grade 5' => [
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Science', 'code' => 'Sci'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+                ['name' => 'Edukasyong Pantahanan at Pangkabuhayan', 'code' => 'EPP'],
+            ],
+            'Grade 6' => [
+                ['name' => 'Filipino', 'code' => 'Fil'],
+                ['name' => 'English', 'code' => 'Eng'],
+                ['name' => 'Mathematics', 'code' => 'Math'],
+                ['name' => 'Science', 'code' => 'Sci'],
+                ['name' => 'Araling Panlipunan', 'code' => 'AP'],
+                ['name' => 'Edukasyon sa Pagpapakatao', 'code' => 'ESP'],
+                ['name' => 'Music', 'code' => 'Music'],
+                ['name' => 'Arts', 'code' => 'Arts'],
+                ['name' => 'Physical Education', 'code' => 'PE'],
+                ['name' => 'Health', 'code' => 'Health'],
+                ['name' => 'Edukasyong Pantahanan at Pangkabuhayan', 'code' => 'EPP'],
+            ],
+        ];
+
+        $subjects = $defaultSubjects[$yearLevel] ?? $defaultSubjects['Grade 1'];
+        
+        return collect($subjects)->map(function($subject, $index) use ($yearLevel) {
+            return (object)[
+                'id' => $index + 1000, // Offset to avoid collision with real IDs
+                'name' => $subject['name'],
+                'code' => $subject['code'],
+                'grade_level' => $yearLevel
+            ];
+        });
+    }
+
 
     /**
      * SF5 - Report on Promotion (PDF Export)
@@ -545,6 +848,7 @@ $section = $enrollment->section;
             'grades'
         ));
     }
+
 
      public function sf10(Student $student)
 {

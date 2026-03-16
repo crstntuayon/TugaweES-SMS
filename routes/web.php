@@ -503,7 +503,7 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
    Route::get('/sf5', [SFController::class, 'sf5'])->name('sf5');
         Route::get('/sf5/export', [SFController::class, 'sf5Export'])->name('sf5.export');
         
-        Route::get('/sf6/{student}', [SFController::class, 'sf6'])->name('sf6');
+        Route::get('/sf6', [App\Http\Controllers\Teacher\SFormController::class, 'sf6'])->name('sf6');
         Route::get('/sf7/{student}', [SFController::class, 'sf7'])->name('sf7');
         Route::get('/sf8/{student}', [SFController::class, 'sf8'])->name('sf8');
         Route::get('/sf9/{student}', [SFController::class, 'sf9'])->name('sf9');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 15, 2026 at 09:04 AM
+-- Generation Time: Mar 16, 2026 at 12:39 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -207,18 +207,19 @@ CREATE TABLE `enrollments` (
   `section_id` bigint UNSIGNED DEFAULT NULL,
   `status` enum('enrolled','promoted','retained','transfer','unenrolled') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'enrolled',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `year_level_id` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `enrollments`
 --
 
-INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`) VALUES
-(4, 171, 1, 55, 'enrolled', '2026-03-12 02:22:41', '2026-03-12 02:22:41'),
-(5, 165, 1, 55, 'enrolled', '2026-03-12 18:39:49', '2026-03-12 18:39:49'),
-(6, 166, 1, 56, 'enrolled', '2026-03-13 21:54:24', '2026-03-13 21:54:24'),
-(7, 170, 1, 56, 'enrolled', '2026-03-14 19:11:04', '2026-03-14 19:11:04');
+INSERT INTO `enrollments` (`id`, `student_id`, `school_year_id`, `section_id`, `status`, `created_at`, `updated_at`, `year_level_id`) VALUES
+(4, 171, 1, 55, 'enrolled', '2026-03-12 02:22:41', '2026-03-12 02:22:41', NULL),
+(5, 165, 1, 55, 'enrolled', '2026-03-12 18:39:49', '2026-03-12 18:39:49', NULL),
+(6, 166, 1, 56, 'enrolled', '2026-03-13 21:54:24', '2026-03-13 21:54:24', NULL),
+(7, 170, 1, 56, 'enrolled', '2026-03-14 19:11:04', '2026-03-14 19:11:04', NULL);
 
 -- --------------------------------------------------------
 
@@ -250,22 +251,31 @@ CREATE TABLE `grades` (
   `quarter` tinyint NOT NULL,
   `grade` double NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `school_year_id` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `grades`
 --
 
-INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `component`, `quarter`, `grade`, `created_at`, `updated_at`) VALUES
-(13, 171, 93, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
-(14, 171, 94, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
-(15, 171, 95, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
-(16, 171, 96, NULL, 1, 90, '2026-03-12 16:28:29', '2026-03-12 16:28:29'),
-(17, 171, 93, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
-(18, 171, 94, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
-(19, 171, 95, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25'),
-(20, 171, 96, NULL, 2, 90, '2026-03-12 17:12:25', '2026-03-12 17:12:25');
+INSERT INTO `grades` (`id`, `student_id`, `subject_id`, `component`, `quarter`, `grade`, `created_at`, `updated_at`, `school_year_id`) VALUES
+(13, 171, 93, NULL, 1, 86, '2026-03-12 16:28:29', '2026-03-15 07:34:25', NULL),
+(14, 171, 94, NULL, 1, 88, '2026-03-12 16:28:29', '2026-03-15 07:34:26', NULL),
+(15, 171, 95, NULL, 1, 88, '2026-03-12 16:28:29', '2026-03-15 07:34:26', NULL),
+(16, 171, 96, NULL, 1, 84, '2026-03-12 16:28:29', '2026-03-15 07:34:26', NULL),
+(17, 171, 93, NULL, 2, 85, '2026-03-12 17:12:25', '2026-03-15 07:34:25', NULL),
+(18, 171, 94, NULL, 2, 88, '2026-03-12 17:12:25', '2026-03-15 07:34:26', NULL),
+(19, 171, 95, NULL, 2, 87, '2026-03-12 17:12:25', '2026-03-15 07:34:26', NULL),
+(20, 171, 96, NULL, 2, 86, '2026-03-12 17:12:25', '2026-03-15 07:34:26', NULL),
+(21, 171, 93, NULL, 3, 88, '2026-03-15 07:34:25', '2026-03-15 07:34:25', NULL),
+(22, 171, 93, NULL, 4, 86, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(23, 171, 94, NULL, 3, 89, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(24, 171, 94, NULL, 4, 87, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(25, 171, 95, NULL, 3, 87, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(26, 171, 95, NULL, 4, 88, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(27, 171, 96, NULL, 3, 87, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL),
+(28, 171, 96, NULL, 4, 87, '2026-03-15 07:34:26', '2026-03-15 07:34:26', NULL);
 
 -- --------------------------------------------------------
 
@@ -421,7 +431,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (88, '2026_03_13_131535_add_columns_to_teachers_table', 75),
 (89, '2026_03_15_033211_create_books_table', 76),
 (90, '2026_03_15_033447_create_book_inventories_table', 77),
-(91, '2026_03_15_033631_create_schools_table', 78);
+(91, '2026_03_15_033631_create_schools_table', 78),
+(92, '2026_03_15_125508_add_school_year_id_to_grades_table', 79),
+(93, '2026_03_15_234833_add_start_end_year_to_school_years_table', 80),
+(94, '2026_03_15_235831_add_year_level_id_to_enrollments', 81);
 
 -- --------------------------------------------------------
 
@@ -480,6 +493,13 @@ CREATE TABLE `schools` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `schools`
+--
+
+INSERT INTO `schools` (`id`, `name`, `school_id`, `principal_name`, `head_name`, `address`, `district`, `division`, `region`, `contact_number`, `email`, `created_at`, `updated_at`) VALUES
+(1, 'Tugawe Elementary School', '120231', 'Mae Harriet M. Dela Pena', NULL, 'Tugawe, Dauin, Negros Oriental', 'Dauin District', 'Division of Negros Oriental', 'NIR - Negros Island Region', NULL, NULL, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -491,23 +511,25 @@ CREATE TABLE `school_years` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `start_year` int DEFAULT NULL,
+  `end_year` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `school_years`
 --
 
-INSERT INTO `school_years` (`id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57'),
-(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57');
+INSERT INTO `school_years` (`id`, `name`, `is_active`, `created_at`, `updated_at`, `start_year`, `end_year`) VALUES
+(1, '2025-2026', 1, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(2, '2026-2027', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(3, '2027-2028', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(4, '2028-2029', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(5, '2029-2030', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(6, '2030-2031', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(7, '2031-2032', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(8, '2032-2033', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL),
+(9, '2033-2034', 0, '2026-02-10 17:00:16', '2026-03-11 14:00:57', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -610,8 +632,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('oN7383pSBpwLcJlU1EZdQZIHbOjo9ynmtEN54Beo', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTUVsbjFjSUdkMHhuQ093ZHpVSG50ZkFDUGNlR1gwenhaV2xTZGgxeSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773565402),
-('ZFiDq7vJ35en4Lk6g2kbX27ApxFyLYuytL4T5nRO', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidll0ckhDZHMyMGJKUHFhOVVQSzFwYXZNdGdkaE45bWdoRThTbUN0ciI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL3NjaG9vbC1mb3Jtcy9zZjMvMTcxIjtzOjU6InJvdXRlIjtzOjI0OiJ0ZWFjaGVyLnNjaG9vbC1mb3Jtcy5zZjMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773554526);
+('oN7383pSBpwLcJlU1EZdQZIHbOjo9ynmtEN54Beo', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTUVsbjFjSUdkMHhuQ093ZHpVSG50ZkFDUGNlR1gwenhaV2xTZGgxeSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773592336),
+('YEx80XqQ2ciBxHGyNuU28U7E4lV0BOCCCBzhmrxP', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibWNSWUNTbHBYNWJpVEdUYTRzaGZ1YnpPNDBPckkwMzJPYzJOMkNVcSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773621489);
 
 -- --------------------------------------------------------
 
@@ -851,7 +873,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `role_id`, `email`, `email_verified_at`, `password`, `google_id`, `facebook_id`, `avatar`, `remember_token`, `created_at`, `updated_at`, `first_name`, `middle_name`, `last_name`, `suffix`, `birthday`, `username`, `login_attempts`, `lock_until`) VALUES
 (1, 1, 'admin@tugaweES.edu.ph', NULL, '$2y$12$zXtYoxdECMpT8DvDKSKFee0E.B7PXe4yQgoRJim6sPz/1zutl3Gsu', NULL, NULL, NULL, 'D9xeRWqYdIfhUpKKbLlLYsxwOGaikxzKUGB0M8E0oWcltPkcaTdMOvyW6F1I', '2026-01-27 05:37:20', '2026-02-23 07:19:05', 'System', NULL, 'Administrator', 'I', NULL, 'sysadmin123', 3, NULL),
 (2, 3, 'registrar@tugaweES.edu.ph', NULL, '$2y$12$U.1P6YsXem2b3PGR94gFeO14UKaqX8ohqvff/ouYL7FnqE9LDE.oi', NULL, NULL, NULL, 'nccbD0wj3C8DCCA5bmj539qorahXQTTW7a2N4I9oydPbwKJlK9BuJAP5QvYK', '2026-01-27 05:37:21', '2026-01-27 05:37:21', '', NULL, '', NULL, NULL, '', 0, NULL),
-(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, NULL, NULL, NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', NULL, 'Cruz', NULL, NULL, 'juandelacruz', 5, NULL),
+(42, 2, 'juandelacruz@gmail.com', NULL, '$2y$12$W7asov1IAI8NcPPXLa1Ln.NEW2oYwK.6eyUPvVGr6HyG8PM3U8NeO', NULL, NULL, NULL, NULL, '2026-02-10 23:50:01', '2026-02-23 17:16:56', 'Juan', 'Dela Cruz', 'Cruz', 'III', NULL, 'juandelacruz', 5, NULL),
 (165, 4, 'tradioejiee@gmail.com', NULL, '$2y$12$roezpoWgExhuX1fbPiBJi.tPS9cnUTbkGNwEBeHQyi84c4OOPjmUy', NULL, NULL, NULL, NULL, '2026-02-23 04:21:36', '2026-03-11 13:56:15', 'Ejie Mae', NULL, 'Tradio', NULL, NULL, 'etradio961', 4, NULL),
 (166, 4, 'troituayon@gmail.com', NULL, '$2y$12$vFuEjOrlaVArsfniQZnyKOwR0mt2tGnozPTobE2bVx8h/F2AfZx02', NULL, NULL, NULL, NULL, '2026-02-23 04:25:08', '2026-02-23 04:25:08', 'Troilan', NULL, 'Tuayon', NULL, NULL, 'ttuayon512', 0, NULL),
 (167, 2, 'teacher@tugaweES.edu.ph', NULL, '$2y$12$/uktMVzTTEt14BN9KUOQG.MSlzfnAQktr7eDOdv36EB6hUWI5DiEq', NULL, NULL, NULL, NULL, '2026-02-23 04:28:17', '2026-02-23 04:28:17', 'Teacher', NULL, 'Cruz', NULL, NULL, 'cruz112', 0, NULL),
@@ -956,7 +978,8 @@ ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `enrollments_student_id_foreign` (`student_id`),
   ADD KEY `enrollments_school_year_id_foreign` (`school_year_id`),
-  ADD KEY `enrollments_section_id_foreign` (`section_id`);
+  ADD KEY `enrollments_section_id_foreign` (`section_id`),
+  ADD KEY `enrollments_year_level_id_foreign` (`year_level_id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -971,7 +994,8 @@ ALTER TABLE `failed_jobs`
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `grades_student_id_subject_id_component_quarter_unique` (`student_id`,`subject_id`,`component`,`quarter`),
-  ADD KEY `grades_subject_id_foreign` (`subject_id`);
+  ADD KEY `grades_subject_id_foreign` (`subject_id`),
+  ADD KEY `grades_school_year_id_foreign` (`school_year_id`);
 
 --
 -- Indexes for table `jobs`
@@ -1178,7 +1202,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1196,7 +1220,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1208,7 +1232,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `school_years`
@@ -1320,12 +1344,14 @@ ALTER TABLE `books`
 ALTER TABLE `enrollments`
   ADD CONSTRAINT `enrollments_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `enrollments_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `enrollments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `enrollments_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enrollments_year_level_id_foreign` FOREIGN KEY (`year_level_id`) REFERENCES `year_levels` (`id`);
 
 --
 -- Constraints for table `grades`
 --
 ALTER TABLE `grades`
+  ADD CONSTRAINT `grades_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`),
   ADD CONSTRAINT `grades_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `grades_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE;
 

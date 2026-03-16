@@ -141,7 +141,7 @@
     <span>Report on Promotion</span>
 </a>
             
-            <a href="#" 
+            <a href="{{ route('teacher.school-forms.sf6')}}" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
                 <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF6</span>
                 <span>Summarized Report</span>
@@ -395,11 +395,13 @@
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
                                                             </a> -->
                                                             
-                                                            <!-- SF6-SF10 -->
+                                                            <!-- SF6-SF10 
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
                                                                 <span class="truncate">SF6 - Summarized Report</span>
-                                                            </a>
+                                                            </a> -->
+
+
                                                             <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
                                                                 <span class="truncate">SF7 - School Personnel</span>
@@ -566,11 +568,13 @@
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
                                                             </a> -->
                                                             
-                                                            <!-- SF6-SF10 -->
+                                                            <!-- SF6-SF10 
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
                                                                 <span class="truncate">SF6 - Summarized Report</span>
-                                                            </a>
+                                                            </a> --> 
+
+                                                            
                                                             <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
                                                                 <span class="truncate">SF7 - School Personnel</span>

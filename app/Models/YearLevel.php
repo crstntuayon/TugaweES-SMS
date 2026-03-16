@@ -24,4 +24,9 @@ class YearLevel extends Model
         return $this->hasMany(Section::class, 'year_level'); 
         // assumes 'year_level' column in sections table stores year_level id
     }
+
+    public function enrollments()
+{
+    return $this->hasMany(Enrollment::class);
+}
 }

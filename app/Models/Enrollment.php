@@ -32,4 +32,9 @@ class Enrollment extends Model
     {
         return $this->belongsTo(Section::class);
     }
+
+    public function yearLevel()
+{
+    return $this->belongsTo(YearLevel::class);
+}
 }

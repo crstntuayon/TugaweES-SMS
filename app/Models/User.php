@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 
 
+
 class User extends Authenticatable implements MustVerifyEmail
 
 {
@@ -85,6 +86,12 @@ public function teacher()
 public function announcements()
 {
     return $this->hasMany(Announcement::class);
+}
+
+//added march 16, 2025
+public function hasRole($roleName)
+{
+    return $this->role && $this->role->name === $roleName;
 }
 
 }

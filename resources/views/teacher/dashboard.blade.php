@@ -256,6 +256,13 @@
         📊 Grades
     </a>
 
+
+   <!-- Quiz Button -->
+<a href="{{ route('teacher.quizzes', $section) }}"
+   class="bg-white text-indigo-600 font-semibold px-5 py-2 rounded-xl shadow hover:scale-105 transition transform">
+   🧠 Quizzes
+</a>
+
   
 </div>
             </div>
@@ -1058,6 +1065,232 @@ function closeProfileModal() {
     }
 </script>
 
+
+<!-- ADDED MARCH  16, 2025 -- NOT IN USE -- START-->
+
+ <!--Enhanced Quiz Modal -->
+<div id="quizModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 transition-all duration-300">
+    
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="quizModalContent">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 rounded-t-2xl">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    Record Quiz Score
+                </h2>
+                <button type="button" onclick="closeQuizModal()" class="text-white/80 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <form action="{{ route('teacher.quiz.store') }}" method="POST" class="p-6">
+            @csrf
+            <input type="hidden" name="section_id" value="{{ $section->id }}">
+
+            <!-- Quiz Title -->
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Quiz Title</label>
+                <input type="text" name="quiz_title" required 
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                    placeholder="e.g., Midterm Exam, Chapter 3 Quiz">
+            </div>
+
+            <!-- Student Selection with Search -->
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Students <span class="text-xs font-normal text-gray-500">({{ count($students) }} enrolled)</span>
+                </label>
+                
+                <!-- Search Filter -->
+                <div class="relative mb-2">
+                    <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" id="studentSearch" placeholder="Search students..." 
+                        class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                        onkeyup="filterStudents()">
+                </div>
+
+                <!-- Student List Container -->
+                <div class="border border-gray-200 rounded-lg max-h-48 overflow-y-auto bg-gray-50" id="studentListContainer">
+                    @forelse($students as $index => $student)
+                        <div class="student-item flex items-center p-3 hover:bg-white border-b border-gray-100 last:border-b-0 cursor-pointer transition-colors"
+                             onclick="selectStudent('{{ $student->id }}', '{{ $student->name }}', this)">
+                            
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold mr-3">
+                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                            </div>
+                            
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">{{ $student->name }}</p>
+                                <p class="text-xs text-gray-500">ID: {{ $student->student_id ?? $student->id }}</p>
+                            </div>
+                            
+                            <div class="check-indicator hidden">
+                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="p-4 text-center text-gray-500 text-sm">
+                            No students enrolled in this section
+                        </div>
+                    @endforelse
+                </div>
+                
+                <!-- Hidden Input for Selected Student -->
+                <input type="hidden" name="student_id" id="selectedStudentId" required>
+                <p id="selectedStudentDisplay" class="mt-2 text-sm text-purple-600 font-medium hidden">
+                    Selected: <span></span>
+                </p>
+            </div>
+
+            <!-- Score Inputs -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Score</label>
+                    <input type="number" name="score" required min="0" 
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-center font-bold text-lg"
+                        placeholder="0">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Total Score</label>
+                    <input type="number" name="total_score" required min="1" 
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-center font-bold text-lg"
+                        placeholder="100">
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Date</label>
+                <input type="date" name="date" required 
+                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    value="{{ date('Y-m-d') }}">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeQuizModal()"
+                    class="px-5 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="saveBtn"
+                    class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-medium shadow-lg shadow-purple-500/30 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    Save Score
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openQuizModal() {
+        const modal = document.getElementById('quizModal');
+        const content = document.getElementById('quizModalContent');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Trigger animation
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+        
+        // Disable save button until student is selected
+        document.getElementById('saveBtn').disabled = true;
+    }
+
+    function closeQuizModal() {
+        const modal = document.getElementById('quizModal');
+        const content = document.getElementById('quizModalContent');
+        
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            resetForm();
+        }, 300);
+    }
+
+    function selectStudent(id, name, element) {
+        // Remove previous selection
+        document.querySelectorAll('.student-item').forEach(item => {
+            item.classList.remove('bg-purple-50', 'border-purple-200');
+            item.querySelector('.check-indicator').classList.add('hidden');
+        });
+        
+        // Add selection to clicked item
+        element.classList.add('bg-purple-50', 'border-purple-200');
+        element.querySelector('.check-indicator').classList.remove('hidden');
+        
+        // Update hidden input and display
+        document.getElementById('selectedStudentId').value = id;
+        const display = document.getElementById('selectedStudentDisplay');
+        display.classList.remove('hidden');
+        display.querySelector('span').textContent = name;
+        
+        // Enable save button
+        document.getElementById('saveBtn').disabled = false;
+    }
+
+    function filterStudents() {
+        const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+        const items = document.querySelectorAll('.student-item');
+        
+        items.forEach(item => {
+            const name = item.querySelector('p.text-sm').textContent.toLowerCase();
+            const id = item.querySelector('p.text-xs').textContent.toLowerCase();
+            
+            if (name.includes(searchTerm) || id.includes(searchTerm)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function resetForm() {
+        document.querySelector('form').reset();
+        document.querySelectorAll('.student-item').forEach(item => {
+            item.classList.remove('bg-purple-50', 'border-purple-200');
+            item.querySelector('.check-indicator').classList.add('hidden');
+        });
+        document.getElementById('selectedStudentDisplay').classList.add('hidden');
+        document.getElementById('saveBtn').disabled = true;
+        document.getElementById('studentSearch').value = '';
+        filterStudents(); // Reset filter
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('quizModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeQuizModal();
+        }
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const studentId = document.getElementById('selectedStudentId').value;
+        if (!studentId) {
+            e.preventDefault();
+            alert('Please select a student');
+            return false;
+        }
+    });
+</script>
+<!-- END -->
 
 
 <script src="//unpkg.com/alpinejs" defer></script>

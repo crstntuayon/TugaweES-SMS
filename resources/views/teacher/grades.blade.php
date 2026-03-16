@@ -106,6 +106,79 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span x-show="sidebarOpen">Announcements</span>
             </button>
 
+             <!-- School Forms Dropdown -->
+    <div x-data="{ schoolFormsOpen: false }" class="relative">
+        <button @click="schoolFormsOpen = !schoolFormsOpen"
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-medium transition group">
+            <i class="fas fa-file-alt text-lg w-6 text-center text-emerald-600"></i>
+            <span x-show="sidebarOpen" class="flex-1 text-left">School Forms</span>
+            <i x-show="sidebarOpen" 
+               :class="schoolFormsOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
+               class="text-xs transition-transform duration-200"></i>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div x-show="schoolFormsOpen && sidebarOpen" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2"
+             class="ml-9 mt-1 space-y-1">
+            
+            <a href="{{ route('teacher.school-forms.sf1') }}" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF1</span>
+                <span>School Register</span>
+            </a>
+            
+        <!-- SF2 -->
+       <a href="{{ route('teacher.school-forms.sf2') }}"
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+            <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF2</span>
+            <span>Daily Attendance</span>
+        </a>
+            
+          <!--  <a href="#" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF3</span>
+                <span>Books Issued</span>
+            </a> -->
+            
+            <a href="{{ route('teacher.school-forms.sf4') }}" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF4</span>
+                <span>Monthly Attendance</span>
+            </a>
+            
+            <a href="{{ route('teacher.school-forms.sf5') }}"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                  <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF5</span>
+                  <span>Report on Promotion</span>
+            </a>
+            
+            <a href="{{ route('teacher.school-forms.sf6')}}" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF6</span>
+                <span>Summarized Report</span>
+            </a>
+            
+           <a href="{{ route('teacher.school-forms.sf7')}}" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF7</span>
+                <span>School Personnel</span>
+            </a>
+            
+             <a href="{{ route('teacher.school-forms.sf8')}}" 
+               class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF8</span>
+                <span>Health/Nutrition</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
             <div class="mt-6 px-3 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider" x-show="sidebarOpen">System</div>
 
             <button @click="document.getElementById('profileModal').classList.remove('hidden');"

@@ -8,6 +8,7 @@ use App\Models\Enrollment;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 
 class Student extends Model
@@ -122,4 +123,20 @@ public function scopeActive($query)
     return $query->where('graduation_status', 'active');
 }
 
+
+    /**
+     * Get full name attribute
+     */
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * ✅ ADD THIS: Quiz scores relationship
+     */
+    public function quizScores()
+    {
+        return $this->hasMany(QuizScore::class);
+    }
 }

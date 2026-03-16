@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System - Flowchart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        /* Flowchart Grid */
+        .flowchart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* Box Styles */
+        .box {
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .entry { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 3px solid #1976d2; }
+        .admin { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border: 3px solid #c2185b; }
+        .teacher { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 3px solid #388e3c; }
+        .student { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border: 3px solid #7b1fa2; }
+        .database { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%); border: 3px solid #616161; }
+        
+        .icon { font-size: 3em; margin-bottom: 10px; }
+        .title { font-weight: bold; font-size: 1.1em; color: #333; margin-bottom: 10px; }
+        .features { font-size: 0.85em; color: #555; text-align: left; }
+        .features li { margin: 5px 0; list-style: none; }
+        .features li:before { content: "✓ "; color: #4caf50; font-weight: bold; }
+        
+        /* Arrows */
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: #666;
+        }
+        
+        /* Section Headers */
+        .section-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.3em;
+            color: white;
+        }
+        .header-entry { background: linear-gradient(90deg, #1976d2, #1565c0); }
+        .header-admin { background: linear-gradient(90deg, #c2185b, #ad1457); }
+        .header-teacher { background: linear-gradient(90deg, #388e3c, #2e7d32); }
+        .header-student { background: linear-gradient(90deg, #7b1fa2, #6a1b9a); }
+        .header-db { background: linear-gradient(90deg, #616161, #424242); }
+        
+        /* Database Section */
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .db-table {
+            background: #f5f5f5;
+            border: 2px solid #757575;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .db-table .db-icon { font-size: 2em; margin-bottom: 8px; }
+        .db-table .db-name { font-weight: bold; color: #333; }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏫 Tugawe Elementary School</h1>
+        <p class="subtitle">Student Management System - Architecture Diagram</p>
+        
+        <!-- ENTRY POINT -->
+        <div class="section-header header-entry">🚪 SYSTEM ENTRY POINT</div>
+        <div class="flowchart">
+            <div class="box entry">
+                <div class="icon">🔐</div>
+                <div class="title">Login Page</div>
+                <ul class="features">
+                    <li>Username/Password</li>
+                    <li>Role Selection</li>
+                    <li>Remember Me</li>
+                </ul>
+            </div>
+            <div class="arrow">➜</div>
+            <div class="box entry">
+                <div class="icon">✅</div>
+                <div class="title">Authentication</div>
+                <ul class="features">
+                    <li>Validate Credentials</li>
+                    <li>Check User Status</li>
+                    <li>Session Creation</li>
+                </ul>
+            </div>
+            <div class="arrow">➜</div>
+            <div class="box entry">
+                <div class="icon">🎯</div>
+                <div class="title">Role Router</div>
+                <ul class="features">
+                    <li>Admin Dashboard</li>
+                    <li>Teacher Dashboard</li>
+                    <li>Student Dashboard</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- ADMIN MODULE -->
+        <div class="section-header header-admin">👨‍💼 ADMIN MODULE</div>
+        <div class="flowchart">
+            <div class="box admin">
+                <div class="icon">👥</div>
+                <div class="title">Manage Students</div>
+                <ul class="features">
+                    <li>Enroll New Student</li>
+                    <li>Edit Information</li>
+                    <li>Delete Records</li>
+                    <li>Search & Filter</li>
+                </ul>
+            </div>
+            <div class="box admin">
+                <div class="icon">👨‍🏫</div>
+                <div class="title">Manage Teachers</div>
+                <ul class="features">
+                    <li>Add Teacher</li>
+                    <li>Edit Details</li>
+                    <li>Assign Section</li>
+                    <li>Deactivate</li>
+                </ul>
+            </div>
+            <div class="box admin">
+                <div class="icon">🏫</div>
+                <div class="title">Manage Sections</div>
+                <ul class="features">
+                    <li>Create Section</li>
+                    <li>Assign Adviser</li>
+                    <li>Set Grade Level</li>
+                    <li>View Roster</li>
+                </ul>
+            </div>
+            <div class="box admin">
+                <div class="icon">📅</div>
+                <div class="title">School Years</div>
+                <ul class="features">
+                    <li>Set Active Year</li>
+                    <li>Open New Year</li>
+                    <li>Close School Year</li>
+                    <li>Archive Data</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- TEACHER MODULE -->
+        <div class="section-header header-teacher">👩‍🏫 TEACHER MODULE</div>
+        <div class="flowchart">
+            <div class="box teacher">
+                <div class="icon">📋</div>
+                <div class="title">My Sections</div>
+                <ul class="features">
+                    <li>View Assigned</li>
+                    <li>Section Details</li>
+                    <li>Student Roster</li>
+                    <li>Quick Stats</li>
+                </ul>
+            </div>
+            <div class="box teacher">
+                <div class="icon">👨‍🎓</div>
+                <div class="title">My Students</div>
+                <ul class="features">
+                    <li>View All Students</li>
+                    <li>Enroll New</li>
+                    <li>View Grades</li>
+                    <li>View Attendance</li>
+                </ul>
+            </div>
+            <div class="box teacher">
+                <div class="icon">📝</div>
+                <div class="title">Quiz Manager</div>
+                <ul class="features">
+                    <li>Add New Quiz</li>
+                    <li>Edit Scores</li>
+                    <li>Delete Quiz</li>
+                    <li>Print Grade Sheet</li>
+                </ul>
+            </div>
+            <div class="box teacher">
+                <div class="icon">📅</div>
+                <div class="title">Attendance</div>
+                <ul class="features">
+                    <li>Daily Marking</li>
+                    <li>Monthly Report</li>
+                    <li>SF2 Generation</li>
+                    <li>Print Records</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- STUDENT MODULE -->
+        <div class="section-header header-student">🎓 STUDENT MODULE</div>
+        <div class="flowchart">
+            <div class="box student">
+                <div class="icon">👤</div>
+                <div class="title">My Profile</div>
+                <ul class="features">
+                    <li>View Information</li>
+                    <li>Edit Profile</li>
+                    <li>Change Photo</li>
+                    <li>Update Contact</li>
+                </ul>
+            </div>
+            <div class="box student">
+                <div class="icon">📊</div>
+                <div class="title">My Grades</div>
+                <ul class="features">
+                    <li>View Grade Cards</li>
+                    <li>Subject Grades</li>
+                    <li>Print Grades</li>
+                    <li>Historical View</li>
+                </ul>
+            </div>
+            <div class="box student">
+                <div class="icon">📝</div>
+                <div class="title">My Quiz Scores</div>
+                <ul class="features">
+                    <li>View All Scores</li>
+                    <li>Class Average</li>
+                    <li>Progress Tracking</li>
+                    <li>Print Results</li>
+                </ul>
+            </div>
+            <div class="box student">
+                <div class="icon">📅</div>
+                <div class="title">My Attendance</div>
+                <ul class="features">
+                    <li>View Record</li>
+                    <li>Monthly Calendar</li>
+                    <li>Present/Absent/Late</li>
+                    <li>Attendance Rate</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- DATABASE -->
+        <div class="section-header header-db">💾 DATABASE LAYER (MySQL)</div>
+        <div class="db-grid">
+            <div class="db-table">
+                <div class="db-icon">👤</div>
+                <div class="db-name">users</div>
+                <small>Auth & Profiles</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">🎓</div>
+                <div class="db-name">students</div>
+                <small>Student Records</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">👨‍🏫</div>
+                <div class="db-name">teachers</div>
+                <small>Teacher Records</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">🏫</div>
+                <div class="db-name">sections</div>
+                <small>Class Sections</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">📝</div>
+                <div class="db-name">enrollments</div>
+                <small>Student-Section Link</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">📊</div>
+                <div class="db-name">grades</div>
+                <small>Subject Grades</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">🎯</div>
+                <div class="db-name">quiz_scores</div>
+                <small>Quiz Results</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">📅</div>
+                <div class="db-name">attendance</div>
+                <small>Daily Attendance</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">📅</div>
+                <div class="db-name">school_years</div>
+                <small>Academic Years</small>
+            </div>
+            <div class="db-table">
+                <div class="db-icon">📢</div>
+                <div class="db-name">announcements</div>
+                <small>School News</small>
+            </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #1976d2;"></div>
+                <span>Entry/Auth</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #c2185b;"></div>
+                <span>Admin</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #388e3c;"></div>
+                <span>Teacher</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #7b1fa2;"></div>
+                <span>Student</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #616161;"></div>
+                <span>Database</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add click interactions
+        document.querySelectorAll('.box').forEach(box => {
+            box.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+        
+        // Print button
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>

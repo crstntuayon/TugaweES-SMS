@@ -18,10 +18,14 @@ class DashboardController extends Controller
 
     $activeSchoolYear = \App\Models\SchoolYear::where('is_active', true)->first();
 
-    $enrollment = \App\Models\Enrollment::with('section')
-        ->where('student_id', $student->id)
-        ->where('school_year_id', $activeSchoolYear?->id)
-        ->first();
+    $enrollment = \App\Models\Enrollment::with([
+        'section' => function($query) {
+            $query->with(['teacher', 'schoolYear']);
+        }
+    ])
+    ->where('student_id', $student->id)
+    ->where('school_year_id', $activeSchoolYear?->id)
+    ->first();
 
     $section = $enrollment?->section;
 
@@ -31,7 +35,6 @@ class DashboardController extends Controller
         'activeSchoolYear'
     ));
 }
-
     public function grades()
     {
         $student = Student::with('grades.subject')->where('user_id', auth()->id())->first();

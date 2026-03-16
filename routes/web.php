@@ -518,16 +518,29 @@ Route::get('/sf2/section/{section}', [SFController::class, 'sf2'])->name('sf2.wi
 });
 
 
-use App\Models\Section;
+// ADDED MARCH 16, 2026 -- START
 
-Route::get('/api/sections', function () {
-    return Section::with('teacher')->get();
+// ✅ Make sure this is OUTSIDE any other route group, or inside the correct one
+Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function () {
+
+
+  // ✅ FIXED: Quiz route that matches your button's route name
+    Route::get('/section/{section}/quizzes', [App\Http\Controllers\Teacher\QuizController::class, 'index'])
+        ->name('quizzes');  // This creates route name: teacher.quizzes
+    
+    // Other quiz management routes
+    Route::post('/quiz/store', [App\Http\Controllers\Teacher\QuizController::class, 'store'])
+        ->name('quiz.store');
+    Route::post('/quiz/{quizScore}/update', [App\Http\Controllers\Teacher\QuizController::class, 'update'])
+        ->name('quiz.update');
+    Route::delete('/quiz/{quizScore}', [App\Http\Controllers\Teacher\QuizController::class, 'destroy'])
+        ->name('quiz.destroy');
+            // ✅ NEW: Additional routes
+    Route::get('/section/{section}/student/{student}/history', [App\Http\Controllers\Teacher\QuizController::class, 'studentHistory'])
+        ->name('quiz.student.history');
+    Route::delete('/section/{section}/quiz-title', [App\Http\Controllers\Teacher\QuizController::class, 'destroyQuiz'])
+        ->name('quiz.destroy.title');
 });
 
-Route::get('/api/sections/{id}/students', function ($id) {
-
-    return \App\Models\Student::where('section_id', $id)->get();
-
-});
 
 require __DIR__.'/auth.php';

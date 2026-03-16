@@ -479,17 +479,16 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
 
     Route::prefix('school-forms')->name('school-forms.')->group(function () {
 
-       // SF1 Routes
-        Route::get('/sf1', [SFController::class, 'sf1SectionSelect'])
-            ->name('sf1.select-section');
-        Route::get('/sf1/section/{section}', [SFController::class, 'sf1'])
-            ->name('sf1');
-  // SF2 - Daily Attendance
-        Route::get('/sf2/{section}', [SFController::class, 'sf2'])->name('sf2');
-        Route::get('/sf2/{section}/export', [SFController::class, 'sf2Export'])->name('sf2.export');
+    // SF1 Routes
+Route::get('/sf1', [SFController::class, 'sf1'])
+    ->name('sf1');
 
-        Route::get('/sf2', [SFController::class, 'selectSectionSF2'])
-        ->name('sf2.select-section');
+Route::get('/sf1/section/{section}', [SFController::class, 'sf1'])
+    ->name('sf1.with-section');
+
+// If your SF2 routes look like this:
+Route::get('/sf2', [SFController::class, 'sf2'])->name('sf2');
+Route::get('/sf2/section/{section}', [SFController::class, 'sf2'])->name('sf2.with-section');
         
         // SF3 - Books Issued/Returned
         Route::get('/sf3/{student}', [SFController::class, 'sf3'])->name('sf3');
@@ -504,8 +503,10 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
         Route::get('/sf5/export', [SFController::class, 'sf5Export'])->name('sf5.export');
         
         Route::get('/sf6', [App\Http\Controllers\Teacher\SFormController::class, 'sf6'])->name('sf6');
-        Route::get('/sf7/{student}', [SFController::class, 'sf7'])->name('sf7');
-        Route::get('/sf8/{student}', [SFController::class, 'sf8'])->name('sf8');
+        Route::get('/sf7', [App\Http\Controllers\Teacher\SFormController::class, 'sf7'])->name('sf7');
+        Route::get('/sf8', [App\Http\Controllers\Teacher\SFormController::class, 'sf8'])->name('sf8');
+
+        
         Route::get('/sf9/{student}', [SFController::class, 'sf9'])->name('sf9');
         Route::get('/sf10/{student}', [SFController::class, 'sf10'])->name('sf10');
 

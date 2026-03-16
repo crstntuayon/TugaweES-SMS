@@ -946,7 +946,7 @@
 </head>
 <body>
 
-    <!-- Modern Top Navigation -->
+       <!-- Modern Top Navigation -->
     <nav class="top-nav">
         <div class="nav-container">
             <div class="nav-left">
@@ -962,10 +962,32 @@
                 
                 <div class="nav-divider"></div>
                 
+                <!-- Section Filter Dropdown -->
+                <div class="section-filter-container">
+                    <form method="GET" action="{{ route('teacher.school-forms.sf1') }}" id="sectionFilterForm" style="display: flex; align-items: center; gap: 10px;">
+                        <label for="section_id" style="font-size: 0.8125rem; font-weight: 600; color: var(--gray-600);">
+                            <i class="fas fa-users-class" style="margin-right: 5px; color: var(--primary);"></i>
+                            Section:
+                        </label>
+                        <div class="custom-select-wrapper">
+                            <select name="section_id" id="section_id" onchange="document.getElementById('sectionFilterForm').submit()" class="section-select">
+                                @foreach($teacherSections as $sec)
+                                    <option value="{{ $sec->id }}" {{ $selectedSection->id == $sec->id ? 'selected' : '' }}>
+                                        Grade {{ $sec->year_level }} - {{ $sec->name }} (SY: {{ $sec->schoolYear->name ?? 'N/A' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="nav-divider"></div>
+                
                 <div class="nav-info">
                     <div class="nav-info-item">
                         <i class="fas fa-graduation-cap"></i>
-                        <span>{{ $section->year_level ?? 'Grade Level' }} - {{ $section->name ?? 'Section' }}</span>
+                        <span>Grade {{ $selectedSection->year_level }} - {{ $selectedSection->name }}</span>
                     </div>
                     <div class="nav-info-item">
                         <i class="fas fa-calendar-alt"></i>
@@ -990,8 +1012,6 @@
                         <i class="fas fa-rotate-left"></i>
                         <span>Reset</span>
                     </button>
-                   
-                    
                 </div>
 
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -999,6 +1019,18 @@
                 </button>
 
                 <div class="mobile-actions" id="mobileActions">
+                    <!-- Section filter for mobile -->
+                    <div style="padding: 8px 12px; border-bottom: 1px solid var(--gray-200); margin-bottom: 4px;">
+                        <label style="font-size: 0.75rem; color: var(--gray-500); display: block; margin-bottom: 4px;">Select Section:</label>
+                        <select onchange="window.location.href='{{ route('teacher.school-forms.sf1') }}?section_id=' + this.value" class="mobile-section-select">
+                            @foreach($teacherSections as $sec)
+                                <option value="{{ $sec->id }}" {{ $selectedSection->id == $sec->id ? 'selected' : '' }}>
+                                    Grade {{ $sec->year_level }} - {{ $sec->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
                     <button onclick="toggleEditMode(); toggleMobileMenu();" class="btn btn-warning" id="mobileEditBtn">
                         <i class="fas fa-pen"></i>
                         <span>Edit</span>
@@ -1011,6 +1043,95 @@
             </div>
         </div>
     </nav>
+    <style>
+                /* Section Filter Styles */
+        .section-filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 8px 36px 8px 14px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            min-width: 220px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .section-select:hover {
+            border-color: var(--primary-light);
+        }
+
+        .section-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            pointer-events: none;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-select-wrapper:hover .select-arrow {
+            color: var(--primary);
+        }
+
+        .section-select:focus + .select-arrow {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* Mobile Section Select */
+        .mobile-section-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: white;
+            color: var(--gray-800);
+            font-weight: 500;
+        }
+
+        .mobile-section-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .section-filter-container {
+                display: none; /* Hidden on tablet, shown in mobile menu instead */
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-divider {
+                display: none;
+            }
+        }
+    </style>
 
     <!-- Main Content -->
     <main class="main-wrapper">
@@ -1110,14 +1231,14 @@
                                 <td>
                                     <span class="editable-field font-bold" data-field="school_year" data-original="{{ $activeSchoolYear->name ?? 'N/A' }}">{{ $activeSchoolYear->name ?? 'N/A' }}</span>
                                 </td>
-                                <td style="font-weight: bold; background: #f9fafb;">Grade Level</td>
-                                <td>
-                                    <span class="editable-field font-bold" data-field="grade_level" data-original="{{ $section->year_level ?? 'N/A' }}">{{ $section->year_level ?? 'N/A' }}</span>
-                                </td>
-                                <td style="font-weight: bold; background: #f9fafb;">Section</td>
-                                <td>
-                                    <span class="editable-field font-bold" data-field="section" data-original="{{ $section->name ?? 'N/A' }}">{{ $section->name ?? 'N/A' }}</span>
-                                </td>
+                               <td style="font-weight: bold; background: #f9fafb;">Grade Level</td>
+                               <td>
+                                   <span class="editable-field font-bold" data-field="grade_level" data-original="{{ $selectedSection->year_level ?? 'N/A' }}">{{ $selectedSection->year_level ?? 'N/A' }}</span>
+                               </td>
+                               <td style="font-weight: bold; background: #f9fafb;">Section</td>
+                               <td>
+                                   <span class="editable-field font-bold" data-field="section" data-original="{{ $selectedSection->name ?? 'N/A' }}">{{ $selectedSection->name ?? 'N/A' }}</span>
+                               </td>
                             </tr>
                         </table>
                     </div>
@@ -1132,7 +1253,10 @@
                             <tr>
                                 <td style="width: 15%; font-weight: bold; background: #f9fafb;">Name of Adviser</td>
                                 <td style="width: 50%;">
-                                    <span class="editable-field font-bold uppercase" data-field="adviser_name" data-original="{{ $adviser ?? auth()->user()->full_name ?? '____________________' }}">{{ $adviser ?? auth()->user()->full_name ?? '____________________' }}</span>
+                                   <!-- Adviser Name -->
+                                     <span class="editable-field font-bold uppercase" data-field="adviser_name" data-original="{{ $adviser }}">
+                                        {{ $adviser }}
+                                     </span>
                                 </td>
                                 <td style="width: 15%; font-weight: bold; background: #f9fafb;">Date Generated</td>
                                 <td style="width: 20%;">
@@ -1425,7 +1549,7 @@
 
    <!-- Floating Action Button Container -->
 <div class="fab-container">
-    <a href="{{ route('teacher.school-forms.sf1.select-section') }}" class="fab-button fab-back" title="Back to Dashboard">
+    <a href="{{ route('teacher.dashboard') }}" class="fab-button fab-back" title="Back to Dashboard">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>

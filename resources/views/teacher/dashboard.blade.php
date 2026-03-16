@@ -110,14 +110,14 @@
              x-transition:leave-end="opacity-0 transform -translate-y-2"
              class="ml-9 mt-1 space-y-1">
             
-            <a href="{{ route('teacher.school-forms.sf1.select-section') }}" 
+            <a href="{{ route('teacher.school-forms.sf1') }}" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
                 <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF1</span>
                 <span>School Register</span>
             </a>
             
         <!-- SF2 -->
-       <a href="{{ route('teacher.school-forms.sf2.select-section') }}"
+       <a href="{{ route('teacher.school-forms.sf2') }}"
            class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
             <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF2</span>
             <span>Daily Attendance</span>
@@ -135,11 +135,11 @@
                 <span>Monthly Attendance</span>
             </a>
             
-<a href="{{ route('teacher.school-forms.sf5') }}"
-   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
-    <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF5</span>
-    <span>Report on Promotion</span>
-</a>
+            <a href="{{ route('teacher.school-forms.sf5') }}"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                  <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF5</span>
+                  <span>Report on Promotion</span>
+            </a>
             
             <a href="{{ route('teacher.school-forms.sf6')}}" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
@@ -147,16 +147,16 @@
                 <span>Summarized Report</span>
             </a>
             
-            <a href="#" 
+           <a href="{{ route('teacher.school-forms.sf7')}}" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
                 <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF7</span>
                 <span>School Personnel</span>
             </a>
             
-            <a href="#" 
+             <a href="{{ route('teacher.school-forms.sf8')}}" 
                class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition">
                 <span class="w-6 text-center font-semibold text-xs bg-emerald-100 text-emerald-700 rounded px-1.5 py-0.5">SF8</span>
-                <span>Enrollment Report</span>
+                <span>Health/Nutrition</span>
             </a>
         </div>
     </div>
@@ -393,23 +393,21 @@
                                                            <a href="{{ route('teacher.school-forms.sf5', $section->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
-                                                            </a> -->
-                                                            
-                                                            <!-- SF6-SF10 
+                                                            </a> 
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
                                                                 <span class="truncate">SF6 - Summarized Report</span>
-                                                            </a> -->
-
-
+                                                            </a> 
                                                             <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
                                                                 <span class="truncate">SF7 - School Personnel</span>
-                                                            </a>
+                                                            </a> 
                                                             <a href="{{ route('teacher.school-forms.sf8', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">8</span>
                                                                 <span class="truncate">SF8 - Health/Nutrition</span>
-                                                            </a>
+                                                            </a> -->
+
+
                                                             <a href="{{ route('teacher.school-forms.sf9', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">9</span>
                                                                 <span class="truncate">SF9 - Progress Report Card</span>
@@ -566,23 +564,21 @@
                                                             <a href="{{ route('teacher.school-forms.sf5', $section->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">5</span>
                                                                 <span class="truncate">SF5 - Report on Promotion/Learning Progress/Achievements</span>
-                                                            </a> -->
-                                                            
-                                                            <!-- SF6-SF10 
+                                                            </a> 
                                                             <a href="{{ route('teacher.school-forms.sf6', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">6</span>
                                                                 <span class="truncate">SF6 - Summarized Report</span>
-                                                            </a> --> 
-
-                                                            
+                                                            </a>
                                                             <a href="{{ route('teacher.school-forms.sf7', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">7</span>
                                                                 <span class="truncate">SF7 - School Personnel</span>
-                                                            </a>
+                                                            </a> 
                                                             <a href="{{ route('teacher.school-forms.sf8', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">8</span>
                                                                 <span class="truncate">SF8 - Health/Nutrition</span>
-                                                            </a>
+                                                            </a> -->
+
+
                                                             <a href="{{ route('teacher.school-forms.sf9', $student->id) }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors duration-150">
                                                                 <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">9</span>
                                                                 <span class="truncate">SF9 - Progress Report Card</span>

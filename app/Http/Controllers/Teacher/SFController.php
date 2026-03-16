@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 class SFController extends Controller
 {
+    //NOT IN USE -- START
  public function sf1SectionSelect()
     {
         $teacher = Auth::user();
@@ -36,48 +37,74 @@ class SFController extends Controller
         return view('teacher.school-forms.sf1-section-select', compact('sections', 'activeSchoolYear'));
     }
 
-    /**
-     * Display SF1 for a specific section
-     */
-    public function sf1($section)
-    {
-        $section = Section::with(['students', 'schoolYear'])->findOrFail($section);
-        
-        if ($section->teacher_id !== Auth::id()) {
-            abort(403, 'Unauthorized access to this section.');
-        }
-        
-        $school = (object) [
-            'school_id' => '123456',
-            'name' => 'Tugawe Elementary School',
-            'region' => 'NIR - Negros Island Region',
-            'division' => 'Division of Negros Oriental',
-            'district' => 'Dauin District',
-            'principal' => ''
-        ];
-        
-        $activeSchoolYear = $section->schoolYear;
-        $adviser = $section->teacher?->full_name ?? Auth::user()->full_name;
-        
-        $students = $section->students()
-            ->orderBy('sex', 'desc')
-            ->orderBy('last_name')
-            ->orderBy('first_name')
-            ->get();
-        
-        $maleStudents = $students->where('sex', 'Male');
-        $femaleStudents = $students->where('sex', 'Female');
-        
-        return view('teacher.school-forms.sf1', compact(
-            'section',
-            'school',
-            'activeSchoolYear',
-            'adviser',
-            'students',
-            'maleStudents',
-            'femaleStudents'
-        ));
+    // END
+
+    
+
+  public function sf1(Request $request, $section = null)
+{
+    // Get current teacher's sections for the dropdown
+    $teacherSections = Section::where('teacher_id', Auth::id())
+        ->with('schoolYear')
+        ->orderBy('year_level')
+        ->orderBy('name')
+        ->get();
+    
+    // If no sections found, show error
+    if ($teacherSections->isEmpty()) {
+        abort(403, 'No sections assigned to you.');
     }
+    
+    // Determine which section to display
+    if ($section) {
+        $selectedSection = Section::with(['students', 'schoolYear'])->findOrFail($section);
+    } else {
+        // Use first section or the one from request
+        $selectedSectionId = $request->input('section_id');
+        if ($selectedSectionId) {
+            $selectedSection = Section::with(['students', 'schoolYear'])->findOrFail($selectedSectionId);
+        } else {
+            $selectedSection = $teacherSections->first();
+        }
+    }
+    
+    // Verify teacher owns this section
+    if ($selectedSection->teacher_id !== Auth::id()) {
+        abort(403, 'Unauthorized access to this section.');
+    }
+    
+    $school = (object) [
+        'school_id' => '120231',
+        'name' => 'Tugawe Elementary School',
+        'region' => 'NIR - Negros Island Region',
+        'division' => 'Division of Negros Oriental',
+        'district' => 'Dauin District',
+        'principal' => ''
+    ];
+    
+    $activeSchoolYear = $selectedSection->schoolYear;
+    $adviser = $selectedSection->teacher?->full_name ?? Auth::user()->full_name;
+    
+    $students = $selectedSection->students()
+        ->orderBy('sex', 'desc')
+        ->orderBy('last_name')
+        ->orderBy('first_name')
+        ->get();
+    
+    $maleStudents = $students->where('sex', 'Male');
+    $femaleStudents = $students->where('sex', 'Female');
+    
+    return view('teacher.school-forms.sf1', compact(
+        'selectedSection',
+        'teacherSections',
+        'school',
+        'activeSchoolYear',
+        'adviser',
+        'students',
+        'maleStudents',
+        'femaleStudents'
+    ));
+}
 
      /**
      * SF2 - Daily Attendance Report (View)
@@ -85,11 +112,41 @@ class SFController extends Controller
   /**
  * SF2 - Daily Attendance Report (View)
  */
-public function sf2(Request $request, Section $section)
+public function sf2(Request $request, $section = null)
 {
+    // Get current teacher's sections for the dropdown
+    $teacherSections = Section::where('teacher_id', Auth::id())
+        ->with('schoolYear')
+        ->orderBy('year_level')
+        ->orderBy('name')
+        ->get();
+    
+    // If no sections found, show error
+    if ($teacherSections->isEmpty()) {
+        abort(403, 'No sections assigned to you.');
+    }
+    
+    // Determine which section to display
+    if ($section) {
+        $selectedSection = Section::with(['students', 'schoolYear'])->findOrFail($section);
+    } else {
+        // Use first section or the one from request
+        $selectedSectionId = $request->input('section_id');
+        if ($selectedSectionId) {
+            $selectedSection = Section::with(['students', 'schoolYear'])->findOrFail($selectedSectionId);
+        } else {
+            $selectedSection = $teacherSections->first();
+        }
+    }
+    
+    // Verify teacher owns this section
+    if ($selectedSection->teacher_id !== Auth::id()) {
+        abort(403, 'Unauthorized access to this section.');
+    }
+
     $activeSchoolYear = SchoolYear::where('is_active', true)->first();
     
-    // Get current year and month from request or default to current date
+    // Get year and month from request or default to current date
     $year = $request->input('year', date('Y'));
     $month = $request->input('month', date('m'));
     
@@ -101,33 +158,36 @@ public function sf2(Request $request, Section $section)
         }
     }
     
-    // Get students
-    $studentIds = \App\Models\Enrollment::where('section_id', $section->id)
+    // Get students with their attendances
+    $studentIds = \App\Models\Enrollment::where('section_id', $selectedSection->id)
         ->where('school_year_id', $activeSchoolYear->id)
         ->pluck('student_id');
     
     $students = Student::whereIn('id', $studentIds)
+        ->with(['attendances' => function($query) use ($year, $month) {
+            $query->whereYear('date', $year)
+                  ->whereMonth('date', $month);
+        }])
         ->orderBy('last_name')
         ->orderBy('first_name')
         ->get();
     
-    // Get attendance data for the selected month/year
-    $attendances = \App\Models\Attendance::whereIn('student_id', $studentIds)
-        ->whereYear('date', $year)
-        ->whereMonth('date', $month)
-        ->get()
-        ->groupBy('student_id');
-            
+
+        $section = $selectedSection;
+
     return view('teacher.school-forms.sf2', compact(
-        'section', 
+        'selectedSection',
+        'teacherSections',
         'students', 
         'activeSchoolYear',
         'year',
         'month',
-        'attendances'
+          'section', 
     ));
 }
 
+
+//NOT IN USE -- START
 public function selectSectionSF2()
 {
      $teacher = Auth::user();
@@ -178,7 +238,10 @@ public function sf2Export(Request $request, Section $section)
     
     return $pdf->download($filename);
 }
-    
+    // END
+
+
+
 /**
  * SF3 - Books Issued and Returned Report
  * Fixed to properly display section and grade level

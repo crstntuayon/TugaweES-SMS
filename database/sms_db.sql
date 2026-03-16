@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2026 at 12:39 AM
+-- Generation Time: Mar 16, 2026 at 03:42 AM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -434,7 +434,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (91, '2026_03_15_033631_create_schools_table', 78),
 (92, '2026_03_15_125508_add_school_year_id_to_grades_table', 79),
 (93, '2026_03_15_234833_add_start_end_year_to_school_years_table', 80),
-(94, '2026_03_15_235831_add_year_level_id_to_enrollments', 81);
+(94, '2026_03_15_235831_add_year_level_id_to_enrollments', 81),
+(95, '2026_03_16_024218_create_student_health_records_table', 82);
 
 -- --------------------------------------------------------
 
@@ -632,8 +633,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('oN7383pSBpwLcJlU1EZdQZIHbOjo9ynmtEN54Beo', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTUVsbjFjSUdkMHhuQ093ZHpVSG50ZkFDUGNlR1gwenhaV2xTZGgxeSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773592336),
-('YEx80XqQ2ciBxHGyNuU28U7E4lV0BOCCCBzhmrxP', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibWNSWUNTbHBYNWJpVEdUYTRzaGZ1YnpPNDBPckkwMzJPYzJOMkNVcSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoidGVhY2hlci5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo0Mjt9', 1773621489);
+('iZMTpGtIXpNPGFg5R0Yl8YZzkKAVcMYWkSmn33pi', 42, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ1h2M1Y4RldJWUdGVm00b2Y0NWlySTdvZ0N5bEx0U2NaUkJGTE5odSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC90ZWFjaGVyL3NjaG9vbC1mb3Jtcy9zZjEvc2VjdGlvbi81NSI7czo1OiJyb3V0ZSI7czoyNDoidGVhY2hlci5zY2hvb2wtZm9ybXMuc2YxIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NDI7fQ==', 1773632404),
+('YJ5mJCA2WweAQ2vkb8vMfzDRVNd8tfYgGnxebI9Z', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWHo2WWJ6SXdRRjdyWXZzUmliTGpaT2RuNHU1WGp4MVduUGZNWVNOMiI7czo3OiJzdWNjZXNzIjtzOjM4OiJZb3UgaGF2ZSBiZWVuIGxvZ2dlZCBvdXQgc3VjY2Vzc2Z1bGx5LiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjE6e2k6MDtzOjc6InN1Y2Nlc3MiO319fQ==', 1773623012);
 
 -- --------------------------------------------------------
 
@@ -675,6 +676,33 @@ INSERT INTO `students` (`id`, `lrn`, `first_name`, `middle_name`, `last_name`, `
 (166, '120231260005', 'Troilan', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2005-05-02', 'troituayon@gmail.com', '09636084589', 'Tugawe, Dauin, Negros Oriental', 166, '2026-02-23 04:25:08', '2026-02-23 05:12:19', NULL, 'S-120231260004', 'photos/UXBwhA00hs8kQ7GeHSB479b6PHuqL79FvMcVTJmO.jpg', 1, NULL, 'active', NULL),
 (170, '120231260008', 'Noime', 'Talorete', 'Baldomar', NULL, 'Female', NULL, '2003-06-11', 'noimebaldomartalorete@gmail.com', '+639636084589', 'Cantil-e', 172, '2026-03-11 17:09:34', '2026-03-11 17:09:34', NULL, NULL, 'students/biv1dhJIJiqxTOZbCHcMzh4AYyw5z9Du3j0r2hgS.jpg', NULL, NULL, 'active', NULL),
 (171, '120231260007', 'Cres', 'Bajado', 'Tuayon', NULL, 'Male', NULL, '2004-01-07', 'cresttuayon07@gmail.com', '+639636084589', 'Tugawe, Dauin Neg.Or.', 175, '2026-03-11 17:21:57', '2026-03-12 03:51:53', NULL, NULL, 'students/hDqgWLmaDmbwttAWVHUWwU2S0S4OJih8VIgBK4oe.jpg', NULL, NULL, 'active', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_health_records`
+--
+
+CREATE TABLE `student_health_records` (
+  `id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `school_year_id` bigint UNSIGNED NOT NULL,
+  `weight` float(5,2) DEFAULT NULL,
+  `height` decimal(5,2) DEFAULT NULL,
+  `bmi` decimal(5,2) DEFAULT NULL,
+  `nutritional_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hfa_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_health_records`
+--
+
+INSERT INTO `student_health_records` (`id`, `student_id`, `school_year_id`, `weight`, `height`, `bmi`, `nutritional_status`, `hfa_status`, `remarks`, `created_at`, `updated_at`) VALUES
+(1, 166, 1, 44.00, 157.00, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1102,6 +1130,14 @@ ALTER TABLE `students`
   ADD KEY `students_school_year_id_foreign` (`school_year_id`);
 
 --
+-- Indexes for table `student_health_records`
+--
+ALTER TABLE `student_health_records`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_health_records_student_id_foreign` (`student_id`),
+  ADD KEY `student_health_records_school_year_id_foreign` (`school_year_id`);
+
+--
 -- Indexes for table `student_subjects`
 --
 ALTER TABLE `student_subjects`
@@ -1220,7 +1256,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1269,6 +1305,12 @@ ALTER TABLE `section_teacher`
 --
 ALTER TABLE `students`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+
+--
+-- AUTO_INCREMENT for table `student_health_records`
+--
+ALTER TABLE `student_health_records`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `student_subjects`
@@ -1397,6 +1439,13 @@ ALTER TABLE `students`
   ADD CONSTRAINT `students_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `students_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `students_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_health_records`
+--
+ALTER TABLE `student_health_records`
+  ADD CONSTRAINT `student_health_records_school_year_id_foreign` FOREIGN KEY (`school_year_id`) REFERENCES `school_years` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_health_records_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student_subjects`

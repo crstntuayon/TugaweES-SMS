@@ -729,22 +729,49 @@
     </header>
 
     <!-- Control Bar - Buttons removed, only month selector remains -->
-    <div class="control-bar no-print">
-        <div class="control-content">
-            <div class="month-selector">
-                <label>📅 Report Period:</label>
-                <form method="GET" style="display: flex; gap: 0.5rem;">
-                    <input type="month" name="month" value="{{ sprintf('%04d-%02d', $year, $month) }}" 
-                           onchange="this.form.submit()">
-                    <input type="hidden" name="section_id" value="{{ $section->id }}">
-                </form>
-            </div>
+<!-- Control Bar -->
+<div class="control-bar no-print">
+    <div class="control-content">
+        
+        <!-- Section Selector - Navigate to URL -->
+        <div class="section-selector">
+            <label>🏫 Section:</label>
+            <select onchange="changeSection(this.value)" 
+                    style="padding: 0.5rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; min-width: 220px;">
+                @foreach($teacherSections as $sec)
+                    <option value="{{ $sec->id }}" {{ $selectedSection->id == $sec->id ? 'selected' : '' }}>
+                        Grade {{ $sec->year_level }} - {{ $sec->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
+
+        <!-- Month Selector - Keep current section in URL -->
+        <form method="GET" style="display: flex; gap: 0.5rem;">
+            <label>📅 Report Period:</label>
+            <input type="month" name="month" value="{{ sprintf('%04d-%02d', $year, $month) }}" 
+                   onchange="this.form.submit()"
+                   style="padding: 0.5rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem;">
+            <!-- Hidden section_id for form submission -->
+            <input type="hidden" name="section_id" value="{{ $selectedSection->id }}">
+        </form>
+        
     </div>
+</div>
+
+<script>
+function changeSection(sectionId) {
+    // Navigate to the section-specific URL (like SF1 does)
+    const baseUrl = '{{ url("/teacher/school-forms/sf2/section") }}';
+    window.location.href = baseUrl + '/' + sectionId;
+}
+</script>
+
+
 
     <!-- Floating Action Buttons -->
     <div class="fab-container no-print">
-        <a href="{{ route('teacher.school-forms.sf2.select-section')}}" class="fab-button fab-back" title="Back to Dashboard">
+        <a href="{{ route('teacher.dashboard')}}" class="fab-button fab-back" title="Back to Dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>

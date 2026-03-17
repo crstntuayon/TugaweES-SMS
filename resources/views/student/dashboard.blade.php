@@ -101,33 +101,1550 @@
                             <p class="text-xs text-gray-500">{{ auth()->user()->email ?? 'student@tugawe.edu.ph' }}</p>
                         </div>
                         
-                        <div class="py-1">
-                            <a href="#" onclick="openProfileModal(); open = false;" 
-                               class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition">
+                    <!-- Menu Container -->
+<div class="flex flex-col max-h-96">
+    
+    <!-- Scrollable Area (My Profile, SF3, SF8) -->
+    <div class="flex-1 overflow-y-auto p-2 space-y-1 
+                [&::-webkit-scrollbar]:w-1.5 
+                [&::-webkit-scrollbar-track]:bg-transparent 
+                [&::-webkit-scrollbar-thumb]:bg-gray-200 
+                [&::-webkit-scrollbar-thumb]:rounded-full">
+        
+        <!-- My Profile -->
+        <a href="#" onclick="openProfileModal(); open = false;" 
+           class="group relative overflow-hidden flex items-center gap-3 px-4 py-4 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition rounded-xl border border-transparent hover:border-teal-200">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-teal-50 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-teal-100 opacity-50"></div>
+            <div class="relative w-10 h-10 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+            <div class="relative flex-1">
+                <div class="font-medium">My Profile</div>
+                <div class="text-xs text-gray-500 group-hover:text-teal-600">View and edit your profile</div>
+            </div>
+        </a>
+
+        <!-- SF3 Books -->
+        <a href="#" @click="open = false; window.dispatchEvent(new CustomEvent('open-books-modal'))" 
+           class="group relative overflow-hidden flex items-center gap-3 px-4 py-4 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition rounded-xl border border-transparent hover:border-amber-200">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-amber-50 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-amber-100 opacity-50"></div>
+            <div class="relative w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+            </div>
+            <div class="relative flex-1">
+                <div class="font-medium">Borrowed Books (SF3)</div>
+                <div class="text-xs text-gray-500 group-hover:text-amber-600">
+                    {{ $student->books->where('status', 'issued')->count() }} book(s) borrowed
+                </div>
+            </div>
+            <span class="relative ml-auto px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-full group-hover:bg-amber-200">
+                {{ $student->books->where('status', 'issued')->count() }}
+            </span>
+        </a>
+
+        <!-- SF8 Health -->
+        <a href="#" @click="open = false; window.dispatchEvent(new CustomEvent('open-sf8-modal'))" 
+           class="group relative overflow-hidden flex items-center gap-3 px-4 py-4 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition rounded-xl border border-transparent hover:border-emerald-200">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-emerald-100 opacity-50"></div>
+            <div class="relative w-10 h-10 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </div>
+            <div class="relative flex-1">
+                <div class="font-medium">Health Profile (SF8)</div>
+                <div class="text-xs text-gray-500 group-hover:text-emerald-600">
+                    @if($student->healthRecords->count() > 0)
+                        Latest: {{ $student->healthRecords->first()->created_at->format('M d, Y') }}
+                    @else
+                        No records yet
+                    @endif
+                </div>
+            </div>
+            <span class="relative ml-auto px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full group-hover:bg-emerald-200">
+                {{ $student->healthRecords->count() }}
+            </span>
+        </a>
+
+        <!-- Announcements - Triggers Global Modal -->
+<a href="#" @click="open = false; window.dispatchEvent(new CustomEvent('open-announcements-modal'))" 
+   class="group relative overflow-hidden flex items-center gap-3 px-4 py-4 text-sm text-gray-700 hover:bg-violet-50 hover:text-violet-700 transition rounded-xl border border-transparent hover:border-violet-200">
+    
+    <!-- Background decoration -->
+    <div class="absolute top-0 right-0 w-20 h-20 bg-violet-50 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-violet-100 opacity-50"></div>
+    
+    <!-- Icon -->
+    <div class="relative w-10 h-10 bg-violet-100 text-violet-600 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+        </svg>
+    </div>
+    
+    <!-- Text Content -->
+    <div class="relative flex-1">
+        <div class="font-medium">Announcements</div>
+        <div class="text-xs text-gray-500 group-hover:text-violet-600">
+            @if($unreadCount > 0)
+                {{ $unreadCount }} unread announcement{{ $unreadCount > 1 ? 's' : '' }}
+            @else
+                No new announcements
+            @endif
+        </div>
+    </div>
+    
+    <!-- Badge -->
+    @if($unreadCount > 0)
+    <span class="relative ml-auto px-2 py-0.5 bg-violet-100 text-violet-700 text-xs font-bold rounded-full group-hover:bg-violet-200">
+        {{ $unreadCount }}
+    </span>
+    @endif
+</a>
+        
+
+    </div>
+    
+    <!-- Fixed Sign Out (Not Scrollable) -->
+    <div class="shrink-0 border-t border-gray-100 bg-white">
+        <a href="{{ route('logout') }}" 
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+           class="flex items-center gap-3 px-4 py-4 text-sm text-red-600 hover:bg-red-50 transition m-2 rounded-xl">
+            <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                </svg>
+            </div>
+            <div class="font-medium">Sign Out</div>
+        </a>
+    </div>
+    
+</div>
+
+<!-- Logout Form -->
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+</header>
+
+
+<!-- =================== SF3 BOOKS MODAL (GLOBAL SCOPE) =================== -->
+<div x-data="{ 
+    open: false,
+    bookTab: 'issued',
+    showAddForm: false,
+    showEditForm: false,
+    showLostForm: false,
+    editingBookId: null,
+    lostBookId: null,
+    lostBookTitle: '',
+    newBook: { 
+        title: '', 
+        book_code: '', 
+        reference_code: '',
+        date_issued: '', 
+        condition: 'good', 
+        subject_area: '',
+        damage_details: '',
+        loss_code: '',
+        action_taken: '',
+        remarks: ''
+    },
+    resetForm() {
+        this.newBook = { 
+            title: '', 
+            book_code: '', 
+            reference_code: '',
+            date_issued: '', 
+            condition: 'good', 
+            subject_area: '',
+            damage_details: '',
+            loss_code: '',
+            action_taken: '',
+            remarks: ''
+        };
+        this.editingBookId = null;
+        this.lostBookId = null;
+        this.lostBookTitle = '';
+        this.showAddForm = false;
+        this.showEditForm = false;
+        this.showLostForm = false;
+    }
+}" 
+x-init="
+    window.addEventListener('open-books-modal', () => { open = true; });
+    $watch('open', value => { 
+        if(!value) { 
+            resetForm();
+            bookTab = 'issued'; 
+        } 
+    });
+"
+class="relative z-[60]">
+
+    <!-- Backdrop -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/70 backdrop-blur-md"
+         @click="open = false">
+    </div>
+
+    <!-- Modal Content -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+         x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+         class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+         @keydown.escape.window="open = false">
+        
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col pointer-events-auto"
+             @click.stop>
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-amber-500 to-amber-600 p-6 text-white relative shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">School Form 3 (SF3)</h2>
+                        <p class="text-amber-100 text-sm">Books Borrowed and Returned</p>
+                    </div>
+                </div>
+                <button @click="open = false" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition hover:rotate-90">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 bg-gray-50 shrink-0">
+                <button @click="bookTab = 'issued'; resetForm()" 
+                        :class="{'bg-white text-amber-600 border-b-2 border-amber-500': bookTab === 'issued', 'text-gray-500 hover:text-gray-700': bookTab !== 'issued'}"
+                        class="flex-1 py-4 text-sm font-semibold transition flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Borrow Books
+                    <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full">{{ $student->books->where('status', 'issued')->count() }}</span>
+                </button>
+                <button @click="bookTab = 'returned'; resetForm()" 
+                        :class="{'bg-white text-green-600 border-b-2 border-green-500': bookTab === 'returned', 'text-gray-500 hover:text-gray-700': bookTab !== 'returned'}"
+                        class="flex-1 py-4 text-sm font-semibold transition flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Returned Books
+                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">{{ $student->books->where('status', 'returned')->count() }}</span>
+                </button>
+                <button @click="bookTab = 'lost'; resetForm()" 
+                        :class="{'bg-white text-red-600 border-b-2 border-red-500': bookTab === 'lost', 'text-gray-500 hover:text-gray-700': bookTab !== 'lost'}"
+                        class="flex-1 py-4 text-sm font-semibold transition flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    Lost Books
+                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">{{ $student->books->where('status', 'lost')->count() }}</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-6">
+                
+                <!-- Add Book Button -->
+                <div class="mb-6 flex justify-between items-center" x-show="!showAddForm && !showEditForm && !showLostForm">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900" 
+                            x-text="bookTab === 'issued' ? 'Currently Issued Books' : bookTab === 'returned' ? 'Returned Books History' : 'Lost Books Records'"></h3>
+                        <p class="text-sm text-gray-500" 
+                           x-text="bookTab === 'issued' ? 'Books currently in your possession' : bookTab === 'returned' ? 'Books you have returned' : 'Books reported as lost'"></p>
+                    </div>
+                    <button x-show="bookTab === 'issued'" 
+                            @click="showAddForm = true"
+                            class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold shadow-lg shadow-amber-500/30 transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        New Book
+                    </button>
+                </div>
+
+                <!-- Add Book Form -->
+                <div x-show="showAddForm && !showEditForm && !showLostForm" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+                    <h4 class="font-bold text-amber-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        New Book
+                    </h4>
+                    <form method="POST" action="{{ route('student.books.store') }}" class="grid md:grid-cols-2 gap-4">
+                        @csrf
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Book Title <span class="text-red-500">*</span></label>
+                            <input type="text" name="title" x-model="newBook.title" required
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                   placeholder="Enter book title">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Book Code / Accession #</label>
+                            <input type="text" name="book_code" x-model="newBook.book_code"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                   placeholder="e.g., MATH-001">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Reference Code / ISBN</label>
+                            <input type="text" name="reference_code" x-model="newBook.reference_code"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                   placeholder="e.g., 978-3-16-148410-0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject Area</label>
+                            <input type="text" name="subject_area" x-model="newBook.subject_area"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                   placeholder="e.g., Mathematics">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Issued <span class="text-red-500">*</span></label>
+                            <input type="date" name="date_issued" x-model="newBook.date_issued" required
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Condition <span class="text-red-500">*</span></label>
+                            <select name="condition" x-model="newBook.condition" required
+                                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition capitalize">
+                                <option value="new">New</option>
+                                <option value="good">Good</option>
+                                <option value="fair">Fair</option>
+                                <option value="damaged">Damaged</option>
+                                <option value="poor">Poor</option>
+                                <option value="lost">Lost</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Conditional Fields for Damaged Books -->
+                        <div x-show="newBook.condition === 'damaged'" x-transition class="md:col-span-2">
+                            <label class="block text-sm font-medium text-red-700 mb-1">Damage Details <span class="text-red-500">*</span></label>
+                            <textarea name="damage_details" x-model="newBook.damage_details" 
+                                      x-bind:required="newBook.condition === 'damaged'"
+                                      rows="2"
+                                      class="w-full border border-red-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition bg-red-50"
+                                      placeholder="Describe the damage (e.g., torn pages, water damage, cover missing...)"></textarea>
+                        </div>
+
+                        <!-- Conditional Fields for Lost Books -->
+                        <div x-show="newBook.condition === 'lost'" x-transition class="md:col-span-2">
+                            <label class="block text-sm font-medium text-red-700 mb-1">Loss Code <span class="text-red-500">*</span></label>
+                            <input type="text" name="loss_code" x-model="newBook.loss_code" 
+                                   x-bind:required="newBook.condition === 'lost'"
+                                   class="w-full border border-red-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition bg-red-50"
+                                   placeholder="e.g., LOST-2024-001">
+                        </div>
+
+                        <!-- Action Taken -->
+                        <div class="md:col-span-2" x-show="newBook.condition === 'damaged' || newBook.condition === 'lost' || newBook.condition === 'poor'" x-transition>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Action Taken</label>
+                            <input type="text" name="action_taken" x-model="newBook.action_taken"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                   placeholder="e.g., Replaced, Paid fine, Under repair...">
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
+                            <textarea name="remarks" x-model="newBook.remarks" rows="2"
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                                      placeholder="Additional notes or comments..."></textarea>
+                        </div>
+
+                        <div class="md:col-span-2 flex gap-3 mt-2">
+                            <button type="button" @click="resetForm()" 
+                                    class="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="flex-1 px-4 py-2.5 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 transition shadow-lg shadow-amber-500/30">
+                                Issue Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Edit Book Form -->
+                <div x-show="showEditForm && !showLostForm" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
+                    <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit Book
+                    </h4>
+                    <form method="POST" x-bind:action="'/student/books/' + editingBookId" class="grid md:grid-cols-2 gap-4">
+                        @csrf
+                        @method('PUT')
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Book Title <span class="text-red-500">*</span></label>
+                            <input type="text" name="title" x-model="newBook.title" required
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="Enter book title">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Book Code / Accession #</label>
+                            <input type="text" name="book_code" x-model="newBook.book_code"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="e.g., MATH-001">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Reference Code / ISBN</label>
+                            <input type="text" name="reference_code" x-model="newBook.reference_code"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="e.g., 978-3-16-148410-0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject Area</label>
+                            <input type="text" name="subject_area" x-model="newBook.subject_area"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="e.g., Mathematics">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Issued <span class="text-red-500">*</span></label>
+                            <input type="date" name="date_issued" x-model="newBook.date_issued" required
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Condition <span class="text-red-500">*</span></label>
+                            <select name="condition" x-model="newBook.condition" required
+                                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition capitalize">
+                                <option value="new">New</option>
+                                <option value="good">Good</option>
+                                <option value="fair">Fair</option>
+                                <option value="damaged">Damaged</option>
+                                <option value="poor">Poor</option>
+                                <option value="lost">Lost</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Conditional Fields for Damaged Books -->
+                        <div x-show="newBook.condition === 'damaged'" x-transition class="md:col-span-2">
+                            <label class="block text-sm font-medium text-red-700 mb-1">Damage Details <span class="text-red-500">*</span></label>
+                            <textarea name="damage_details" x-model="newBook.damage_details" 
+                                      x-bind:required="newBook.condition === 'damaged'"
+                                      rows="2"
+                                      class="w-full border border-red-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition bg-red-50"
+                                      placeholder="Describe the damage (e.g., torn pages, water damage, cover missing...)"></textarea>
+                        </div>
+
+                        <!-- Conditional Fields for Lost Books -->
+                        <div x-show="newBook.condition === 'lost'" x-transition class="md:col-span-2">
+                            <label class="block text-sm font-medium text-red-700 mb-1">Loss Code <span class="text-red-500">*</span></label>
+                            <input type="text" name="loss_code" x-model="newBook.loss_code" 
+                                   x-bind:required="newBook.condition === 'lost'"
+                                   class="w-full border border-red-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition bg-red-50"
+                                   placeholder="e.g., LOST-2024-001">
+                        </div>
+
+                        <!-- Action Taken -->
+                        <div class="md:col-span-2" x-show="newBook.condition === 'damaged' || newBook.condition === 'lost' || newBook.condition === 'poor'" x-transition>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Action Taken</label>
+                            <input type="text" name="action_taken" x-model="newBook.action_taken"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="e.g., Replaced, Paid fine, Under repair...">
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
+                            <textarea name="remarks" x-model="newBook.remarks" rows="2"
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                      placeholder="Additional notes or comments..."></textarea>
+                        </div>
+
+                        <div class="md:col-span-2 flex gap-3 mt-2">
+                            <button type="button" @click="resetForm()" 
+                                    class="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">
+                                Update Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Mark as Lost Form -->
+                <div x-show="showLostForm" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-red-50 border border-red-200 rounded-2xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-4 text-red-800">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <div>
+                            <h4 class="font-bold text-lg">Mark Book as Lost</h4>
+                            <p class="text-sm text-red-600" x-text="lostBookTitle"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-red-100 border border-red-200 rounded-lg p-3 mb-4">
+                        <p class="text-xs text-red-700">
+                            <strong>Warning:</strong> This action will mark the book as lost. Please provide the loss code and any relevant details.
+                        </p>
+                    </div>
+
+                    <form method="POST" x-bind:action="'/student/books/' + lostBookId + '/lost'" class="space-y-4">
+                        @csrf
+                        @method('PATCH')
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-red-700 mb-1">Loss Code <span class="text-red-500">*</span></label>
+                            <input type="text" name="loss_code" x-model="newBook.loss_code" required
+                                   class="w-full border border-red-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition bg-white"
+                                   placeholder="e.g., LOST-2024-001">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Action Taken</label>
+                            <input type="text" name="action_taken" x-model="newBook.action_taken"
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                                   placeholder="e.g., Paid replacement fee, Searching...">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Remarks</label>
+                            <textarea name="remarks" x-model="newBook.remarks" rows="2"
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                                      placeholder="Additional details about the loss..."></textarea>
+                        </div>
+
+                        <div class="flex gap-3 mt-2">
+                            <button type="button" @click="resetForm()" 
+                                    class="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition shadow-lg shadow-red-500/30 flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
-                                My Profile
-                            </a>
+                                Confirm Lost
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Books List -->
+                <div class="space-y-3" x-show="!showAddForm && !showEditForm && !showLostForm">
+                    @forelse($student->books as $book)
+                    <div x-show="(bookTab === 'issued' && '{{ $book->status }}' === 'issued') || 
+                                 (bookTab === 'returned' && '{{ $book->status }}' === 'returned') ||
+                                 (bookTab === 'lost' && '{{ $book->status }}' === 'lost')"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-x-4"
+                         x-transition:enter-end="opacity-100 translate-x-0"
+                         class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 
+                                    {{ $book->status === 'issued' ? 'bg-amber-100 text-amber-600' : 
+                                       ($book->status === 'returned' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600') }}">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <h4 class="font-bold text-gray-900 text-lg">{{ $book->title }}</h4>
+                                            @if($book->subject_area)
+                                                <span class="inline-block px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-lg mt-1">{{ $book->subject_area }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-500">
+                                        @if($book->book_code)
+                                        <span class="flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                                            </svg>
+                                            {{ $book->book_code }}
+                                        </span>
+                                        @endif
+                                        @if($book->reference_code)
+                                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span class="flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                            </svg>
+                                            ISBN: {{ $book->reference_code }}
+                                        </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center gap-3 mt-2 text-sm">
+                                        <span class="flex items-center gap-1 {{ $book->date_issued ? 'text-gray-600' : 'text-gray-400' }}">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            Issued: {{ $book->date_issued ? $book->date_issued->format('M d, Y') : 'N/A' }}
+                                        </span>
+                                        @if($book->date_returned)
+                                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span class="flex items-center gap-1 text-green-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            Returned: {{ $book->date_returned->format('M d, Y') }}
+                                        </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="mt-3 flex items-center gap-2 flex-wrap">
+                                        @if($book->condition)
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-lg font-medium capitalize">
+                                            Condition: {{ $book->condition }}
+                                        </span>
+                                        @endif
+                                        @if($book->status === 'issued')
+                                        <span class="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded-lg font-bold">Active</span>
+                                        @elseif($book->status === 'returned')
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-lg font-bold">Returned</span>
+                                        @elseif($book->status === 'lost')
+                                        <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-lg font-bold">Lost</span>
+                                        @endif
+                                        @if($book->loss_code)
+                                        <span class="px-2 py-1 bg-red-50 text-red-600 text-xs rounded-lg font-medium border border-red-200">
+                                            <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                            </svg>
+                                            {{ $book->loss_code }}
+                                        </span>
+                                        @endif
+                                        @if($book->action_taken)
+                                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-lg font-medium border border-blue-200">
+                                            <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                            </svg>
+                                            {{ $book->action_taken }}
+                                        </span>
+                                        @endif
+                                    </div>
+
+                                    @if($book->damage_details)
+                                    <div class="mt-2 p-3 bg-red-50 border border-red-100 rounded-lg">
+                                        <p class="text-xs text-red-700 flex items-start gap-2">
+                                            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                            </svg>
+                                            <span><span class="font-semibold">Damage Reported:</span> {{ $book->damage_details }}</span>
+                                        </p>
+                                    </div>
+                                    @endif
+
+                                    @if($book->remarks)
+                                    <div class="mt-2 p-2 bg-gray-50 border border-gray-100 rounded-lg">
+                                        <p class="text-xs text-gray-600 flex items-start gap-2">
+                                            <svg class="w-4 h-4 shrink-0 mt-0.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                            </svg>
+                                            <span><span class="font-medium">Remarks:</span> {{ $book->remarks }}</span>
+                                        </p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
                             
-                            <div class="border-t border-gray-100"></div>
-                            
-                            <a href="{{ route('logout') }}" 
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
-                               class="flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-                                </svg>
-                                Sign Out
-                            </a>
+                            <!-- Action Buttons for Issued Books -->
+                            @if($book->status === 'issued')
+                            <div class="flex flex-col gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <!-- Edit Button -->
+                                <button type="button" 
+                                        @click="
+                                            showEditForm = true;
+                                            editingBookId = {{ $book->id }};
+                                            newBook = {
+                                                title: '{{ addslashes($book->title) }}',
+                                                book_code: '{{ addslashes($book->book_code ?? '') }}',
+                                                reference_code: '{{ addslashes($book->reference_code ?? '') }}',
+                                                date_issued: '{{ $book->date_issued ? $book->date_issued->format('Y-m-d') : '' }}',
+                                                condition: '{{ $book->condition }}',
+                                                subject_area: '{{ addslashes($book->subject_area ?? '') }}',
+                                                damage_details: '{{ addslashes($book->damage_details ?? '') }}',
+                                                loss_code: '{{ addslashes($book->loss_code ?? '') }}',
+                                                action_taken: '{{ addslashes($book->action_taken ?? '') }}',
+                                                remarks: '{{ addslashes($book->remarks ?? '') }}'
+                                            }
+                                        "
+                                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-blue-500/30 transition flex items-center gap-2 whitespace-nowrap">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                
+                                <!-- Mark as Lost Button -->
+                                <button type="button" 
+                                        @click="
+                                            showLostForm = true;
+                                            lostBookId = {{ $book->id }};
+                                            lostBookTitle = '{{ addslashes($book->title) }}';
+                                            newBook = {
+                                                loss_code: '',
+                                                action_taken: '',
+                                                remarks: ''
+                                            }
+                                        "
+                                        class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-red-500/30 transition flex items-center gap-2 whitespace-nowrap">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                    Mark Lost
+                                </button>
+                                
+                                <!-- Return Button -->
+                                <form method="POST" action="{{ route('student.books.return', $book) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" 
+                                            class="w-full px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-green-500/30 transition flex items-center justify-center gap-2 whitespace-nowrap">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Return
+                                    </button>
+                                </form>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium" 
+                           x-text="bookTab === 'issued' ? 'No books currently borrowed' : bookTab === 'returned' ? 'No returned books yet' : 'No lost books recorded'"></p>
+                        <p class="text-sm text-gray-400 mt-1" 
+                           x-text="bookTab === 'issued' ? 'Click &quot;Issue New Book&quot; to add one' : bookTab === 'returned' ? 'Books you return will appear here' : 'Lost books will appear here'"></p>
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center text-xs text-gray-500 shrink-0">
+                <span>School Form 3 - Individual Inventory of Books</span>
+                <span>Total: {{ $student->books->count() }} | Issued: {{ $student->books->where('status', 'issued')->count() }} | Returned: {{ $student->books->where('status', 'returned')->count() }} | Lost: {{ $student->books->where('status', 'lost')->count() }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =================== SF8 HEALTH & NUTRITION MODAL (GLOBAL SCOPE) =================== -->
+<div x-data="{ 
+    open: false,
+    showAddRecord: false,
+    showEditRecord: false,
+    editingRecordId: null,
+    newRecord: {
+        examination_date: '',
+        weight: '',
+        height: '',
+        bmi: '',
+        nutritional_status: '',
+        hfa_status: '',
+        remarks: ''
+    },
+    calculateBMI() {
+        if (this.newRecord.height && this.newRecord.weight) {
+            let heightM = parseFloat(this.newRecord.height);
+            let weightKg = parseFloat(this.newRecord.weight);
+            if (heightM > 0 && weightKg > 0) {
+                let bmi = (weightKg / ((heightM/100) * (heightM/100))).toFixed(2);
+                this.newRecord.bmi = bmi;
+                
+                // Auto-determine nutritional status
+                if (bmi < 14) this.newRecord.nutritional_status = 'Severely Underweight';
+                else if (bmi < 16) this.newRecord.nutritional_status = 'Underweight';
+                else if (bmi < 25) this.newRecord.nutritional_status = 'Normal';
+                else if (bmi < 30) this.newRecord.nutritional_status = 'Overweight';
+                else this.newRecord.nutritional_status = 'Obese';
+            }
+        }
+    },
+    resetForm() {
+        this.newRecord = {
+            examination_date: new Date().toISOString().split('T')[0],
+            weight: '',
+            height: '',
+            bmi: '',
+            nutritional_status: '',
+            hfa_status: '',
+            remarks: ''
+        };
+        this.editingRecordId = null;
+        this.showAddRecord = false;
+        this.showEditRecord = false;
+    },
+    initEdit(record) {
+        this.editingRecordId = record.id;
+        this.newRecord = {
+            examination_date: record.examination_date,
+            weight: record.weight,
+            height: record.height,
+            bmi: record.bmi,
+            nutritional_status: record.nutritional_status,
+            hfa_status: record.hfa_status,
+            remarks: record.remarks
+        };
+        this.showEditRecord = true;
+        this.showAddRecord = false;
+    }
+}" 
+x-init="
+    window.addEventListener('open-sf8-modal', () => { 
+        open = true; 
+        resetForm();
+    });
+    $watch('open', value => { 
+        if(!value) { 
+            resetForm();
+        } 
+    });
+"
+class="relative z-[60]">
+
+    <!-- Backdrop -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/70 backdrop-blur-md"
+         @click="open = false">
+    </div>
+
+    <!-- Modal Content -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+         x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+         class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+         @keydown.escape.window="open = false">
+        
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col pointer-events-auto"
+             @click.stop>
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 text-white relative shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">School Form 8 (SF8)</h2>
+                        <p class="text-emerald-100 text-sm">Learner's Basic Health and Nutrition Profile</p>
+                    </div>
+                </div>
+                <button @click="open = false" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition hover:rotate-90">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="bg-gray-50 p-4 border-b border-gray-200 shrink-0">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    @php
+                        $latestRecord = $student->healthRecords->first();
+                    @endphp
+                    <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 mb-1">Latest BMI</div>
+                        <div class="text-xl font-bold text-emerald-600">
+                            {{ $latestRecord->bmi ?? 'N/A' }}
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 mb-1">Nutritional Status</div>
+                        <div class="text-sm font-bold 
+                            {{ ($latestRecord->nutritional_status ?? '') === 'Normal' ? 'text-green-600' : 
+                               (in_array($latestRecord->nutritional_status ?? '', ['Underweight', 'Severely Underweight']) ? 'text-red-600' : 
+                               (in_array($latestRecord->nutritional_status ?? '', ['Overweight', 'Obese']) ? 'text-orange-600' : 'text-gray-600')) }}">
+                            {{ $latestRecord->nutritional_status ?? 'No Record' }}
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 mb-1">Height-for-Age</div>
+                        <div class="text-sm font-bold text-blue-600">
+                            {{ $latestRecord->hfa_status ?? 'N/A' }}
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 mb-1">Total Records</div>
+                        <div class="text-xl font-bold text-gray-700">
+                            {{ $student->healthRecords->count() }}
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-6">
+                
+                <!-- Action Bar -->
+                <div class="mb-6 flex justify-between items-center" x-show="!showAddRecord && !showEditRecord">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Anthropometric Measurements</h3>
+                        <p class="text-sm text-gray-500">Weight, height, BMI and nutritional assessment records</p>
+                    </div>
+                    <button @click="showAddRecord = true" 
+                            class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold shadow-lg shadow-emerald-500/30 transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Measurement
+                    </button>
+                </div>
+
+                <!-- Add New Record Form -->
+                <div x-show="showAddRecord" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-6">
+                    <h4 class="font-bold text-emerald-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        New Anthropometric Measurement
+                    </h4>
+                    
+                    <form method="POST" action="{{ route('student.health.store') }}" class="space-y-4">
+                        @csrf
+                        <input type="hidden" name="student_id" value="{{ $student->id }}">
+                        <input type="hidden" name="school_year_id" value="{{ $activeSchoolYear->id ?? 1 }}">
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date Recorded <span class="text-red-500">*</span></label>
+                                <input type="date" name="created_at_date" x-model="newRecord.examination_date" required
+                                       class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                                <input type="hidden" name="examination_date" :value="newRecord.examination_date">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Weight (kg) <span class="text-red-500">*</span></label>
+                                <input type="number" step="0.01" name="weight" x-model="newRecord.weight" @input="calculateBMI()" required
+                                       class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                       placeholder="e.g., 45.50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Height (cm) <span class="text-red-500">*</span></label>
+                                <input type="number" step="0.01" name="height" x-model="newRecord.height" @input="calculateBMI()" required
+                                       class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                       placeholder="e.g., 155.50">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">BMI (Auto-calculated)</label>
+                                <input type="number" step="0.01" name="bmi" x-model="newRecord.bmi" readonly
+                                       class="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-2.5 text-gray-600"
+                                       placeholder="Auto-calculated">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nutritional Status <span class="text-red-500">*</span></label>
+                                <select name="nutritional_status" x-model="newRecord.nutritional_status" required
+                                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition capitalize">
+                                    <option value="">Select Status</option>
+                                    <option value="Severely Underweight">Severely Underweight</option>
+                                    <option value="Underweight">Underweight</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Overweight">Overweight</option>
+                                    <option value="Obese">Obese</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Height-for-Age Status</label>
+                                <select name="hfa_status" x-model="newRecord.hfa_status"
+                                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                                    <option value="">Select Status</option>
+                                    <option value="Severely Stunted">Severely Stunted</option>
+                                    <option value="Stunted">Stunted</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Tall">Tall</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Remarks / Recommendations</label>
+                            <textarea name="remarks" x-model="newRecord.remarks" rows="3"
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                      placeholder="Enter any observations, recommendations, or referrals..."></textarea>
+                        </div>
+
+                        <!-- BMI Reference Card -->
+                        <div class="bg-white rounded-lg p-3 border border-emerald-200 text-xs">
+                            <h5 class="font-semibold text-emerald-800 mb-2">BMI Classification Reference (WHO Child Growth Standards)</h5>
+                            <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                <div class="text-center p-2 bg-red-100 rounded text-red-800">
+                                    <div class="font-bold">&lt; -3 SD</div>
+                                    <div>Severely Underweight</div>
+                                </div>
+                                <div class="text-center p-2 bg-yellow-100 rounded text-yellow-800">
+                                    <div class="font-bold">-3 to -2 SD</div>
+                                    <div>Underweight</div>
+                                </div>
+                                <div class="text-center p-2 bg-green-100 rounded text-green-800">
+                                    <div class="font-bold">-2 to +1 SD</div>
+                                    <div>Normal</div>
+                                </div>
+                                <div class="text-center p-2 bg-orange-100 rounded text-orange-800">
+                                    <div class="font-bold">+1 to +2 SD</div>
+                                    <div>Overweight</div>
+                                </div>
+                                <div class="text-center p-2 bg-red-100 rounded text-red-800">
+                                    <div class="font-bold">&gt; +2 SD</div>
+                                    <div>Obese</div>
+                                </div>
+                            </div>
+                            <p class="mt-2 text-gray-500 italic">Note: Accurate classification requires age and sex-specific WHO Z-score tables</p>
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            <button type="button" @click="resetForm()" 
+                                    class="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="flex-1 px-4 py-2.5 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Save Measurement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Edit Record Form -->
+                <div x-show="showEditRecord" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
+                    <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit Measurement
+                    </h4>
+                    
+                    <form method="POST" x-bind:action="'/student/health/' + editingRecordId" class="space-y-4">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="student_id" value="{{ $student->id }}">
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Weight (kg) <span class="text-red-500">*</span></label>
+                                <input type="number" step="0.01" name="weight" x-model="newRecord.weight" @input="calculateBMI()" required
+                                       class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Height (cm) <span class="text-red-500">*</span></label>
+                                <input type="number" step="0.01" name="height" x-model="newRecord.height" @input="calculateBMI()" required
+                                       class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">BMI</label>
+                                <input type="number" step="0.01" name="bmi" x-model="newRecord.bmi" readonly
+                                       class="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-2.5 text-gray-600">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nutritional Status <span class="text-red-500">*</span></label>
+                                <select name="nutritional_status" x-model="newRecord.nutritional_status" required
+                                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition capitalize">
+                                    <option value="Severely Underweight">Severely Underweight</option>
+                                    <option value="Underweight">Underweight</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Overweight">Overweight</option>
+                                    <option value="Obese">Obese</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Height-for-Age Status</label>
+                                <select name="hfa_status" x-model="newRecord.hfa_status"
+                                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                    <option value="Severely Stunted">Severely Stunted</option>
+                                    <option value="Stunted">Stunted</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Tall">Tall</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Remarks / Recommendations</label>
+                            <textarea name="remarks" x-model="newRecord.remarks" rows="3"
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            <button type="button" @click="resetForm()" 
+                                    class="flex-1 px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Update Measurement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Health Records List -->
+                <div class="space-y-3" x-show="!showAddRecord && !showEditRecord">
+                    @forelse($student->healthRecords as $record)
+                    <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0
+                                    {{ $record->nutritional_status === 'Normal' ? 'bg-green-100 text-green-600' : 
+                                       (in_array($record->nutritional_status, ['Underweight', 'Severely Underweight']) ? 'bg-red-100 text-red-600' : 
+                                       (in_array($record->nutritional_status, ['Overweight', 'Obese']) ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-600')) }}">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-1">
+                                        <h4 class="font-bold text-gray-900 text-lg">
+                                            {{ $record->created_at ? $record->created_at->format('F d, Y') : 'No Date' }}
+                                        </h4>
+                                        <span class="px-2 py-0.5 rounded text-xs font-bold
+                                            {{ $record->nutritional_status === 'Normal' ? 'bg-green-100 text-green-700' : 
+                                               (in_array($record->nutritional_status, ['Underweight', 'Severely Underweight']) ? 'bg-red-100 text-red-700' : 
+                                               (in_array($record->nutritional_status, ['Overweight', 'Obese']) ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700')) }}">
+                                            {{ $record->nutritional_status }}
+                                        </span>
+                                        @if($record->hfa_status && $record->hfa_status !== 'Normal')
+                                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-bold">
+                                            {{ $record->hfa_status }}
+                                        </span>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 text-sm">
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="text-gray-500 text-xs block">Weight</span>
+                                            <span class="font-semibold text-gray-900">{{ $record->weight }} kg</span>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="text-gray-500 text-xs block">Height</span>
+                                            <span class="font-semibold text-gray-900">{{ $record->height }} cm</span>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="text-gray-500 text-xs block">BMI</span>
+                                            <span class="font-semibold text-gray-900">{{ $record->bmi }}</span>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="text-gray-500 text-xs block">School Year</span>
+                                            <span class="font-semibold text-gray-900">{{ $record->schoolYear->name ?? 'N/A' }}</span>
+                                        </div>
+                                    </div>
+
+                                    @if($record->remarks)
+                                    <div class="mt-3 p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                                        <p class="text-sm text-amber-800">
+                                            <span class="font-semibold">Remarks:</span> {{ $record->remarks }}
+                                        </p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button type="button" 
+                                        @click="initEdit({
+                                            id: {{ $record->id }},
+                                            examination_date: '{{ $record->created_at ? $record->created_at->format('Y-m-d') : '' }}',
+                                            weight: '{{ $record->weight }}',
+                                            height: '{{ $record->height }}',
+                                            bmi: '{{ $record->bmi }}',
+                                            nutritional_status: '{{ $record->nutritional_status }}',
+                                            hfa_status: '{{ $record->hfa_status }}',
+                                            remarks: '{{ addslashes($record->remarks ?? '') }}'
+                                        })"
+                                        class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold shadow-lg shadow-blue-500/30 transition flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                
+                                <form method="POST" action="{{ route('student.health.destroy', $record) }}" onsubmit="return confirm('Are you sure you want to delete this health record?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-semibold shadow-lg shadow-red-500/30 transition flex items-center justify-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium">No health records found</p>
+                        <p class="text-sm text-gray-400 mt-1">Click "Add Measurement" to create the first record</p>
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center text-xs text-gray-500 shrink-0">
+                <span>School Form 8 - Learner's Basic Health and Nutrition Profile</span>
+                <span>
+Records: {{ $student->healthRecords->count() }} |
+Latest:
+{{ $student->healthRecords->first() ? $student->healthRecords->first()->created_at->format('M d, Y') : 'None' }}
+</span>
+            </div>
         </div>
     </div>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
-</header>
+</div>
+
+
+
+<script>
+    window.$announcements = @json($announcements);
+    window.$unreadCount = {{ $unreadCount }};
+</script>
+
+<!-- =================== ANNOUNCEMENTS MODAL (GLOBAL SCOPE) =================== -->
+<div x-data="{ 
+    open: false,
+    activeTab: 'all',
+    selectedAnnouncement: null,
+    searchQuery: '',
+    get filteredAnnouncements() {
+        let announcements = $announcements;
+        
+        // Filter by tab
+        if (this.activeTab === 'urgent') {
+            announcements = announcements.filter(a => a.is_urgent);
+        } else if (this.activeTab === 'pinned') {
+            announcements = announcements.filter(a => a.is_pinned);
+        }
+        
+        // Filter by search
+        if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            announcements = announcements.filter(a => 
+                a.title.toLowerCase().includes(query) || 
+                a.content.toLowerCase().includes(query)
+            );
+        }
+        
+        // Sort: pinned first, then by date
+        return announcements.sort((a, b) => {
+            if (a.is_pinned !== b.is_pinned) return b.is_pinned - a.is_pinned;
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+    },
+    unreadCount: $unreadCount,
+    markAsRead(id) {
+        // AJAX call to mark as read
+        fetch(`/announcements/${id}/read`, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }});
+        this.unreadCount = Math.max(0, this.unreadCount - 1);
+    }
+}" 
+x-init="
+    window.addEventListener('open-announcements-modal', () => { open = true; });
+    $watch('open', value => { if(!value) { selectedAnnouncement = null; searchQuery = ''; } });
+"
+class="relative z-[60]">
+
+    <!-- Backdrop -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/70 backdrop-blur-md"
+         @click="open = false">
+    </div>
+
+    <!-- Modal Content -->
+    <div x-show="open" 
+         x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+         x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+         class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+         @keydown.escape.window="open = false">
+        
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col pointer-events-auto"
+             @click.stop>
+            
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-violet-500 to-purple-600 p-6 text-white relative shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold">Announcements</h2>
+                        <p class="text-violet-100 text-sm">Stay updated with the latest news and information</p>
+                    </div>
+                    <div x-show="unreadCount > 0" class="px-3 py-1 bg-white/20 rounded-full text-sm font-semibold">
+                        <span x-text="unreadCount"></span> unread
+                    </div>
+                </div>
+                <button @click="open = false" class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition hover:rotate-90">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div class="bg-gray-50 border-b border-gray-200 p-4 shrink-0">
+                <div class="flex flex-col md:flex-row gap-3">
+                    <!-- Search -->
+                    <div class="relative flex-1">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" x-model="searchQuery" placeholder="Search announcements..."
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition">
+                    </div>
+                    
+                    <!-- Filter Tabs -->
+                    <div class="flex gap-1 bg-gray-200 p-1 rounded-xl">
+                        <button @click="activeTab = 'all'" 
+                                :class="{'bg-white text-violet-600 shadow-sm': activeTab === 'all', 'text-gray-600 hover:text-gray-800': activeTab !== 'all'}"
+                                class="px-4 py-1.5 rounded-lg text-sm font-medium transition">
+                            All
+                        </button>
+                        <button @click="activeTab = 'urgent'" 
+                                :class="{'bg-white text-red-600 shadow-sm': activeTab === 'urgent', 'text-gray-600 hover:text-gray-800': activeTab !== 'urgent'}"
+                                class="px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            Urgent
+                        </button>
+                        <button @click="activeTab = 'pinned'" 
+                                :class="{'bg-white text-amber-600 shadow-sm': activeTab === 'pinned', 'text-gray-600 hover:text-gray-800': activeTab !== 'pinned'}"
+                                class="px-4 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                            </svg>
+                            Pinned
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                
+                <!-- Announcement Detail View -->
+                <div x-show="selectedAnnouncement" x-transition class="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-4">
+                    <div class="p-6">
+                        <button @click="selectedAnnouncement = null" class="mb-4 flex items-center gap-2 text-sm text-gray-500 hover:text-violet-600 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back to list
+                        </button>
+                        
+                        <div class="flex items-start gap-3 mb-4">
+                            <div x-show="selectedAnnouncement?.is_urgent" class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-lg flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                                URGENT
+                            </div>
+                            <div x-show="selectedAnnouncement?.is_pinned" class="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-lg flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                                PINNED
+                            </div>
+                            <div class="px-2 py-1 bg-violet-100 text-violet-700 text-xs font-bold rounded-lg" x-text="selectedAnnouncement?.type?.toUpperCase()"></div>
+                        </div>
+                        
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2" x-text="selectedAnnouncement?.title"></h2>
+                        <div class="flex items-center gap-3 text-sm text-gray-500 mb-6">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <span x-text="selectedAnnouncement?.author?.name || 'Unknown'"></span>
+                            </span>
+                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span x-text="new Date(selectedAnnouncement?.created_at).toLocaleDateString()"></span>
+                            </span>
+                        </div>
+                        
+                        <div class="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap" x-text="selectedAnnouncement?.content"></div>
+                        
+                        <div x-show="selectedAnnouncement?.grade_level || selectedAnnouncement?.target_audience !== 'all'" class="mt-6 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-lg flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                Target: <span x-text="selectedAnnouncement?.target_audience"></span>
+                            </span>
+                            <span x-show="selectedAnnouncement?.grade_level" class="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-lg">
+                                Grade: <span x-text="selectedAnnouncement?.grade_level"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcements List -->
+                <div x-show="!selectedAnnouncement" class="space-y-3">
+                    <template x-for="announcement in filteredAnnouncements" :key="announcement.id">
+                        <div @click="selectedAnnouncement = announcement; markAsRead(announcement.id)"
+                             class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all duration-300 cursor-pointer group relative overflow-hidden"
+                             :class="{ 'border-l-4 border-l-red-500': announcement.is_urgent, 'border-l-4 border-l-amber-500': announcement.is_pinned && !announcement.is_urgent }">
+                            
+                            <!-- Unread indicator -->
+                            <div x-show="!announcement.is_read" class="absolute top-4 right-4 w-2 h-2 bg-violet-500 rounded-full"></div>
+                            
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                                     :class="announcement.is_urgent ? 'bg-red-100 text-red-600' : (announcement.is_pinned ? 'bg-amber-100 text-amber-600' : 'bg-violet-100 text-violet-600')">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path x-show="announcement.is_urgent" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        <path x-show="!announcement.is_urgent && announcement.is_pinned" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                        <path x-show="!announcement.is_urgent && !announcement.is_pinned" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                                    </svg>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                        <h3 class="font-bold text-gray-900 text-lg truncate group-hover:text-violet-600 transition" x-text="announcement.title"></h3>
+                                        <span x-show="announcement.is_urgent" class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">URGENT</span>
+                                        <span x-show="announcement.is_pinned" class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded">PINNED</span>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 line-clamp-2 mb-3" x-text="announcement.content"></p>
+                                    
+                                    <div class="flex items-center gap-3 text-xs text-gray-500">
+                                        <span class="flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                            </svg>
+                                            <span x-text="announcement.author?.name || 'Teacher'"></span>
+                                        </span>
+                                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <span x-text="new Date(announcement.created_at).toLocaleDateString()"></span>
+                                        <span x-show="announcement.target_audience !== 'all'" class="px-2 py-0.5 bg-gray-100 rounded" x-text="announcement.target_audience"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="self-center text-gray-400 group-hover:text-violet-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- Empty State -->
+                    <div x-show="filteredAnnouncements.length === 0" class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium">No announcements found</p>
+                        <p class="text-sm text-gray-400 mt-1" x-text="activeTab === 'all' ? 'Check back later for updates' : 'Try a different filter'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center text-xs text-gray-500 shrink-0">
+                <span>Showing <span x-text="filteredAnnouncements.length"></span> announcements</span>
+                <span>Last updated: Just now</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <!-- =================== MAIN CONTENT =================== -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">

@@ -139,4 +139,17 @@ public function scopeActive($query)
     {
         return $this->hasMany(QuizScore::class);
     }
+
+    // app/Models/Student.php
+
+public function healthRecords()
+{
+    return $this->hasMany(StudentHealthRecord::class)->orderBy('created_at', 'desc');
+}
+
+// Or if you want to use the exact table name:
+public function studentHealthRecords()
+{
+    return $this->hasMany(StudentHealthRecord::class)->orderBy('created_at', 'desc');
+}
 }

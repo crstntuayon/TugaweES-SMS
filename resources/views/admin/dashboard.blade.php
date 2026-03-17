@@ -63,11 +63,12 @@ h-screen sticky top-0 z-50"
 
 <!-- USER PROFILE -->
 <div class="p-5 border-b border-gray-100">
-    @php
-    $first = auth()->user()->first_name;
-    $last = auth()->user()->last_name;
-    $initials = strtoupper(substr($first,0,1) . substr($last,0,1));
-    @endphp
+@php
+$user = auth()->user();
+$initials = $user 
+    ? strtoupper(substr($user->first_name,0,1) . substr($user->last_name,0,1))
+    : 'GU';
+@endphp
 
     <div class="flex items-center gap-4" :class="!sidebarOpen && 'justify-center'">
         <div class="relative group">
@@ -84,13 +85,18 @@ h-screen sticky top-0 z-50"
         </div>
 
         <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-300 delay-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="overflow-hidden">
-            <p class="text-sm font-bold text-gray-900 leading-tight truncate">
-                {{ auth()->user()->first_name }}
-                {{ auth()->user()->last_name }}
-            </p>
-            <p class="text-xs text-gray-500 truncate mt-0.5">
-                {{ auth()->user()->email }}
-            </p>
+           @php
+$user = auth()->user();
+@endphp
+
+<p class="text-sm font-bold text-gray-900 leading-tight truncate">
+    {{ $user->first_name ?? 'Guest' }}
+    {{ $user->last_name ?? '' }}
+</p>
+
+<p class="text-xs text-gray-500 truncate mt-0.5">
+    {{ $user->email ?? 'guest@example.com' }}
+</p>
             <span class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 Administrator
@@ -238,7 +244,7 @@ h-screen sticky top-0 z-50"
         </div>
     </a>
 
-    <!-- Graduation -->
+    <!-- Graduation 
     <a href="{{ route('admin.students.graduation') }}"
     class="group relative flex items-center gap-3.5 px-3.5 py-3 rounded-xl hover:bg-amber-50/80 hover:text-amber-600 transition-all duration-300 ease-out {{ request()->routeIs('admin.students.graduation') ? 'bg-amber-50 text-amber-600' : '' }}"
     :class="!sidebarOpen && 'justify-center'">
@@ -259,7 +265,7 @@ h-screen sticky top-0 z-50"
             Graduation
             <div class="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
         </div>
-    </a>
+    </a> -->
 
     <!-- Issue School IDs -->
     <button onclick="openSectionModal()"

@@ -292,8 +292,11 @@ Route::post('/admin/students/issue-ids', [App\Http\Controllers\Admin\StudentCont
     ->name('admin.students.issue-ids');
 Route::post('/admin/students/export-ids', [App\Http\Controllers\Admin\StudentController::class, 'exportIdsPdf'])->name('admin.students.export-ids');
 
-Route::get('/admin/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])
-        ->name('admin.reports');
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+
+    Route::get('/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports');
+
+});
 
 
 // TEACHER ROLE ENROLLMENT ROUTE
@@ -542,5 +545,29 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth'])->group(function
         ->name('quiz.destroy.title');
 });
 
+
+//ADDED MARCH 17, 2026
+use App\Http\Controllers\Student\StudentBookController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/student/books', [StudentBookController::class, 'store'])->name('student.books.store');
+    Route::get('/student/books/{book}/edit', [StudentBookController::class, 'edit'])->name('student.books.edit');
+    Route::put('/student/books/{book}', [StudentBookController::class, 'update'])->name('student.books.update');
+    Route::patch('/student/books/{book}/return', [StudentBookController::class, 'return'])->name('student.books.return');
+    Route::patch('/student/books/{book}/lost', [StudentBookController::class, 'markAsLost'])->name('student.books.lost'); // ADD THIS
+});
+
+// routes/web.php
+use App\Http\Controllers\Student\StudentHealthController;
+Route::middleware(['auth'])->group(function () {
+    Route::post('/student/health', [StudentHealthController::class, 'store'])->name('student.health.store');
+    Route::put('/student/health/{healthRecord}', [StudentHealthController::class, 'update'])->name('student.health.update');
+    Route::delete('/student/health/{healthRecord}', [StudentHealthController::class, 'destroy'])->name('student.health.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/announcements', [App\Http\Controllers\Student\AnnouncementController::class, 'index']);
+    Route::post('/announcements/{announcement}/read', [App\Http\Controllers\Student\AnnouncementController::class, 'markAsRead'])->name('announcements.read');
+});
 
 require __DIR__.'/auth.php';

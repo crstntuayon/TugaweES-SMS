@@ -228,7 +228,7 @@ h-screen sticky top-0 z-50"
         </div>
     </a>
 
-    <!-- Graduation -->
+    <!-- Graduation 
     <a href="{{ route('admin.students.graduation') }}"
     class="group relative flex items-center gap-3.5 px-3.5 py-3 rounded-xl hover:bg-amber-50/80 hover:text-amber-600 transition-all duration-300 ease-out {{ request()->routeIs('admin.students.graduation') ? 'bg-amber-50 text-amber-600' : '' }}"
     :class="!sidebarOpen && 'justify-center'">
@@ -249,7 +249,7 @@ h-screen sticky top-0 z-50"
             Graduation
             <div class="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
         </div>
-    </a>
+    </a>  -->
 
     <!-- Issue School IDs -->
     <button onclick="openSectionModal()"

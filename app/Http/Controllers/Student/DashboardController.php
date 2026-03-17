@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Announcement;
 
 class DashboardController extends Controller
 {
@@ -29,8 +30,22 @@ class DashboardController extends Controller
 
     $section = $enrollment?->section;
 
+    $announcements = Announcement::visibleToStudent($student)
+    ->with('author')
+    ->orderBy('is_pinned', 'desc')
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+$unreadCount = $announcements->where('is_read', false)->count();
+
+// Pass to JavaScript
+$announcementsJson = $announcements->toJson();
+
     return view('student.dashboard', compact(
         'student',
+        'announcements',
+        'unreadCount',
+        'announcementsJson',
         'section',
         'activeSchoolYear'
     ));

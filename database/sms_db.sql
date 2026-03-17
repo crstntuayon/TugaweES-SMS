@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2026 at 01:21 PM
+-- Generation Time: Mar 17, 2026 at 10:13 PM
 -- Server version: 8.0.45
 -- PHP Version: 8.2.30
 
@@ -31,8 +31,8 @@ CREATE TABLE `announcements` (
   `id` bigint UNSIGNED NOT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `target_audience` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'all',
-  `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target_audience` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'all',
+  `grade_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_urgent` tinyint(1) NOT NULL DEFAULT '0',
   `type` enum('admin','teacher') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
   `user_id` bigint UNSIGNED NOT NULL,
@@ -42,6 +42,29 @@ CREATE TABLE `announcements` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `author_id` bigint UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `announcements`
+--
+
+INSERT INTO `announcements` (`id`, `title`, `content`, `target_audience`, `grade_level`, `is_urgent`, `type`, `user_id`, `section_id`, `is_pinned`, `created_at`, `updated_at`, `deleted_at`, `author_id`) VALUES
+(7, 'Meeting', 'For all Grade 6 Monopollo parents. Tomorrow, March 21, 2026 @3:00 PM. See you...', 'all', NULL, 0, 'teacher', 42, NULL, 0, '2026-03-17 07:48:23', '2026-03-17 07:48:23', NULL, NULL),
+(8, 'MEETING', 'Graduation Program Plan Meeting', 'teachers', NULL, 1, 'teacher', 42, NULL, 1, '2026-03-17 08:06:27', '2026-03-17 08:06:27', NULL, 42);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `announcement_reads`
+--
+
+CREATE TABLE `announcement_reads` (
+  `id` bigint UNSIGNED NOT NULL,
+  `announcement_id` bigint UNSIGNED NOT NULL,
+  `student_id` bigint UNSIGNED NOT NULL,
+  `read_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -129,18 +152,18 @@ CREATE TABLE `attendance_records` (
 CREATE TABLE `books` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Title of the textbook or learning material',
-  `subject_area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Subject area (e.g., Math, Science, English)',
-  `book_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Internal book tracking code',
-  `reference_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ISBN or official reference number',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Title of the textbook or learning material',
+  `subject_area` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Subject area (e.g., Math, Science, English)',
+  `book_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Internal book tracking code',
+  `reference_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ISBN or official reference number',
   `date_issued` date DEFAULT NULL COMMENT 'Date when book was issued to student',
   `date_returned` date DEFAULT NULL COMMENT 'Date when book was returned',
-  `status` enum('issued','returned','lost') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'issued' COMMENT 'Current status of the book',
-  `condition` enum('new','good','fair','damaged','poor') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Physical condition of the book',
-  `damage_details` text COLLATE utf8mb4_unicode_ci COMMENT 'Description of damage if applicable',
-  `loss_code` enum('FM','TDO','NEG') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'FM=Force Majeure, TDO=Transferred/Dropout, NEG=Negligence',
-  `action_taken` enum('LLTR','TLTR','PTL') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'LLTR=Letter from Learner, TLTR=Teacher Letter, PTL=Paid',
-  `remarks` text COLLATE utf8mb4_unicode_ci COMMENT 'Additional notes or comments',
+  `status` enum('issued','returned','lost') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'issued' COMMENT 'Current status of the book',
+  `condition` enum('new','good','fair','damaged','poor') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Physical condition of the book',
+  `damage_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Description of damage if applicable',
+  `loss_code` enum('FM','TDO','NEG') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'FM=Force Majeure, TDO=Transferred/Dropout, NEG=Negligence',
+  `action_taken` enum('LLTR','TLTR','PTL') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'LLTR=Letter from Learner, TLTR=Teacher Letter, PTL=Paid',
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Additional notes or comments',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -153,12 +176,12 @@ CREATE TABLE `books` (
 
 CREATE TABLE `book_inventories` (
   `id` bigint UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject_area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `book_code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isbn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `publisher` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_area` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `grade_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `book_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `publication_year` year DEFAULT NULL,
   `total_copies` int NOT NULL DEFAULT '0',
   `available_copies` int NOT NULL DEFAULT '0',
@@ -166,7 +189,7 @@ CREATE TABLE `book_inventories` (
   `damaged_copies` int NOT NULL DEFAULT '0',
   `lost_copies` int NOT NULL DEFAULT '0',
   `replacement_cost` decimal(10,2) DEFAULT NULL,
-  `remarks` text COLLATE utf8mb4_unicode_ci,
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -439,7 +462,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (95, '2026_03_16_024218_create_student_health_records_table', 82),
 (96, '2026_03_16_053615_create_student_core_values_table', 83),
 (97, '2026_03_16_053952_add_school_year_id_to_attendances_table', 84),
-(98, '2026_03_16_095248_create_quiz_scores_table', 85);
+(98, '2026_03_16_095248_create_quiz_scores_table', 85),
+(99, '2026_03_17_133731_fix_subjects_code_column', 86),
+(100, '2026_03_17_152117_create_announcement_reads_table', 86);
 
 -- --------------------------------------------------------
 
@@ -463,7 +488,7 @@ CREATE TABLE `quiz_scores` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `section_id` bigint UNSIGNED NOT NULL,
-  `quiz_title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `quiz_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `score` int NOT NULL,
   `total_score` int NOT NULL,
   `date` date NOT NULL,
@@ -514,16 +539,16 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 
 CREATE TABLE `schools` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `school_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `principal_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `head_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `division` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `region` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `contact_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `school_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `principal_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `head_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `division` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -667,7 +692,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('Zl3m1JAciKEXETetHFAcQa7rQ9Q3IfEuNy5smpdU', 175, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOW5KbEl5M09qZW5seDJFS3FVeHJtb3pTVFV6RjVNMzdZNGk1bEdiWiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdHVkZW50L2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNzoic3R1ZGVudC5kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxNzU7fQ==', 1773667256);
+('cz85E8qJA6Z6CfPq02duNQC8lFRyilG5MkHfGWei', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibFBKQ0dybTlROEVLMUxZNG5xT1dsZzhVckl5VmFIaWk1SGt3UjVGYSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9kYXNoYm9hcmQvc3RhdHMiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLmRhc2hib2FyZC5zdGF0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1773778827),
+('lTBWtI1JXdo6i7YMeDUg6r79FkwzfrvfAA5Vy1rv', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRDVRTlc0ZGZhQlpTcEdiNDVaUlhGMFdiRlFua0tDZ3h0RGNTY0VraCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9yZXBvcnRzIjt9fQ==', 1773785569),
+('XulhLVjBnsoF7EjUW4zbAebwCIxLK934ZAlbIkRT', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV0UyenJSTHRFZTBSd0tMUHlPYXpGd0U1MkdTTkxjN3Q1YTdmamVJQSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9kYXNoYm9hcmQvc3RhdHMiO3M6NToicm91dGUiO3M6MjE6ImFkbWluLmRhc2hib2FyZC5zdGF0cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1773778836);
 
 -- --------------------------------------------------------
 
@@ -720,10 +747,10 @@ CREATE TABLE `student_core_values` (
   `id` bigint UNSIGNED NOT NULL,
   `student_id` bigint UNSIGNED NOT NULL,
   `school_year_id` bigint UNSIGNED NOT NULL,
-  `core_value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `behavior_statement` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `core_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `behavior_statement` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `quarter` tinyint NOT NULL,
-  `mark` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mark` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -741,9 +768,9 @@ CREATE TABLE `student_health_records` (
   `weight` float(5,2) DEFAULT NULL,
   `height` decimal(5,2) DEFAULT NULL,
   `bmi` decimal(5,2) DEFAULT NULL,
-  `nutritional_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `hfa_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remarks` text COLLATE utf8mb4_unicode_ci,
+  `nutritional_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hfa_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -753,7 +780,8 @@ CREATE TABLE `student_health_records` (
 --
 
 INSERT INTO `student_health_records` (`id`, `student_id`, `school_year_id`, `weight`, `height`, `bmi`, `nutritional_status`, `hfa_status`, `remarks`, `created_at`, `updated_at`) VALUES
-(1, 166, 1, 44.00, 157.00, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 166, 1, 44.00, 157.00, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 171, 1, 45.00, 158.00, 18.03, 'Normal', 'Normal', 'Very good', '2026-03-17 06:42:44', '2026-03-17 06:42:44');
 
 -- --------------------------------------------------------
 
@@ -780,7 +808,7 @@ CREATE TABLE `student_subjects` (
 
 CREATE TABLE `subjects` (
   `id` bigint UNSIGNED NOT NULL,
-  `code` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `grade_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `components` json DEFAULT NULL,
@@ -855,16 +883,16 @@ CREATE TABLE `teachers` (
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `suffix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birthday` date DEFAULT NULL,
-  `sex` enum('Male','Female') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sex` enum('Male','Female') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `contact_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci,
-  `school` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `division` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `region` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `grade_levels` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `section_names` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `school` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `division` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `grade_levels` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `section_names` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `employee_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_hired` date DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1000,6 +1028,14 @@ ALTER TABLE `announcements`
   ADD KEY `announcements_user_id_foreign` (`user_id`),
   ADD KEY `announcements_section_id_foreign` (`section_id`),
   ADD KEY `announcements_author_id_foreign` (`author_id`);
+
+--
+-- Indexes for table `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `announcement_reads_announcement_id_student_id_unique` (`announcement_id`,`student_id`),
+  ADD KEY `announcement_reads_student_id_foreign` (`student_id`);
 
 --
 -- Indexes for table `attendances`
@@ -1264,7 +1300,13 @@ ALTER TABLE `year_levels`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `attendances`
@@ -1324,7 +1366,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `quiz_scores`
@@ -1390,7 +1432,7 @@ ALTER TABLE `student_core_values`
 -- AUTO_INCREMENT for table `student_health_records`
 --
 ALTER TABLE `student_health_records`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `student_subjects`
@@ -1439,6 +1481,13 @@ ALTER TABLE `announcements`
   ADD CONSTRAINT `announcements_author_id_foreign` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `announcements_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `announcements_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `announcement_reads`
+--
+ALTER TABLE `announcement_reads`
+  ADD CONSTRAINT `announcement_reads_announcement_id_foreign` FOREIGN KEY (`announcement_id`) REFERENCES `announcements` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `announcement_reads_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `attendances`
